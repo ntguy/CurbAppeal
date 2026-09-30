@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blowhard</title>
+<title>Curb Appeal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -1034,7 +1034,7 @@ addEventListener('mouseup',e=>{if(e.button===0)mouse.l=false;if(e.button===2)mou
 addEventListener('wheel',e=>{if(state!=='play'||driving)return;const list=ATT.filter(a=>owned.includes(a.id));if(list.length<2)return;let i=list.findIndex(a=>a.id===equipped);i=(i+(e.deltaY>0?1:-1)+list.length)%list.length;equip(list[i].id);},{passive:true});
 addEventListener('contextmenu',e=>e.preventDefault());
 addEventListener('blur',()=>{for(const k in keys)keys[k]=false;mouse.l=mouse.r=false;});
-document.getElementById('logo').innerHTML=[...'BLOWHARD'].map((ch,i)=>ch===' '?'<span style="width:.5em"></span>':`<span style="animation-delay:${-i*.18}s">${ch}</span>`).join('');
+document.getElementById('logo').innerHTML=[...'CURB APPEAL'].map((ch,i)=>ch===' '?'<span style="width:.5em"></span>':`<span style="animation-delay:${-i*.18}s">${ch}</span>`).join('');
 document.body.style.cursor='default';
 function equip(id){if(equipped===id)return;equipped=id;const a=att();floatText(P.x,P.y-16,a.name,a.tip);blip(700,.05,'square',.05);setTimeout(()=>blip(900,.05,'square',.04),50);hudCache.hot=null;}
 
