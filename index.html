@@ -305,6 +305,12 @@ const DRIVE_CFG=[null,{w:30,cars:1,p:.7},null,{w:32,cars:1,p:.8},{w:34,cars:1,p:
 const DAY_SECONDS=320,DAY_START=7,DAY_END=22;
 const FANCY_PEN=3,TIPS=[[.9,.3],[.7,.2],[.5,.1]];
 const tipFor=pct=>(TIPS.find(t=>pct>=t[0])||[0,0])[1];
+// reputation, scored at the end of each day. Houses finished at 50/70/90% earn a flat bonus;
+// damage costs 1 point per $10 of it, plus per-scare, per-road-leaf and late-night noise penalties
+const REP_HOUSE=[[.9,40],[.7,20],[.5,10]],REP_PED=3,REP_ROAD_PER=10,REP_ROAD_CAP=25,LATE_HOUR=20,REP_LATE_PER_SEC=1;
+const REP_RANKS=[[700,'NEIGHBORHOOD LEGEND'],[300,'WELL LIKED'],[100,'RELIABLE'],[0,'NEW IN TOWN'],[-Infinity,'SKETCHY']];
+const repForPct=pct=>(REP_HOUSE.find(t=>pct>=t[0])||[0,0])[1];
+const repRank=r=>REP_RANKS.find(t=>r>=t[0])[1];
 const TRUCK_HL=26,TRUCK_HW=12;
 // pools: COPE px of stone deck ring the water. The net is a stick NET_STICK long; held, its head sits NET_REACH from the player
 const COPE=3,NET_STICK=24,NET_REACH=26,NET_CAP=50,NET_R=5.5;
@@ -965,7 +971,7 @@ const P={x:110,y:Y1-26,vx:0,vy:0,walk:0};
 const TR={x:100,y:Y1-6,a:0,v:0,steer:0};
 const aim={x:1,y:-.3};
 let power=0,mode=0,battery=100,spares=2,swapT=0,tieT=0,time=0,airCount=0;
-let state='title',driving=false,money=20000,day=1,hour=DAY_START;
+let state='title',driving=false,money=20000,day=1,hour=DAY_START,rep=0;
 let today=null,bumpT=0;
 // truckBundles: leaf counts of the tied tarps loaded today. Each one used up a tarp until tomorrow
 const tarps=[],truckBundles=[];let bundle=null,tarpSeq=1,tarpsUsed=0,heldNet=null;
@@ -984,7 +990,8 @@ const cvs=document.getElementById('game'),ctx=cvs.getContext('2d');
 let scale=3,VW=480,VH=270,gCan,aCan,lCan,gCtx,aCtx,lCtx,gImg,aImg,gBuf,aBuf;
 function resize(){
   scale=Math.max(2,Math.round(Math.min(innerWidth/390,innerHeight/245)));
-  VW=Math.ceil(innerWidth/scale);VH=Math.ceil(innerHeight/scale);
+  // one spare pixel each way so the canvas can slide by a sub-pixel amount without showing an edge
+  VW=Math.ceil(innerWidth/scale)+1;VH=Math.ceil(innerHeight/scale)+1;
   cvs.width=VW;cvs.height=VH;cvs.style.width=VW*scale+'px';cvs.style.height=VH*scale+'px';
   ctx.imageSmoothingEnabled=false;
   gCan=mk(VW,VH);aCan=mk(VW,VH);lCan=mk(VW,VH);gCtx=gCan.getContext('2d');aCtx=aCan.getContext('2d');lCtx=lCan.getContext('2d');
@@ -1040,13 +1047,13 @@ function equip(id){if(equipped===id)return;equipped=id;const a=att();floatText(P
 
 // ============================================================ save
 const SAVE_KEY='leafblower-save-v3';
-function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({money,day,upg,owned,equipped}));}catch(e){}}
+function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({money,day,rep,upg,owned,equipped}));}catch(e){}}
 function loadSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY));if(s&&typeof s.money==='number')return s;}catch(e){}return null;}
 function setupTitle(){
   const s=loadSave(),b=document.getElementById('titleBtns');
   b.innerHTML='';
   const mkb=(txt,cls,fn)=>{const el=document.createElement('button');el.className='btn '+cls;el.textContent=txt;el.onclick=e=>{e.stopPropagation();fn();};b.appendChild(el);};
-  if(s){mkb(`CONTINUE - DAY ${s.day}`,'bounce',()=>{money=s.money;day=s.day;upg={...upg,...s.upg};upg.bigtarp=Math.min(upg.bigtarp,UPG.bigtarp.max);owned=s.owned||['std'];equipped=s.equipped||'std';beginGame();});mkb('NEW GAME','red',()=>{try{localStorage.removeItem(SAVE_KEY);}catch(e){}money=20000;beginGame();});}
+  if(s){mkb(`CONTINUE - DAY ${s.day}`,'bounce',()=>{money=s.money;day=s.day;rep=s.rep||0;upg={...upg,...s.upg};upg.bigtarp=Math.min(upg.bigtarp,UPG.bigtarp.max);owned=s.owned||['std'];equipped=s.equipped||'std';beginGame();});mkb('NEW GAME','red',()=>{try{localStorage.removeItem(SAVE_KEY);}catch(e){}money=20000;rep=0;beginGame();});}
   else mkb('START DAY 1','bounce',beginGame);
   mkb('YARD EDITOR','gold',openEditor);
 }
@@ -1208,7 +1215,7 @@ function emptyNet(force){
 function breakPot(p){
   if(p.broken)return;p.broken=true;p.stress=0;p.wob=0;
   const cost=POT_COST[p.big?1:0],paid=Math.min(cost,Math.max(0,Math.floor(money)));
-  money-=paid;today.potDamage+=paid;today.pots++;p.lot.potsBroken=(p.lot.potsBroken||0)+1;
+  money-=paid;today.potDamage+=paid;today.pots++;today.damageRep+=Math.round(cost/10);p.lot.potsBroken=(p.lot.potsBroken||0)+1;
   floatText(p.x,p.y-12,paid?`-${fmt$(paid)} BROKEN POT`:'CRASH!','#fe5f55',true);
   crashShake=Math.max(crashShake,p.big?.22:.14);
   blip(1700,.05,'square',.04);setTimeout(()=>blip(1100+rnd()*300,.05,'square',.035),45);setTimeout(()=>blip(1500+rnd()*400,.04,'square',.03),100);blip(120,.18,'sawtooth',.05,50);
@@ -1262,7 +1269,7 @@ function confirmCloseout(){
 }
 
 // ============================================================ day cycle + night screens
-const newToday=()=>({houseEarn:0,hauled:0,bundles:0,houses:0,complaints:0,damage:0,pots:0,potDamage:0,startMoney:money});
+const newToday=()=>({houseEarn:0,hauled:0,bundles:0,houses:0,complaints:0,damage:0,pots:0,potDamage:0,crashes:0,damageRep:0,lateHigh:0,startMoney:money});
 function resetDay(){
   N=0;for(const L of ALL_LOTS)L.potsBroken=0;
   for(const p of POTS){p.broken=false;p.stress=0;p.wob=0;p.touch=false;}
@@ -1293,9 +1300,21 @@ function closeMenu(){if(state!=='menu')return;modalEl.classList.add('hide');stat
 function endDay(){
   if(state!=='play')return;
   state='shop';mouse.l=mouse.r=false;driving=false;document.body.style.cursor='default';
-  daySummary=LOTS.map(L=>{const s=lotStats(L);return{name:L.name,tag:L.tag,k:L.k,done:L.done,paid:L.paidAmt,pct:L.done?L.paidPct:s.pct,hauled:L.hauled};});
+  daySummary=LOTS.map(L=>{const s=lotStats(L);return{name:L.name,tag:L.tag,k:L.k,done:L.done,paid:L.paidAmt,pct:L.done?L.paidPct:s.pct,hauled:L.hauled,rep:L.done?repForPct(L.paidPct):0};});
+  scoreRep();
   blip(523,.15,'triangle',.06);setTimeout(()=>blip(392,.15,'triangle',.06),150);setTimeout(()=>blip(262,.3,'triangle',.06),300);
   nightTab='sum';renderNight();modalEl.classList.remove('hide');
+}
+function scoreRep(){
+  let road=0;for(let i=0;i<N;i++){if(ST[i]!==0||LZ[i]>1)continue;const x=LX[i]|0,y=LY[i]|0;if(x>=0&&y>=0&&x<WORLD_W&&y<H&&REG[y*WORLD_W+x]===1)road++;}
+  const done=daySummary.filter(h=>h.done);
+  const r={houses:done.reduce((a,h)=>a+h.rep,0),houseN:done.filter(h=>h.rep>0).length,
+    damage:-today.damageRep,damageN:today.crashes+today.pots,
+    peds:-today.complaints*REP_PED,pedN:today.complaints,
+    road:-Math.min(REP_ROAD_CAP,Math.floor(road/REP_ROAD_PER)),roadN:road,
+    late:-Math.round(today.lateHigh*REP_LATE_PER_SEC),lateSec:today.lateHigh};
+  r.total=r.houses+r.damage+r.peds+r.road+r.late;
+  r.before=rep;rep+=r.total;today.rep=r;
 }
 function statBars(a){
   const rows=[['REACH',a.range/1.5],['WIDTH',a.coneLo/60],['POWER',a.force/2.2],['LIFT',a.lift/1.7],['BATTERY',(1/a.drain)/1.9]];
@@ -1308,8 +1327,18 @@ function renderNight(){
     const earned=today.houseEarn;
     const houses=daySummary.map(h=>{const pct=Math.round(h.pct*100);
       const tag=h.done?`<span class="tagp g">PAID ${fmt$(h.paid)}</span>`:pct>0?`<span class="tagp y">UNFINISHED &middot; ${pct}%</span>`:`<span class="tagp x">NOT STARTED</span>`;
-      return `<div class="house"><span><span class="n">#${h.k+1} ${h.name}</span><span class="t">${h.tag}${h.hauled?' &middot; '+h.hauled+' HAULED':''}</span></span>${tag}</div>`;}).join('');
-    body=`<div class="sumwrap">
+      return `<div class="house"><span><span class="n">#${h.k+1} ${h.name}</span><span class="t">${h.tag}${h.hauled?' &middot; '+h.hauled+' HAULED':''}${h.rep?` &middot; <span style="color:var(--green)">+${h.rep} REP</span>`:''}</span></span>${tag}</div>`;}).join('');
+    const r=today.rep,sg=v=>v>0?'+'+v:v<0?'&minus;'+(-v):'0',cl=v=>v>0?'pos':v<0?'neg':'dim';
+    const rline=(label,v)=>`<div class="line"><span>${label}</span><span class="${cl(v)}">${sg(v)}</span></div>`;
+    const repPanel=`<div class="panel"><div class="label">REPUTATION</div>
+        <div class="bigstat" style="font-size:26px">${sg(r.total)}</div>
+        ${rline(`HOUSES FINISHED${r.houseN?' &times;'+r.houseN:''}`,r.houses)}
+        ${rline(`DAMAGE${r.damageN?' &times;'+r.damageN:''}`,r.damage)}
+        ${rline(`SCARED PEDESTRIANS${r.pedN?' &times;'+r.pedN:''}`,r.peds)}
+        ${rline(`LEAVES IN THE ROAD${r.roadN?' &times;'+r.roadN:''}`,r.road)}
+        ${rline(`LOUD BLOWING AFTER 8 PM${r.lateSec>=.5?' &middot; '+Math.round(r.lateSec)+'S':''}`,r.late)}
+        <div class="line total"><span>${repRank(rep)}</span><span>${rep}</span></div></div>`;
+    body=`<div class="sumwrap"><div style="display:flex;flex-direction:column;gap:16px">
       <div class="panel"><div class="label">EARNED TODAY</div><div class="bigstat">${fmt$(earned)}</div>
         <div class="line"><span>HOUSES PAID</span><span>${today.houses} / ${LOTS.length}</span></div>
         <div class="line"><span>FROM HOMEOWNERS</span><span class="pos">${fmt$(today.houseEarn)}</span></div>
@@ -1318,6 +1347,7 @@ function renderNight(){
         ${today.pots?`<div class="line"><span>BROKEN FLOWERPOTS &times;${today.pots}</span><span class="neg">-${fmt$(today.potDamage)}</span></div>`:''}
         <div class="line"><span>ANGRY PEDESTRIANS</span><span class="${today.complaints?'neg':'dim'}">${today.complaints}</span></div>
         <div class="line total"><span>BANK</span><span>${fmt$(money)}</span></div></div>
+      ${repPanel}</div>
       <div class="panel"><div class="label">THE NEIGHBORHOOD</div>${houses}</div></div>`;
   }else{
     const cards=Object.entries(UPG).map(([id,u])=>{
@@ -1601,7 +1631,7 @@ let crashShake=0;
 function crash(car,pt,sp){
   const k=clamp((sp-CRASH_MIN)/(TRUCK_TOP-CRASH_MIN),0,1),cost=Math.max(1,Math.round(k*CRASH_MAX));
   const paid=Math.min(cost,Math.max(0,Math.floor(money)));
-  money-=paid;today.damage=(today.damage||0)+paid;
+  money-=paid;today.damage=(today.damage||0)+paid;today.crashes++;today.damageRep+=Math.max(1,Math.round(cost/10));
   floatText(pt[0],pt[1]-10,paid?`-${fmt$(paid)} DAMAGE`:'CRUNCH!','#fe5f55',k>.5);
   crashShake=Math.max(crashShake,.15+k*.5);car.jolt=.25+k*.35;
   blip(90+k*40,.22,'sawtooth',.06+k*.04,35);blip(1400,.05,'square',.03);setTimeout(()=>blip(900+rnd()*400,.05,'square',.025),60);
@@ -1676,6 +1706,7 @@ function update(dt){
   let want=0;if(!driving&&!bundle&&!heldNet&&swapT<=0&&tieT<=0){if(mouse.r)want=2;else if(mouse.l)want=1;}
   if(want&&battery<=0){want=0;if(time-lastEmptyBuzz>.45){lastEmptyBuzz=time;blip(110,.12,'sawtooth',.05,70);}}
   mode=want;
+  if(mode===2&&hour>=LATE_HOUR)today.lateHigh+=dt;
   let target=mode;const bpct=battery/capacity();
   if(mode&&bpct<.12)target*=.55+.45*(Math.sin(time*37)>-.2?1:0);
   power+=(target-power)*Math.min(1,dt*(target>power?6:9));if(power<.005)power=0;
@@ -1684,8 +1715,10 @@ function update(dt){
   if(crashShake>0)crashShake=Math.max(0,crashShake-dt);for(const c of CARS)if(c.jolt>0)c.jolt-=dt;
   updateLeaves(dt);updatePool(dt);updatePots(dt);updateTarps(dt);updateTrees(dt);updateParticles(dt);updatePeds(dt);
   const [c,s]=tdir();
-  const fx=driving?TR.x+c*TR.v*.5:P.x+clamp((mwx-P.x)*.2,-60,60),fy=driving?TR.y-30+s*TR.v*.35:P.y+clamp((mwy-P.y)*.2,-40,40);
-  const ck=Math.min(1,dt*(driving?4:6));camX+=(fx-VW/2-camX)*ck;camY+=(fy-VH/2-camY)*ck;
+  // look ahead toward the mouse's screen offset, not its world position: that moves with the camera and never settles
+  const lx=(mouse.x-innerWidth/2)/scale,ly=(mouse.y-innerHeight/2)/scale;
+  const fx=driving?TR.x+c*TR.v*.5:P.x+clamp(lx*.25,-60,60),fy=driving?TR.y-30+s*TR.v*.35:P.y+clamp(ly*.25,-40,40);
+  const ck=Math.min(1,dt*(driving?4:8));camX+=(fx-VW/2-camX)*ck;camY+=(fy-VH/2-camY)*ck;
   camX=VW>=WORLD_W?(WORLD_W-VW)/2:clamp(camX,0,WORLD_W-VW);camY=VH>=H?(H-VH)/2:clamp(camY,0,H-VH);
 }
 
@@ -1902,7 +1935,7 @@ function drawMarker(cx,cy){
 }
 function drawCursor(){
   if(driving||state!=='play')return;
-  const mx=Math.floor(mouse.x/scale),my=Math.floor(mouse.y/scale);
+  const mx=Math.floor((mouse.x+canOff.x)/scale),my=Math.floor((mouse.y+canOff.y)/scale);
   const col=bundle?'#8a9a9d':mode===2?'#fe5f55':mode===1?'#009dff':'#ffffff',g=2+(mode?Math.round(Math.sin(time*30)*.6+power*.7):0);
   const bars=[[mx-g-3,my,3,1],[mx+g+1,my,3,1],[mx,my-g-3,1,3],[mx,my+g+1,1,3],[mx,my,1,1]];
   ctx.fillStyle='#10171a';for(const b of bars)ctx.fillRect(b[0]-1,b[1]-1,b[2]+2,b[3]+2);
@@ -1935,9 +1968,14 @@ function drawLighting(cx,cy){
   for(const [x,y,r] of glows){const g=ctx.createRadialGradient(x,y,0,x,y,r*.7);g.addColorStop(0,`rgba(255,170,80,${.12*s.dark})`);g.addColorStop(1,'rgba(255,170,80,0)');ctx.fillStyle=g;ctx.fillRect(x-r,y-r,r*2,r*2);}
   ctx.globalCompositeOperation='source-over';
 }
+const canOff={x:0,y:0};
 function render(){
   const shake=(power>1.2?(rnd()-.5)*(power-1.2)*1.2:0)+(crashShake>0?(rnd()-.5)*crashShake*14:0);
-  const cx=Math.round(camX+shake),cy=Math.round(camY+shake*.6);
+  // draw on whole world pixels, then slide the canvas by the leftover fraction (snapped to device pixels) for smooth scrolling
+  const bx=Math.floor(camX),by=Math.floor(camY),dpr=devicePixelRatio||1;
+  const ox=Math.round((camX-bx)*scale*dpr)/dpr,oy=Math.round((camY-by)*scale*dpr)/dpr;
+  if(ox!==canOff.x||oy!==canOff.y){canOff.x=ox;canOff.y=oy;cvs.style.transform=`translate3d(${-ox}px,${-oy}px,0)`;}
+  const cx=bx+Math.round(shake),cy=by+Math.round(shake*.6);
   ctx.fillStyle='#10171a';ctx.fillRect(0,0,VW,VH);
   const sx=Math.max(0,cx),sy=Math.max(0,cy),sw=Math.min(VW,WORLD_W-sx),sh=Math.min(VH,H-sy);
   if(sw>0&&sh>0)ctx.drawImage(bg,sx,sy,sw,sh,sx-cx,sy-cy,sw,sh);
@@ -2021,6 +2059,7 @@ function updateHUD(dt){
     const part=truckPart(),door=nearDoor();
     if(swapT>0){cls='busy';txt='SWAPPING BATTERY...';pfill.style.width=((1-swapT/SWAP_TIME)*100).toFixed(1)+'%';}
     else if(tieT>0){cls='busy';txt='TYING UP THE TARP...';pfill.style.width=((1-tieT/TIE_T)*100).toFixed(1)+'%';}
+    else if(mode===2&&hour>=LATE_HOUR){cls='dead';txt='IT\'S AFTER 8 PM! HIGH SPEED IS HURTING YOUR REPUTATION';}
     else if(driving){if(Math.abs(TR.v)<=35){cls='info';txt='[E] GET OUT  ·  [N] END THE DAY';}}
     else if(heldNet){const full=heldNet.n>=NET_CAP;cls=full?'dead':'info';txt=full?'NET FULL!  [Q] EMPTY IT ON DRY LAND':heldNet.n?'[Q] EMPTY THE NET  ·  [E] PUT IT DOWN':'SWEEP THE NET THROUGH THE WATER  ·  [E] PUT IT DOWN';}
     else if(door){cls=door.done?'info':'swap';txt=door.done?`${door.name} ALREADY PAID TODAY`:'[E] KNOCK ON THE DOOR';}
