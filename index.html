@@ -525,7 +525,7 @@ function buildLots(){
       const x=r.h?r.x0+a:r.c+side*(RH+4),y=r.h?r.c+side*(RH+4):r.y0+a;
       if(REG[(y|0)*WORLD_W+(x|0)]!==2)continue;
       if(MOUTHS.some(m=>inRect(m,x,y,8)))continue;
-      STREETLIGHTS.push({x,y});
+      STREETLIGHTS.push({x,y,dx:r.h?0:-side,dy:r.h?-side:0});
     }
   }
   // street parking along the curbs
@@ -601,13 +601,21 @@ function zoneOutline(z,house){
 function makeLot(k,s,w,d,R,filler,custom){
   const L={k,style:s,w,d,filler:!!filler,lz:[],lpaved:[],lcars:[],ltrees:[],lpots:[],lnets:[],deco:[],name:filler?'':NAMES[k],tag:filler?'':TAGS[k],done:false,hauled:0,paidAmt:0};
   L.lfences=[{x0:0,y0:0,x1:6,y1:d},{x0:w-6,y0:0,x1:w,y1:d},{x0:0,y0:0,x1:w,y1:6}];
-  const hw=Math.round(clamp(w*.42,72,190)),hh=Math.round(clamp(d*.3,52,122));
-  const hx=Math.round(14+(w-28-hw)*(s===7?.12:.2+R()*.6)),hy=12+Math.round(R()*Math.min(18,d*.06));
+  // the house sits toward the street with a modest front lawn, leaving a real backyard behind it
+  const hw=Math.round(clamp(w*.42,72,190)),hh=Math.round(clamp(d*.28,46,122)),F=Math.round(clamp(d*.34,64,150)+R()*8);
+  const hx=Math.round(14+(w-28-hw)*(s===7?.12:.2+R()*.6)),hy=d-F-hh;
   L.lhouse={x0:hx,y0:hy,x1:hx+hw,y1:hy+hh};
   L.ldoor={x:hx+Math.round(hw*(s>=1?.36:.5)),y:hy+hh};
   const door=L.ldoor,occ=[{x0:hx-4,y0:hy-4,x1:hx+hw+4,y1:hy+hh+8}];
   L.lpaved.push({x0:door.x-5,y0:hy+hh+6,x1:door.x+5,y1:d,kind:'path'});
   occ.push({x0:door.x-8,y0:hy+hh,x1:door.x+8,y1:d});
+  // backyard fence: from each side of the house out to the side fence, with a gate gap in each run
+  const fy=hy+Math.round(hh*.45),GATE=20;L.gates=[];
+  for(const [a,b] of [[6,hx],[hx+hw,w-6]]){const len=b-a;if(len<GATE+12){if(len>0)occ.push({x0:a,y0:fy-6,x1:b,y1:fy+12});continue;}
+    const gx=a<hx?a+Math.round((len-GATE)*.5):a+Math.round((len-GATE)*.5);
+    if(gx-a>2)L.lfences.push({x0:a,y0:fy,x1:gx,y1:fy+6,wing:true});if(b-gx-GATE>2)L.lfences.push({x0:gx+GATE,y0:fy,x1:b,y1:fy+6,wing:true});
+    L.gates.push({x0:gx,x1:gx+GATE,y:fy});occ.push({x0:a,y0:fy-2,x1:b,y1:fy+8},{x0:gx-2,y0:fy-16,x1:gx+GATE+2,y1:fy+22});}
+  const back={x0:10,y0:10,x1:w-10,y1:fy-4},front={x0:10,y0:hy+hh+6,x1:w-10,y1:d-8};
   const finish=()=>{
     const h=L.lhouse,G=10,IN=4,DEEP=26;
     const blocked=r=>L.lpaved.some(p=>rectsHit(p,r))||L.lz.some(o=>!o.good&&rectsHit(o,r));
@@ -639,8 +647,9 @@ function makeLot(k,s,w,d,R,filler,custom){
     }else{
       const dw=dc.w,dx=hx+hw-dw-2,dr={x0:dx,y0:hy+hh,x1:dx+dw,y1:d,kind:'drive'};
       L.lpaved.push(dr);occ.push({x0:dx-4,y0:hy+hh,x1:dx+dw+4,y1:d});
-      if(dc.cars===2){car(dx+dw*.27,hy+hh+24,true,-1,CAR_COLS[(R()*10)|0]);car(dx+dw*.73,hy+hh+24+R()*20,true,-1,CAR_COLS[(R()*10)|0]);}
-      else if(R()<.85)car(dx+dw/2,hy+hh+24+R()*30,true,R()<.7?-1:1,CAR_COLS[(R()*10)|0]);
+      const cy=()=>hy+hh+21+R()*Math.max(0,F-46);
+      if(dc.cars===2){car(dx+dw*.27,hy+hh+21,true,-1,CAR_COLS[(R()*10)|0]);car(dx+dw*.73,cy(),true,-1,CAR_COLS[(R()*10)|0]);}
+      else if(R()<.85)car(dx+dw/2,cy(),true,R()<.7?-1:1,CAR_COLS[(R()*10)|0]);
     }
   }
   const yard={x0:10,y0:10,x1:w-10,y1:d-8};
@@ -656,17 +665,18 @@ function makeLot(k,s,w,d,R,filler,custom){
   const dr=L.lpaved.find(p=>p.kind==='drive'&&p.y0===hy+hh);
   const rEnd=dr?dr.x0-6:hx+hw+2;
   if(rEnd-(door.x+9)>14){const r={x0:door.x+9,y0:by,x1:rEnd,y1:by+bh};occ.push(r);addRect(r,'mulch',true);}
-  // fancy stuff next, so the beds can fit around it
-  if(s>=3){const pw=Math.round(44+s*7),ph=Math.round(30+s*4);
-    const side={x0:Math.max(yard.x0,hx-pw-30),y0:hy,x1:Math.min(yard.x1,hx+hw+pw+30),y1:hy+hh+ph+30};
-    addRect(place(pw,ph,side,120)||place(pw,ph),'patio',false);}
-  if(s>=5)addRect(place(Math.round(56+s*7),Math.round(34+s*5)),'garden',false);
-  if(s>=7){addRect(place(110,60),'garden',false);addRect(place(90,56),'patio',false);}
-  // pools: more likely and bigger the fancier the house. Reserve a margin for the deck, the net and some pots
+  // fancy stuff next, so the beds can fit around it. Patio steps straight off the back of the house
+  const fits=(bw,bh,box)=>box.x1-box.x0>=bw&&box.y1-box.y0>=bh;
+  if(s>=3){const pw=Math.min(hw-8,Math.round(44+s*9)),ph=Math.round(28+s*4);
+    if(hy-10-ph>=10){const px=Math.round(hx+4+R()*(hw-8-pw)),r={x0:px,y0:hy-5-ph,x1:px+pw,y1:hy-5};if(!occ.some(o=>rectsHit(o,r,0))){occ.push(r);addRect(r,'patio',false);}}
+    else if(fits(pw,ph,back))addRect(place(pw,ph,back,120),'patio',false);}
+  // pools: more likely and bigger the fancier the house, always out back. A margin is kept for the deck, net and pots
   if(R()<POOL_CHANCE[s]){const pw=Math.round(56+s*11+R()*14),ph=Math.round(36+s*6+R()*8),M=9;
-    const near={x0:yard.x0,y0:6,x1:yard.x1,y1:Math.min(yard.y1,hy+hh+ph+60)};
-    const r=place(pw+M*2,ph+M*2,near,140)||place(pw+M*2,ph+M*2);
-    if(r)L.lz.push({x0:r.x0+M,y0:r.y0+M,x1:r.x1-M,y1:r.y1-M,type:'pool',good:false,shape:'r'});}
+    if(fits(pw+M*2,ph+M*2,back)){const r=place(pw+M*2,ph+M*2,back,160);
+      if(r)L.lz.push({x0:r.x0+M,y0:r.y0+M,x1:r.x1-M,y1:r.y1-M,type:'pool',good:false,shape:'r'});}}
+  // a vegetable/flower garden out back; the grandest houses add a show garden out front too
+  if(s>=5&&fits(56+s*7,34+s*5,back))addRect(place(Math.round(56+s*7),Math.round(34+s*5),back,120),'garden',false);
+  if(s>=7){addRect(place(110,50,front,120),'garden',false);if(fits(90,56,back))addRect(place(90,56,back),'patio',false);}
   // quarter-round beds tucked into yard corners; shrink until they fit
   const cornerBed=(ax,ay,sx,sy,rw,rh,type='mulch')=>{
     for(let t=0;t<7;t++){const bw=Math.round(rw*(1-t*.12)),bh2=Math.round(rh*(1-t*.12));if(bw<18||bh2<14)return;
@@ -687,7 +697,7 @@ function makeLot(k,s,w,d,R,filler,custom){
   if(s>=2)edgeBed(R()<.5?-1:1);
   if(s>=4){edgeBed(-1);edgeBed(1);cornerBed(6,d,1,-1,cw*.7,ch*.7);}
   if(s>=6){edgeBed('back');cornerBed(w-6,d,-1,-1,cw*.7,ch*.7);}
-  if(s>=4)addRect(place(Math.round(w*.2),Math.round(d*.2),{x0:yard.x0,y0:6,x1:yard.x1,y1:6+d*.35}),'natural',true);
+  if(s>=4&&back.y1-back.y0>40)addRect(place(Math.round(w*.2),Math.round(Math.min(d*.2,(back.y1-back.y0)*.6)),{x0:back.x0,y0:6,x1:back.x1,y1:back.y1}),'natural',true);
   if(s>=6)edgeBed(R()<.5?-1:1,'natural');
   const nt=[2,2,3,3,4,5,6,9][s];
   for(let i=0,tries=0;i<nt&&tries<500;tries++){
@@ -697,6 +707,7 @@ function makeLot(k,s,w,d,R,filler,custom){
     if(L.lcars.some(c=>inRect(carRect(c),tx,ty,8)))continue;
     if(L.lz.some(z=>!z.good&&inRect(zoneBox(z),tx,ty,10)))continue;
     if(L.ltrees.some(t=>Math.hypot(t.x-tx,t.y-ty)<(t.r+r)*.75))continue;
+    if(Math.abs(ty-fy-3)<9||L.gates.some(g=>tx>g.x0-10&&tx<g.x1+10&&Math.abs(ty-fy)<22))continue;
     L.ltrees.push({x:tx,y:ty,r,pal:(R()*4)|0,rate:.22+s*.1});i++;
   }
   return finish();
@@ -897,7 +908,6 @@ function buildBackground(){
   for(const L of ALL_LOTS){const h=L.house;for(let y=h.y0+7;y<h.y1+8;y++)for(let x=h.x0+7;x<h.x1+8;x++)dark(x,y,.68);}
   c.putImageData(img,0,0);
   ALL_LOTS.forEach((L,i)=>blitLot(c,layers[i][1],L));
-  for(const s of STREETLIGHTS){c.fillStyle='#2a2e33';c.fillRect(s.x-1,s.y-1,4,6);c.fillStyle='#5d656d';c.fillRect(s.x,s.y,2,4);c.fillStyle='#1e2226';c.fillRect(s.x-3,s.y-9,8,3);c.fillStyle='#fff0b0';c.fillRect(s.x-2,s.y-9,6,2);}
   for(const t of TREES){c.fillStyle='#3a2416';pcircle(c,t.x,t.y,5);c.fillStyle='#6b4428';pcircle(c,t.x,t.y,4);c.fillStyle='#8a5a36';c.fillRect(t.x-2,t.y-3,2,2);}
 }
 // paint a lot in its local frame: [ground layer, overlay layer (house, fence, props)]
@@ -997,14 +1007,16 @@ function drawHouse(c,L){
   if(L.style>=5)sky(x+Math.round(w*.55),y+hh-Math.round(hh*.33));
 }
 function drawFence(c,L){
-  const x0=0,x1=L.w,y0=0,y1=L.d;
-  c.fillStyle='#4f301b';c.fillRect(x0,y0,x1-x0,7);c.fillRect(x0,y0,7,y1-y0);c.fillRect(x1-7,y0,7,y1-y0);
-  for(let x=x0+1;x<x1;x+=5){c.fillStyle='#b07a48';c.fillRect(x,y0,3,6);c.fillStyle='#d49c62';c.fillRect(x,y0,1,5);}
-  for(let y=y0+1;y<y1;y+=5){c.fillStyle='#b07a48';c.fillRect(x0,y,6,3);c.fillRect(x1-6,y,6,3);c.fillStyle='#d49c62';c.fillRect(x0,y,5,1);c.fillRect(x1-6,y,5,1);}
   const post=(x,y)=>{c.fillStyle='#3a2314';c.fillRect(x-1,y-1,9,9);c.fillStyle='#8a5a36';c.fillRect(x,y,7,7);c.fillStyle='#a8744a';c.fillRect(x,y,7,2);};
-  for(let x=x0;x<x1-7;x+=48)post(x,y0);post(x1-7,y0);
-  for(let y=y0+48;y<y1-7;y+=48){post(x0,y);post(x1-7,y);}
-  post(x0,y1-7);post(x1-7,y1-7);
+  for(const f of L.lfences){const horiz=f.x1-f.x0>=f.y1-f.y0;
+    c.fillStyle='#4f301b';c.fillRect(f.x0,f.y0,f.x1-f.x0,f.y1-f.y0);
+    if(horiz){for(let x=f.x0+1;x<f.x1-1;x+=5){c.fillStyle='#b07a48';c.fillRect(x,f.y0,3,6);c.fillStyle='#d49c62';c.fillRect(x,f.y0,1,5);}
+      for(let x=f.x0;x<f.x1-7;x+=48)post(x,f.y0);post(f.x1-7,f.y0);}
+    else{for(let y=f.y0+1;y<f.y1-1;y+=5){c.fillStyle='#b07a48';c.fillRect(f.x0,y,6,3);c.fillStyle='#d49c62';c.fillRect(f.x0,y,5,1);}
+      for(let y=f.y0;y<f.y1-7;y+=48)post(f.x0,y);post(f.x0,f.y1-7);}
+  }
+  // gates stand open: a short leaf swung back against one post
+  for(const g of L.gates||[]){c.fillStyle='#4f301b';c.fillRect(g.x0-1,g.y-9,3,10);c.fillStyle='#b07a48';c.fillRect(g.x0,g.y-9,2,9);c.fillStyle='#d49c62';c.fillRect(g.x0,g.y-9,1,8);}
 }
 // vehicles (sprites face +x)
 let truckBase,truckTmp;
@@ -1905,7 +1917,7 @@ function updateLeaves(dt){
     if(z<.8&&WATER[(y|0)*WW+(x|0)]){ST[i]=3;LZ[i]=0;VX[i]*=.15;VY[i]*=.15;VZ[i]=0;if(ripples.length<70&&(vz<-6||s2>400))ripples.push({x,y,r0:1,g:4,l:.6,m:.6});continue;}
     const li=LOT_AT[(y|0)*WW+(x|0)];
     if(li>=0){{const L=ALL_LOTS[li];
-        if(z<11){const fs=L.fences;for(let q=0;q<3;q++){const w=fs[q];if(x>w.x0&&x<w.x1&&y>w.y0&&y<w.y1){pushRect(i,w);break;}}}
+        if(z<11){const fs=L.fences;for(let q=0;q<fs.length;q++){const w=fs[q];if(x>w.x0&&x<w.x1&&y>w.y0&&y<w.y1){pushRect(i,w);break;}}}
         if(z<13){const ob=L.obst;for(let q=0;q<ob.length;q++){const w=ob[q];if(LX[i]>w.x0&&LX[i]<w.x1&&LY[i]>w.y0&&LY[i]<w.y1){pushRect(i,w);break;}}}
         if(z<9){const pp=L.pots;for(let q=0;q<pp.length;q++){const p=pp[q];if(p.broken)continue;const dx=LX[i]-p.x,dy=LY[i]-p.y,m=p.r+.8;if(dx>-m&&dx<m&&dy>-m&&dy<m){const d=Math.hypot(dx,dy)||.01;if(d<m){LX[i]=p.x+dx/d*(m+.4);LY[i]=p.y+dy/d*(m+.4);bounceLeaf(i,dx/d,dy/d);}}}}
         if(z<25){const ts2=L.trees;for(let q=0;q<ts2.length;q++){const t=ts2[q],dx=LX[i]-t.x,dy=LY[i]-t.y;if(dx>-5&&dx<5&&dy>-5&&dy<5){const d=Math.hypot(dx,dy)||.01;if(d<5){LX[i]=t.x+dx/d*5.4;LY[i]=t.y+dy/d*5.4;bounceLeaf(i,dx/d,dy/d);}}}}
@@ -2027,20 +2039,28 @@ function updateTruck(dt,ix,iy){
   TR.a+=TR.steer*TR.v*dt*.88/(30+Math.abs(TR.v)*.3);
   const [c,s]=tdir();TR.x+=c*TR.v*dt;TR.y+=s*TR.v*dt;
   // collisions: 3 circles along the truck
-  let hit=false,car=null,cpt=null,fresh=false;const r=11,sp0=Math.abs(TR.v);
+  let hit=false,car=null,cpt=null,fresh=false,tHit={v:null,sp:0},carImp=0;const r=11,sp0=Math.abs(TR.v);
   for(let it=0;it<2;it++)for(const off of [-14,0,14]){
     const cx=TR.x+c*off,cy=TR.y+s*off;let px=0,py=0;
     const q=roadClamp(cx,cy,r);if(q){px=q[0]-cx;py=q[1]-cy;}
-    for(const tv of traffic)for(const [qx,qy] of trafficCircles(tv)){const dx=cx-qx,dy=cy-qy,d=Math.hypot(dx,dy),m=r+tv.hw;if(d<m&&d>0){px+=dx/d*(m-d);py+=dy/d*(m-d);}}
+    for(const tv of traffic)for(const [qx,qy] of trafficCircles(tv)){const dx=cx-qx,dy=cy-qy,d=Math.hypot(dx,dy),m=r+tv.hw;if(d<m&&d>0){px+=dx/d*(m-d);py+=dy/d*(m-d);
+      // impact speed: how fast the two were closing along the line between them (both velocities, with direction)
+      const rvx=c*TR.v-Math.cos(tv.a)*tv.v,rvy=s*TR.v-Math.sin(tv.a)*tv.v,imp=-(rvx*dx+rvy*dy)/d;
+      if(it===0&&imp>tHit.sp){tHit={v:tv,pt:[qx+dx/d*tv.hw,qy+dy/d*tv.hw],sp:imp};}}}
     for(const w of CARS){
       if(cx<w.x0-r||cx>w.x1+r||cy<w.y0-r||cy>w.y1+r)continue;
       const qx=clamp(cx,w.x0,w.x1),qy=clamp(cy,w.y0,w.y1),dx=cx-qx,dy=cy-qy,d=Math.hypot(dx,dy);
-      if(d<r){if(!(time-(w.touchT??-9)<.3))fresh=true;w.touchT=time;car=w;cpt=[qx,qy];if(d>0){px+=dx/d*(r-d);py+=dy/d*(r-d);}else py+=cy<(w.y0+w.y1)/2?-(cy-w.y0+r):(w.y1-cy+r);}
+      if(d<r){if(!(time-(w.touchT??-9)<.3))fresh=true;w.touchT=time;car=w;cpt=[qx,qy];
+        // a parked car isn't moving, so the impact is the truck's speed straight into it: a scrape costs less than a head-on
+        const imp=d>0?Math.max(0,-(c*TR.v*dx+s*TR.v*dy)/d):sp0;if(it===0&&imp>carImp)carImp=imp;
+        if(d>0){px+=dx/d*(r-d);py+=dy/d*(r-d);}else py+=cy<(w.y0+w.y1)/2?-(cy-w.y0+r):(w.y1-cy+r);}
     }
     if(px||py){TR.x+=px;TR.y+=py;hit=true;}
     if(it===0&&sp0>3)for(const p of POTS){if(!p.broken&&Math.abs(cx-p.x)<r+p.r&&Math.abs(cy-p.y)<r+p.r&&Math.hypot(cx-p.x,cy-p.y)<r+p.r)breakPot(p);}
   }
-  if(car&&fresh&&sp0>CRASH_MIN){bumpT=time;crash(car,cpt,sp0);TR.v*=.35;}
+  if(tHit.v&&tHit.sp>CRASH_MIN&&!(time-(tHit.v.touchT??-9)<.6)){tHit.v.touchT=time;bumpT=time;crash(tHit.v,tHit.pt,tHit.sp);TR.v*=.35;}
+  else if(tHit.v)tHit.v.touchT=time;
+  if(car&&fresh&&carImp>CRASH_MIN){bumpT=time;crash(car,cpt,carImp);TR.v*=.35;}
   else if(hit){TR.v*=Math.exp(-4*dt);if(Math.abs(TR.v)>45&&time-bumpT>.4){bumpT=time;blip(80,.15,'sawtooth',.07,40);TR.v*=.6;}}
   P.x=TR.x;P.y=TR.y;P.vx=P.vy=0;
 }
@@ -2056,7 +2076,16 @@ function crash(car,pt,sp){
   if(k>.35)setTimeout(()=>{for(let i=0;i<4;i++)setTimeout(()=>blip(i%2?660:880,.12,'square',.03),i*160);},200);
   const n=8+Math.round(k*26);
   for(let i=0;i<n;i++){const a=rnd()*Math.PI*2,v=30+rnd()*90*(.4+k);sparks.push({x:pt[0],y:pt[1],z:4+rnd()*6,vx:Math.cos(a)*v,vy:Math.sin(a)*v*.7,vz:30+rnd()*60,l:.4+rnd()*.5,c:rnd()<.45?'#bfe6ff':rnd()<.5?'#ffe38a':'#d8d2c6'});}
-  dentCar(car,pt,k);statsT=1;
+  if(car.kind){dentTraffic(car,pt,k);car.v=0;car.shockT=1.6;car.honkT=time;setTimeout(()=>{blip(330,.3,'square',.05);blip(415,.3,'square',.04);},350);}
+  else dentCar(car,pt,k);statsT=1;
+}
+// traffic shares sprites, so a vehicle gets its own copy the first time it's dented
+function dentTraffic(v,pt,k){
+  if(!v.ownCan){const c=mk(v.can.width,v.can.height);c.getContext('2d').drawImage(v.can,0,0);v.can=c;v.ownCan=true;if(v.kind==='cop')v.copDent=c;}
+  const dx=pt[0]-v.x,dy=pt[1]-v.y,ca=Math.cos(-v.a),sa=Math.sin(-v.a),lx=Math.round(dx*ca-dy*sa+v.can.width/2),ly=Math.round(dx*sa+dy*ca+v.can.height/2);
+  const g=v.can.getContext('2d'),n=3+Math.round(k*8);
+  for(let i=0;i<n;i++){const x=clamp(lx+Math.round((rnd()-.5)*(3+k*6)),1,v.can.width-2),y=clamp(ly+Math.round((rnd()-.5)*(3+k*4)),1,v.can.height-2);
+    g.fillStyle=rnd()<.6?'rgba(20,20,24,.75)':'rgba(230,230,230,.7)';g.fillRect(x,y,1,1);}
 }
 // scuff the car's sprite where it was hit, so the damage sticks around
 function dentCar(car,pt,k){
@@ -2274,6 +2303,7 @@ function mergeOk(v,c){
 function bendAhead(v,L){const a0=TPA[v.i];for(let j=v.i;j<TPS.length&&TPS[j]-v.s<L;j+=3){let d=Math.abs(TPA[j]-a0);if(d>Math.PI)d=Math.PI*2-d;if(d>.3)return true;}return false;}
 const oncoming=v=>traffic.some(o=>o!==v&&o.v>5&&Math.cos(o.a-v.a)<-.5&&Math.hypot(o.x-v.x,o.y-v.y)<230);
 function driveVehicle(v,ob,dt,stopAt){
+  if(v.shockT>0){v.shockT-=dt;v.v=0;trafficPos(v);return;}
   if(v.state==='parked'){v.v=Math.max(0,v.v-V_HARD*dt);v.latT=v.lat;v.yaw*=Math.exp(-6*dt);v.s+=v.v*dt;trafficPos(v);return;}
   // backing up out of a jam to get room to steer round it
   if(v.rev>0){v.rev-=dt;
@@ -2358,7 +2388,7 @@ function updateOfficer(o,dt){
   const sp=Math.min(d,40*dt);o.x+=dx/d*sp;o.y+=dy/d*sp;o.stop=0;o.walk+=dt*10;o.mx=dx/d;o.my=dy/d;if(Math.abs(o.mx)>.3)o.fdir=o.mx>0?1:-1;
 }
 // ---------- the parcel van: a handful of houses a day, parked at the curb out front while the driver runs the box up
-const PKG_RANGE=12,PKG_THR=200,REP_COURIER=5,REP_PACKAGE=8,REP_PKG_RETURN=5;
+const PKG_CUE_WALK=8,PKG_RANGE=12,PKG_THR=200,REP_COURIER=5,REP_PACKAGE=8,REP_PKG_RETURN=5;
 let carryPkg=null;
 function vanSpot(j){const a=TPA[j],nx=-Math.sin(a),ny=Math.cos(a);return{j,s:TPS[j],x:TPX[j]+nx*PARK_LAT,y:TPY[j]+ny*PARK_LAT,nx,ny};}
 function vanSpotOk(p,self){
@@ -2481,11 +2511,28 @@ function updateTraffic(dt){
       if(!v.park)v.prefLat=0;}
     if(v.kind==='van'){const s=updateVan(v,dt);if(s!=null)stopAt=s;}
     driveVehicle(v,ob,dt,stopAt);
-    if(v.lights)v.can=copCans[1+(((time*6)|0)&1)];else if(v.kind==='cop')v.can=copCans[0];
+    if(v.lights)v.can=copCans[1+(((time*6)|0)&1)];else if(v.kind==='cop')v.can=v.copDent||copCans[0];
     v.jamT=v.state!=='parked'&&v.v<1?(v.jamT||0)+dt:0;
     const off=v.x<camX-60||v.x>camX+VW+60||v.y<camY-60||v.y>camY+VH+60;
     if(v.s>=TPS[TPS.length-1]-1||(v.jamT>25&&off))traffic.splice(n,1);
   }
+}
+// a tall lamp post on the verge with a curved arm reaching out over the road; the lamp glows after dusk
+const LAMP_H=24;
+const lampHead=st=>[st.x+st.dx*10,st.y-LAMP_H+(st.dy>0?5:st.dy<0?-3:1)];
+function drawStreetlight(st,cx,cy){
+  const x=Math.round(st.x-cx),y=Math.round(st.y-cy);if(x<-20||x>VW+20||y<-40||y>VH+10)return;
+  const [hx0,hy0]=lampHead(st),hx=Math.round(hx0-cx),hy=Math.round(hy0-cy),top=y-LAMP_H,lit=sky(hour).dark>.05;
+  ctx.fillStyle='rgba(0,0,0,.28)';pellipse(ctx,x+3,y+1,5,2);ctx.fillRect(x+3,y,10,1);
+  // base and pole
+  ctx.fillStyle='#1c2024';ctx.fillRect(x-3,y-4,7,5);ctx.fillStyle='#4a5258';ctx.fillRect(x-2,y-4,5,3);ctx.fillStyle='#6b757c';ctx.fillRect(x-2,y-4,5,1);
+  ctx.fillStyle='#1c2024';ctx.fillRect(x-1,top,3,LAMP_H-3);ctx.fillStyle='#6b757c';ctx.fillRect(x,top,1,LAMP_H-4);ctx.fillStyle='#4a5258';ctx.fillRect(x+1,top+1,1,LAMP_H-5);
+  // arm: up from the pole top, then out to the head
+  const ax=st.dx?hx:x,ay=st.dy?hy:top;
+  ctx.fillStyle='#1c2024';pline(ctx,x,top,ax,ay-1,2);pline(ctx,ax,ay-1,hx,hy-1,2);ctx.fillStyle='#6b757c';pline(ctx,x,top,ax,ay-1,1);pline(ctx,ax,ay-1,hx,hy-1,1);
+  // head: dark hood over a warm lens
+  ctx.fillStyle='#14171a';ctx.fillRect(hx-4,hy-2,9,4);ctx.fillStyle='#3a4248';ctx.fillRect(hx-3,hy-2,7,2);
+  ctx.fillStyle=lit?'#fff6c8':'#cfc7a0';ctx.fillRect(hx-3,hy+1,7,1);ctx.fillStyle=lit?'#ffe38a':'#a8a07c';ctx.fillRect(hx-2,hy+2,5,1);
 }
 function drawTraffic(v,cx,cy){if(v.x-cx<-50||v.x-cx>VW+50||v.y-cy<-50||v.y-cy>VH+50)return;drawRotated(v.can,v.x,v.y,v.a,cx,cy,true);}
 function drawCourier(o,cx,cy){
@@ -2516,7 +2563,8 @@ function drawPackageCues(cx,cy){
     for(let i=0;i<16;i+=2){const a=i/16*Math.PI*2;ctx.fillRect(Math.round(hx+Math.cos(a)*PKG_RANGE),Math.round(hy+Math.sin(a)*PKG_RANGE*.7),1,1);}
     const x=k.x-cx,y=k.y-cy-k.z-2,a=Math.atan2(k.hy-k.y,k.hx-k.x);
     if(x>-6&&x<VW+6&&y>-6&&y<VH+6)drawArrow(x+Math.cos(a)*9,y+Math.sin(a)*9,a);
-    else{const ex=clamp(x,12,VW-12),ey=clamp(y,12,VH-12),dl=Math.hypot(x-ex,y-ey)||1;ctx.fillStyle='#120c08';pcircle(ctx,ex,ey,6);ctx.fillStyle='#ff9800';pcircle(ctx,ex,ey,5);
+    // off screen: point the way from the screen edge, but only if it's within about an 8 second walk
+    else if(Math.hypot(k.x-P.x,k.y-P.y)<PKG_CUE_WALK*78*moveMul()){const ex=clamp(x,12,VW-12),ey=clamp(y,12,VH-12),dl=Math.hypot(x-ex,y-ey)||1;ctx.fillStyle='#120c08';pcircle(ctx,ex,ey,6);ctx.fillStyle='#ff9800';pcircle(ctx,ex,ey,5);
       ctx.fillStyle='#120c08';ctx.fillRect(ex-3,ey-2,6,5);ctx.fillStyle='#b98a54';ctx.fillRect(ex-2,ey-1,4,3);
       drawArrow(ex+(x-ex)/dl*10,ey+(y-ey)/dl*10,Math.atan2(y-ey,x-ex));}
   }
@@ -2884,7 +2932,7 @@ function drawLighting(cx,cy){
   const lights=[];
   const [c,sn]=tdir();lights.push([TR.x+c*48,TR.y+sn*48,36,.95],[TR.x+c*78,TR.y+sn*78,32,.7],[TR.x,TR.y,22,.5]);
   for(const Lt of ALL_LOTS)lights.push([Lt.door.x+Lt.front[0]*8,Lt.door.y+Lt.front[1]*8,30,.85]);
-  for(const st of STREETLIGHTS)lights.push([st.x+1,st.y-18,62,.9]);
+  for(const st of STREETLIGHTS){const [hx,hy]=lampHead(st);lights.push([hx+st.dx*6,hy+LAMP_H-4+st.dy*16,60,.9],[hx,hy+1,9,1]);}
   const glows=[];
   for(const [wx,wy,r,a] of lights){const x=wx-cx,y=wy-cy;if(x<-r||x>VW+r||y<-r||y>VH+r)continue;
     const g=L.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(0,0,0,${a})`);g.addColorStop(.6,`rgba(0,0,0,${a*.6})`);g.addColorStop(1,'rgba(0,0,0,0)');L.fillStyle=g;L.fillRect(x-r,y-r,r*2,r*2);glows.push([x,y,r]);}
@@ -2928,6 +2976,7 @@ function render(){
   for(const m of MAILBOXES)if(m.flag)spr.push([m.y+3,()=>drawMailFlag(m,cx,cy)]);
   for(const b of birds){ctx.fillStyle='rgba(0,0,0,.16)';ctx.fillRect(Math.round(b.x-cx)-1,Math.round(b.y-cy),3,1);}
   for(const c of CARS)spr.push([c.y1,()=>drawCar(c,cx,cy)]);
+  for(const st of STREETLIGHTS)spr.push([st.y+1,()=>drawStreetlight(st,cx,cy)]);
   for(const p of POTS){if(p.x-cx<-14||p.x-cx>VW+14||p.y-cy<-4||p.y-cy>VH+24)continue;spr.push([p.y,()=>drawPot(p,cx,cy)]);}
   if(!driving)spr.push([P.y,()=>drawPlayer(cx,cy)]);
   spr.push([TR.y+12,()=>drawTruck(cx,cy)]);
