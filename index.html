@@ -21,12 +21,29 @@ canvas.gamecv,canvas#game{position:absolute;left:0;top:0;image-rendering:pixelat
 /* each view is a fixed box; it's transformed so the HUD inside positions itself against the view, not the window */
 .view{position:fixed;top:0;bottom:0;left:0;width:100%;overflow:hidden;transform:translateZ(0);}
 .view+.view{box-shadow:inset 2px 0 0 #10171a,inset 3px 0 0 rgba(255,255,255,.12);}
-#sharedBar{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:4;display:none;pointer-events:none;padding:8px 12px;width:210px;box-sizing:border-box;}
-#sharedBar .clock{margin-top:0;} #sharedBar .reprow{margin-top:8px;}
-#sharedBar .pot{font-size:11px;color:#9fb5b8;letter-spacing:1px;margin-top:6px;text-align:center;} #sharedBar .pot b{color:var(--gold);}
-body.coop #sharedBar{display:block;}
-body.coop .view .clock,body.coop .view .reprow{display:none;}
-body.coop .view #hudR{top:auto;bottom:140px;}
+/* co-op: one short, wide bar up top (bank | day | time | reputation | bank) */
+#sharedBar{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:4;display:none;pointer-events:none;padding:6px 10px;width:440px;box-sizing:border-box;
+  align-items:center;gap:10px;font-size:13px;}
+#sharedBar .day{background:var(--red);padding:3px 8px;border-radius:6px;box-shadow:0 3px 0 var(--red-d);}
+#sharedBar .time{background:var(--panel-in);padding:3px 8px;border-radius:6px;}
+#sharedBar .sm{flex:1;font-size:17px;font-weight:700;color:var(--gold);text-shadow:0 2px 0 #6b4a00,0 4px 0 rgba(0,0,0,.35);}
+#sharedBar .sm.p0{text-align:left;padding-left:8px;border-left:4px solid #c8352c;} #sharedBar .sm.p1{text-align:right;padding-right:8px;border-right:4px solid #2f9a5a;}
+#sharedBar .srep{display:flex;align-items:center;gap:5px;position:relative;} #sharedBar .srep b{font-size:15px;color:#cfe3e6;} #sharedBar .srep b.neg{color:var(--red);}
+#sharedBar .srep .reppop{right:auto;left:100%;margin-left:6px;}
+body.coop #sharedBar{display:flex;}
+/* each half: no money panel (it's in the shared bar), and a slimmer battery panel */
+body.coop .view #hud>.panel:first-child{display:none;}
+body.coop .view #hud{width:190px;}
+body.coop .view .pct{font-size:14px;min-width:40px;margin-left:6px;}
+/* the house you're at folds into one row along the bottom: shared in the middle, or one per player in their corner */
+#sharedLot{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:4;display:none;pointer-events:none;width:440px;}
+body.coop .lotpanel{display:flex;align-items:center;gap:12px;padding:6px 10px;}
+body.coop .lotpanel .lotid{min-width:0;flex:0 1 auto;} body.coop .lotpanel .lotname{font-size:13px;white-space:nowrap;} body.coop .lotpanel .lottag{font-size:9px;white-space:nowrap;}
+body.coop .lotpanel .lotbar{flex:1;margin-top:0;min-width:110px;} body.coop .lotpanel .lotbar .bar{height:18px;} body.coop .lotpanel .barnum{font-size:12px;} body.coop .lotpanel .bartot{font-size:13px;min-width:30px;}
+body.coop .lotpanel .lotbadge{position:static;order:3;flex:none;width:22px;height:22px;}
+body.coop .view #hudR{top:auto;bottom:12px;left:16px;transform:none;width:min(400px,calc(100% - 32px));}
+body.coop #view1 #hudR{left:auto;right:16px;}
+body.coop .view #hotbar{bottom:62px;} body.coop .view #prompt{bottom:118px;}
 /* player 2's panel sits in the far corner, clear of the shared bar */
 body.coop #view1 #hud{left:auto;right:16px;}
 body.coop #menuBtn{display:none!important;}
@@ -64,7 +81,7 @@ svg.px{shape-rendering:crispEdges;display:block;}
 .pct{margin-left:8px;font-size:17px;font-weight:700;text-shadow:0 3px 0 rgba(0,0,0,.45);min-width:50px;text-align:right;}
 .inv{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:13px;}
 .inv .spacer{flex:1;}
-.spares{display:flex;gap:3px;}
+.spares{display:flex;gap:4px;align-items:center;} .spares b.neg{color:var(--red);}
 .spares i{display:block;width:8px;height:13px;border-radius:2px;background:#1a2325;overflow:visible;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25),inset 0 2px 0 rgba(255,255,255,.35);position:relative;}
 .spares i:before{content:'';position:absolute;left:2px;top:-3px;width:4px;height:2px;background:#5d656d;border-radius:1px 1px 0 0;}
 .spares i b{position:absolute;left:0;right:0;bottom:0;border-radius:2px;box-shadow:inset 0 2px 0 rgba(255,255,255,.35),inset 0 -2px 0 rgba(0,0,0,.25);}
@@ -340,9 +357,8 @@ body.pad .padfocus.pf1{outline-color:#6fd18e;}
   </div>
 </div>
 <div id="hudR">
-  <div class="panel bob2" id="lotPanel">
-    <div class="lotname" id="lotName">-</div>
-    <div class="lottag" id="lotTag">-</div>
+  <div class="panel bob2 lotpanel" id="lotPanel">
+    <div class="lotid"><div class="lotname" id="lotName">-</div><div class="lottag" id="lotTag">-</div></div>
     <div class="lotbadge open" id="lotBadge"></div>
     <div class="lotbar"><div class="bar"><div id="lotBar"></div><i style="left:50%"></i><i style="left:70%"></i><i style="left:90%"></i><span class="barnum" id="lotGood">0</span></div><b class="bartot" id="lotTotal">0</b></div>
   </div>
@@ -351,7 +367,8 @@ body.pad .padfocus.pf1{outline-color:#6fd18e;}
 <div id="prompt"><div id="ptext"></div><div id="pbar"><div id="pfill"></div></div></div>
 </div>
 <div id="crt"></div>
-<div id="sharedBar" class="panel"><div class="clock"><span class="day" id="sDay">DAY 1</span><span class="time" id="sClock">7:00 AM</span></div><div class="reprow" id="sRepBox"><svg class="px" width="22" height="20" viewBox="0 0 11 10"><rect x="5" y="0" width="1" height="1" fill="#fff1b0"/><rect x="4" y="1" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="1" width="1" height="1" fill="#fff1b0"/><rect x="6" y="1" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="2" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="2" width="1" height="1" fill="#fff1b0"/><rect x="6" y="2" width="1" height="1" fill="#ffcf4a"/><rect x="0" y="3" width="1" height="1" fill="#b9861a"/><rect x="1" y="3" width="1" height="1" fill="#fff1b0"/><rect x="2" y="3" width="1" height="1" fill="#fff1b0"/><rect x="3" y="3" width="1" height="1" fill="#fff1b0"/><rect x="4" y="3" width="1" height="1" fill="#fff1b0"/><rect x="5" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="9" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="10" y="3" width="1" height="1" fill="#b9861a"/><rect x="1" y="4" width="1" height="1" fill="#b9861a"/><rect x="2" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="9" y="4" width="1" height="1" fill="#b9861a"/><rect x="2" y="5" width="1" height="1" fill="#b9861a"/><rect x="3" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="5" width="1" height="1" fill="#b9861a"/><rect x="3" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="6" width="1" height="1" fill="#b9861a"/><rect x="6" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="2" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="7" width="1" height="1" fill="#b9861a"/><rect x="6" y="7" width="1" height="1" fill="#b9861a"/><rect x="7" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="2" y="8" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="8" width="1" height="1" fill="#b9861a"/><rect x="7" y="8" width="1" height="1" fill="#b9861a"/><rect x="8" y="8" width="1" height="1" fill="#ffcf4a"/><rect x="1" y="9" width="1" height="1" fill="#b9861a"/><rect x="2" y="9" width="1" height="1" fill="#b9861a"/><rect x="8" y="9" width="1" height="1" fill="#b9861a"/><rect x="9" y="9" width="1" height="1" fill="#b9861a"/></svg><b id="sRepT">0</b><span class="lbl">REPUTATION</span></div><div class="pot" id="sPot"></div></div>
+<div id="sharedBar" class="panel"><span class="sm p0" id="sM0">$0</span><span class="day" id="sDay">DAY 1</span><span class="time" id="sClock">7:00 AM</span><span class="srep" id="sRepBox"><svg class="px" width="22" height="20" viewBox="0 0 11 10"><rect x="5" y="0" width="1" height="1" fill="#fff1b0"/><rect x="4" y="1" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="1" width="1" height="1" fill="#fff1b0"/><rect x="6" y="1" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="2" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="2" width="1" height="1" fill="#fff1b0"/><rect x="6" y="2" width="1" height="1" fill="#ffcf4a"/><rect x="0" y="3" width="1" height="1" fill="#b9861a"/><rect x="1" y="3" width="1" height="1" fill="#fff1b0"/><rect x="2" y="3" width="1" height="1" fill="#fff1b0"/><rect x="3" y="3" width="1" height="1" fill="#fff1b0"/><rect x="4" y="3" width="1" height="1" fill="#fff1b0"/><rect x="5" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="9" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="10" y="3" width="1" height="1" fill="#b9861a"/><rect x="1" y="4" width="1" height="1" fill="#b9861a"/><rect x="2" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="9" y="4" width="1" height="1" fill="#b9861a"/><rect x="2" y="5" width="1" height="1" fill="#b9861a"/><rect x="3" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="5" width="1" height="1" fill="#b9861a"/><rect x="3" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="6" width="1" height="1" fill="#b9861a"/><rect x="6" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="2" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="7" width="1" height="1" fill="#b9861a"/><rect x="6" y="7" width="1" height="1" fill="#b9861a"/><rect x="7" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="2" y="8" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="8" width="1" height="1" fill="#b9861a"/><rect x="7" y="8" width="1" height="1" fill="#b9861a"/><rect x="8" y="8" width="1" height="1" fill="#ffcf4a"/><rect x="1" y="9" width="1" height="1" fill="#b9861a"/><rect x="2" y="9" width="1" height="1" fill="#b9861a"/><rect x="8" y="9" width="1" height="1" fill="#b9861a"/><rect x="9" y="9" width="1" height="1" fill="#b9861a"/></svg><b id="sRepT">0</b></span><span class="sm p1" id="sM1">$0</span></div>
+<div id="sharedLot"><div class="panel lotpanel" id="lotPanel"><div class="lotid"><div class="lotname" id="lotName">-</div><div class="lottag" id="lotTag">-</div></div><div class="lotbadge open" id="lotBadge"></div><div class="lotbar"><div class="bar"><div id="lotBar"></div><i style="left:50%"></i><i style="left:70%"></i><i style="left:90%"></i><span class="barnum" id="lotGood">0</span></div><b class="bartot" id="lotTotal">0</b></div></div></div>
 <button id="menuBtn" title="Menu (Esc)"><svg class="px" width="20" height="18" viewBox="0 0 10 9"><rect x="0" y="0" width="10" height="2" fill="#cfe3e6"/><rect x="0" y="3.5" width="10" height="2" fill="#cfe3e6"/><rect x="0" y="7" width="10" height="2" fill="#cfe3e6"/></svg></button>
 <div id="padToast"></div>
 
@@ -1129,7 +1146,7 @@ function newPlayer(i,dev,prof){
   return{i,dev,pal:PLAYER_PALS[i],P:{x:0,y:0,vx:0,vy:0,walk:0},aim:{x:1,y:-.3},cam:{x:0,y:0},
     power:0,mode:0,battery:100,swapT:0,tieT:0,bundle:null,heldNet:null,carryPkg:null,driving:false,riding:false,
     equipped:pr.equipped||'std',owned:(pr.owned||['std']).slice(),upg:{spare:0,cap:0,tune:0,boots:0,tarp:0,bigtarp:0,sticky:0,light:0,solar:0,...pr.upg},money:pr.money||0,tarpsUsed:0,
-    bl:{nx:0,ny:0,range:0,cosH:1,tx:0,ty:0},lastEmptyBuzz:0,wasEmpty:false,netPrev:null,netFullT:-9,curLot:null,statsCache:null,statsT:0,autoMode:'kbm',vortexD:40};
+    bl:{nx:0,ny:0,range:0,cosH:1,tx:0,ty:0},lastEmptyBuzz:0,wasEmpty:false,netPrev:null,netFullT:-9,curLot:null,statsCache:null,statsT:0,autoMode:'kbm',vortexD:40,autoPad:-1};
 }
 function usePl(pl){if(cur)storePl();cur=pl;P=pl.P;aim=pl.aim;PPAL=pl.pal;power=pl.power;mode=pl.mode;battery=pl.battery;swapT=pl.swapT;tieT=pl.tieT;bundle=pl.bundle;heldNet=pl.heldNet;
   carryPkg=pl.carryPkg;driving=pl.driving;equipped=pl.equipped;owned=pl.owned;upg=pl.upg;money=pl.money;tarpsUsed=pl.tarpsUsed;bl=pl.bl;lastEmptyBuzz=pl.lastEmptyBuzz;
@@ -1160,9 +1177,10 @@ let p2Profile=null;
 function joinPlayer(dev){
   if(players.length>=2||state!=='play')return;
   const p1=players[0];storePl();
-  // player one stays on the device they're using now
-  if(p1.dev.t==='auto')p1.dev=p1.autoMode==='pad'&&pads[lastPadIdx]?{t:'pad',i:lastPadIdx}:{t:'kbm'};
-  const pl=newPlayer(1,dev,p2Profile);for(const k of SHARED_UPG)pl.upg[k]=p1.upg[k];
+  // player one keeps the keyboard and any spare controller; if player 2 is joining on the keyboard, player one
+  // stays on the controller they're holding and player 2 gets the keyboard (and spare controllers) instead
+  let d=dev;if(dev.t==='kbm'){const a=autoPl();if(a)a.dev={t:'pad',i:a.autoPad};d={t:'auto'};}
+  const pl=newPlayer(1,d,p2Profile);if(d.t==='auto'){pl.autoMode='kbm';pl.autoPad=-1;}for(const k of SHARED_UPG)pl.upg[k]=p1.upg[k];
   players.push(pl);
   withPl(pl,()=>{const [x,y]=onFoot(p1)?[p1.P.x+12,p1.P.y+4]:fromTruck(-6,-(TRUCK_HW+8));P.x=x;P.y=y;collidePlayer();battery=capacity();});
   pl.cam={...p1.cam};
@@ -1170,7 +1188,7 @@ function joinPlayer(dev){
   const v=makeView(root);v.pl=pl;pl.view=v;views.push(v);layoutViews();
   // from here the day's money goes in one pot, split at the end of the day
   today.coop=true;
-  padToast('PLAYER 2 JOINED');blip(660,.08,'square',.05);setTimeout(()=>blip(880,.12,'square',.05),90);
+  padToast(d.t==='wait'?'PLAYER 2: PICK UP A CONTROLLER':'PLAYER 2 JOINED');blip(660,.08,'square',.05);setTimeout(()=>blip(880,.12,'square',.05),90);
   usePl(players[0]);
 }
 function leavePlayer(pl){
@@ -1181,7 +1199,7 @@ function leavePlayer(pl){
   for(const p of peds.concat(couriers))if(p.bub){p.bub.el.remove();p.bub=null;}
   for(const f of floats)if(f.els[1])f.els[1].remove();
   players.splice(players.indexOf(pl),1);const v=pl.view;v.root.remove();views.splice(views.indexOf(v),1);
-  const p1=players[0],was=p1.dev;p1.dev={t:'auto'};p1.autoMode=was.t==='pad'?'pad':'kbm';if(was.t==='pad')lastPadIdx=was.i;
+  const p1=players[0],was=p1.dev;if(was.t==='pad'){p1.autoPad=was.i;p1.autoMode='pad';}p1.dev={t:'auto'};
   layoutViews();usePl(p1);padToast('PLAYER 2 LEFT');save();
 }
 // money in: straight to your bank on your own; into the shared pot in co-op
@@ -1240,18 +1258,23 @@ const mkPad=idx=>({lx:0,ly:0,rx:0,ry:0,lt:0,rt:0,b:new Array(17).fill(false),pb:
 // ZERO_PAD stands in for "no controller"; MERGED is every pad at once, for menus
 const ZERO_PAD=mkPad(-1),MERGED=mkPad(-2),pads={};let lastPadIdx=-1,pad=ZERO_PAD;
 const padOwner=idx=>players.find(pl=>pl.dev.t==='pad'&&pl.dev.i===idx)||null;
-function devPad(pl){const d=pl.dev;if(d.t==='pad')return pads[d.i]||ZERO_PAD;if(d.t==='kbm')return ZERO_PAD;return pads[lastPadIdx]||ZERO_PAD;}
-function devMode(pl){return pl.dev.t==='pad'?'pad':pl.dev.t==='kbm'?'kbm':pl.autoMode;}
+// Devices: 'auto' is the keyboard and mouse plus any controller nobody else owns (whichever was used last);
+// 'pad' is one particular controller; 'wait' is a second player who hasn't picked a controller up yet
+const autoPl=()=>players.find(pl=>pl.dev.t==='auto')||null,waitPl=()=>players.find(pl=>pl.dev.t==='wait')||null;
+function devPad(pl){const d=pl.dev;if(d.t==='pad')return pads[d.i]||ZERO_PAD;if(d.t==='auto')return pads[pl.autoPad]||ZERO_PAD;return ZERO_PAD;}
+function devMode(pl){return pl.dev.t==='pad'?'pad':pl.dev.t==='auto'?pl.autoMode:'kbm';}
 let padObj=null,padDetected='xbox',inputMode='kbm';
 const padStyle=()=>padPrefs.style||padDetected;
 const glyphStyle=()=>inputMode==='pad'?(padPrefs.style||pad.style||padDetected):'kbm';
 const detectStyle=id=>!/xbox|xinput|045e/i.test(id)&&/054c|sony|playstation|dualsense|dualshock|^wireless controller/i.test(id)?'ps':'xbox';
 const anyPad=()=>!!navigator.getGamepads&&[...navigator.getGamepads()].some(g=>g&&g.connected);
 // whichever device was touched last decides the prompts, the aim style and the cursor
-function setInputMode(m){
-  // only a lone player swaps devices on the fly; in co-op each player keeps the device they joined with
-  const p1=players[0];if(!p1||p1.dev.t!=='auto'||p1.autoMode===m)return;
-  p1.autoMode=m;if(cur===p1){inputMode=m;pad=devPad(p1);padObj=pad.obj||null;}document.body.classList.toggle('pad',m==='pad');refreshGlyphs();
+function setInputMode(m,idx){
+  // the keyboard player hops between keyboard/mouse and any spare controller, whichever they touched last
+  const pl=autoPl();if(!pl)return;
+  if(pl.autoMode===m&&(idx==null||pl.autoPad===idx))return;
+  pl.autoMode=m;if(idx!=null)pl.autoPad=idx;if(cur===pl){inputMode=m;pad=devPad(pl);padObj=pad.obj||null;}
+  if(!coop())document.body.classList.toggle('pad',m==='pad');refreshGlyphs();
   if(m!=='pad')stopRumble();
   if(state==='menu'&&!ctlPicked)showCtl(m==='pad'?padStyle():'kbm');
 }
@@ -1269,16 +1292,20 @@ function pollPad(){
     p.lt=val(6);p.rt=val(7);
     for(let i=0;i<17;i++){const b=bt[i];p.b[i]=b!=null&&(b.pressed||val(i)>.5);}
     if(p.lock&&p.lt<.15&&p.rt<.15)p.lock=false;
-    // a lone player follows whichever pad they pick up (Start on its own doesn't count: that might be someone joining)
-    let fresh=false;for(let i=0;i<17;i++)if(p.b[i]&&!p.pb[i]&&i!==BTN.pause)fresh=true;
-    if((fresh||Math.hypot(p.lx,p.ly)>.5||Math.hypot(p.rx,p.ry)>.5)&&!coop()){lastPadIdx=g.index;setInputMode('pad');if(cur===players[0]){pad=p;padObj=g;}}
+    // a controller nobody owns: a waiting player 2 claims it; otherwise it takes over from the keyboard player
+    // (Start on its own doesn't count unless someone's waiting: it might be a friend holding it to join)
+    const w=waitPl(),a=autoPl();
+    let fresh=false;for(let i=0;i<17;i++)if(p.b[i]&&!p.pb[i]&&(i!==BTN.pause||w))fresh=true;
+    if((fresh||Math.hypot(p.lx,p.ly)>.5||Math.hypot(p.rx,p.ry)>.5)&&!padOwner(g.index)){
+      if(w&&!(a&&a.autoMode==='pad'&&a.autoPad===g.index)){w.dev={t:'pad',i:g.index};for(let i=0;i<17;i++)p.pb[i]=p.b[i];p.lock=true;padToast('PLAYER 2 IS READY');}
+      else if(a){setInputMode('pad',g.index);if(cur===a){pad=p;padObj=g;}}}
   }
   for(const k in pads)if(!seen.has(+k))delete pads[k];
   // every pad at once, for the menus
   const M=MERGED;for(let i=0;i<17;i++){M.pb[i]=M.b[i];M.b[i]=false;}M.lx=M.ly=M.rx=M.ry=M.lt=M.rt=0;M.obj=null;
   for(const k in pads){const p=pads[k];if(!M.obj)M.obj=p.obj;for(let i=0;i<17;i++)if(p.b[i])M.b[i]=true;
     for(const a of ['lx','ly','rx','ry','lt','rt'])if(Math.abs(p[a])>Math.abs(M[a]))M[a]=p[a];}
-  M.style=(pads[lastPadIdx]||{}).style||padDetected;
+  {const ap=autoPl();M.style=((ap&&pads[ap.autoPad])||{}).style||padDetected;}
   if(cur){pad=devPad(cur);padObj=pad.obj||null;}
 }
 const padHit=i=>pad.b[i]&&!pad.pb[i];
@@ -1292,7 +1319,7 @@ function padInput(dt){
   if(state==='play'){
     for(const pl of players){if(devPad(pl)===ZERO_PAD)continue;withPl(pl,()=>playPad(dt));if(state!=='play')break;}
     for(const k in pads){const p=pads[k];if(!p.startTap)continue;p.startTap=false;
-      if(state==='play'&&!padOwnedNow(p.idx)){if(!coop()){lastPadIdx=p.idx;setInputMode('pad');}openMenu(false,coop()?padOwner(p.idx)||players[0]:players[0]);}}
+      if(state==='play'&&!padOwnedNow(p.idx)){if(!coop())setInputMode('pad',p.idx);openMenu(false,coop()?padOwner(p.idx)||players[0]:players[0]);}}
   }else{for(const k in pads)pads[k].startTap=false;
     if(state==='shop'&&coop()){for(const pl of players)if(devPad(pl)!==ZERO_PAD)shopPadNav(pl,dt);}
     else if(state==='title'||state==='menu'||state==='closeout'||state==='shop'){const sv=pad;pad=MERGED;menuNav(dt);pad=sv;}}
@@ -1306,11 +1333,11 @@ function shopPadNav(pl,dt){
   ns.focus=padFocus;ns.navT=navT;ns.navDir=navDir;inputMode=st;navFilter=null;focusCls='';[pad,padFocus,navT,navDir]=sv;
 }
 // is this pad already somebody's, right now?
-const padOwnedNow=idx=>players.some(pl=>pl.dev.t==='pad'?pl.dev.i===idx:pl.dev.t==='auto'&&pl.autoMode==='pad'&&lastPadIdx===idx);
+const padOwnedNow=idx=>players.some(pl=>pl.dev.t==='pad'?pl.dev.i===idx:pl.dev.t==='auto'&&pl.autoMode==='pad'&&pl.autoPad===idx);
 function canJoinWith(dev){
   if(players.length>=2)return false;const p1=players[0];
   if(dev.t==='pad')return !padOwnedNow(dev.i);
-  return p1.dev.t==='pad'||(p1.dev.t==='auto'&&p1.autoMode==='pad');
+  const a=autoPl();return !!a&&a.autoMode==='pad';
 }
 function playPad(dt){
   if(!padObj)return;
@@ -1507,7 +1534,7 @@ addEventListener('gamepaddisconnected',()=>{setTimeout(()=>{
 const modalEl=document.getElementById('modal'),titleEl=document.getElementById('title');
 addEventListener('keydown',e=>{
   // (Enter during play is the keyboard's join button, so it doesn't pull a controller player onto the keyboard)
-  if(!(e.code==='Enter'&&state==='play'))setInputMode('kbm');
+  if(!(e.code==='Enter'&&state==='play')&&!kbClaim())setInputMode('kbm');
   if(e.repeat&&(e.code==='KeyE'||e.code==='KeyQ'))return;
   keys[e.code]=true;
   if(e.code.startsWith('Arrow')||e.code==='Space'||e.code==='Tab')e.preventDefault();
@@ -1534,10 +1561,11 @@ addEventListener('keydown',e=>{
 });
 addEventListener('keyup',e=>{keys[e.code]=false;if(e.code==='Enter')enterDownAt=0;});
 // whoever is on the keyboard and mouse: the lone player, or whichever co-op player joined on it
-const kbmPl=()=>players.find(pl=>pl.dev.t==='kbm'||(pl.dev.t==='auto'))||null;
+const kbmPl=()=>autoPl();
+function kbClaim(){const w=waitPl(),a=autoPl();if(w&&a&&a.autoMode==='pad'&&state==='play'){a.dev={t:'pad',i:a.autoPad};w.dev={t:'auto'};w.autoMode='kbm';w.autoPad=-1;padToast('PLAYER 2 IS ON THE KEYBOARD');return true;}return false;}
 let enterDownAt=0;
 addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;if(Math.abs(e.movementX)+Math.abs(e.movementY)>2)setInputMode('kbm');});
-addEventListener('mousedown',e=>{setInputMode('kbm');if(state!=='play')return;if(e.button===0)mouse.l=true;if(e.button===2)mouse.r=true;ensureAudio();});
+addEventListener('mousedown',e=>{if(!kbClaim())setInputMode('kbm');if(state!=='play')return;if(e.button===0)mouse.l=true;if(e.button===2)mouse.r=true;ensureAudio();});
 addEventListener('mouseup',e=>{if(e.button===0)mouse.l=false;if(e.button===2)mouse.r=false;});
 addEventListener('wheel',e=>{if(state!=='play'||!kbmPl())return;withPl(kbmPl(),()=>cycleNozzle(e.deltaY>0?1:-1));},{passive:true});
 addEventListener('contextmenu',e=>e.preventDefault());
@@ -1841,12 +1869,13 @@ function openMenuAs(first){
   const head=first?`<h2>HOW TO PLAY</h2><div class="goal">BLOW LEAVES INTO THE <span style="color:var(--green)">GREEN</span> BEDS AND KEEP THEM OUT OF THE <span style="color:var(--red)">RED</span> ZONES.<br>THEN KNOCK ON THE FRONT DOOR TO GET PAID.</div>`
     :`<h2>PAUSED</h2><div class="sub">DAY ${day} &middot; ${fmtHour(hour)}</div>`;
   const btns=first?`<button class="btn green bounce" id="mResume">GOT IT! ${G('ok')}</button>`
-    :`<button class="btn green" id="mResume">RESUME ${G('back')}</button><button class="btn red" id="mEnd">END THE DAY</button>${cur!==players[0]?'<button class="btn gold" id="mLeave">LEAVE GAME</button>':''}`;
+    :`<button class="btn green" id="mResume">RESUME ${G('back')}</button><button class="btn red" id="mEnd">END THE DAY</button>${cur!==players[0]?'<button class="btn gold" id="mLeave">LEAVE GAME</button>':''}${players.length<2?'<button class="btn gold" id="mAdd">+ PLAYER 2</button>':''}`;
   modalEl.innerHTML=`<div class="panel pause">${head}${ctlSeg()}<div id="ctlWrap"></div><div class="btns">${btns}</div></div>`;
   modalEl.classList.remove('hide');
   modalEl.querySelectorAll('[data-cv]').forEach(b=>b.onclick=()=>pickCtl(b.dataset.cv));showCtl(ctlView);
   document.getElementById('mResume').onclick=closeMenu;
   if(!first)document.getElementById('mEnd').onclick=()=>{modalEl.classList.add('hide');state='play';endDay();};
+  const ad=document.getElementById('mAdd');if(ad)ad.onclick=()=>{modalEl.classList.add('hide');state='play';document.body.style.cursor='none';joinPlayer({t:'wait'});};
   const lv=document.getElementById('mLeave');if(lv){const who=cur;lv.onclick=()=>{modalEl.classList.add('hide');state='play';leavePlayer(who);};}
 }
 function closeMenu(){if(state!=='menu')return;modalEl.classList.add('hide');state='play';document.body.style.cursor='none';}
@@ -2352,7 +2381,7 @@ function spawnCameo(){
 }
 function drawCameo(p,cx,cy){
   const x=Math.round(p.x-cx),y=Math.round(p.y-cy);if(x<-26||x>VW+26||y<-30||y>VH+30)return;
-  const C=CAMEOS[p.who],fd=p.fdir,run=p.run>0,t=C.tall,s=p.stop>0?0:Math.round(Math.sin(p.walk)*(run?3:2));
+  const C=CAMEOS[p.who],fd=p.fdir,run=p.run>0,t=C.tall;
   // Blu leads the way on the leash, and pulls further out front when they're running
   const ld=run?16:12,dx=Math.round(x+p.mx*ld-p.my*4),dy=Math.round(y+2+p.my*ld),hop=Math.round(Math.abs(Math.sin(p.walk*(run?2.4:1.8)))*(run?2:1));
   const dog=()=>{ctx.fillStyle='rgba(0,0,0,.25)';ctx.fillRect(dx-3,dy+1,8,2);
@@ -2364,13 +2393,11 @@ function drawCameo(p,cx,cy){
     ctx.fillStyle='#2a6fc9';ctx.fillRect(dx+(fd>0?0:-1),dy-2-hop,2,3);ctx.fillStyle='#1d4f9a';ctx.fillRect(dx-3,dy-1-hop,5,1);};
   const leash=()=>{ctx.fillStyle='#1d4f9a';pline(ctx,x+fd*3,y-4-t,dx+(fd>0?0:-1),dy-2-hop,1);};
   const walker=()=>{
-    ctx.fillStyle='rgba(0,0,0,.28)';pellipse(ctx,x+1,y+1,4,2);
-    ctx.fillStyle='#2b2b3a';ctx.fillRect(x-2+s*fd,y,2,1);ctx.fillRect(x+1-s*fd,y,2,1);
-    ctx.fillStyle=C.pants;ctx.fillRect(x-2+s*fd,y-1-t,2,1+t);ctx.fillRect(x+1-s*fd,y-1-t,2,1+t);
-    const by=y-4-t;ctx.fillStyle='rgba(0,0,0,.35)';pcircle(ctx,x,by+1,4);ctx.fillStyle=C.shirt;pcircle(ctx,x,by,3);
-    if(C.stripe){ctx.fillStyle=C.stripe;ctx.fillRect(x-2,by+1,5,1);ctx.fillRect(x-1,by+3,3,1);}
-    ctx.fillStyle=C.skin;pcircle(ctx,x,by-3,2);ctx.fillStyle=C.hair;ctx.fillRect(x-2,by-5,5,2);
-    if(C.long)ctx.fillRect(x-(fd>0?2:-2),by-4,1,5);else ctx.fillRect(x-(fd>0?2:-2),by-4,1,2);};
+    ctx.fillStyle='rgba(0,0,0,.28)';pellipse(ctx,x+1,y+1,3,2);
+    pedLegs(p,x,y,C.pants,3+t,'#2b2b3a');
+    const ty=y-7-t;pedBody(x,ty,C.shirt,C.stripe);
+    ctx.fillStyle=C.skin;pcircle(ctx,x,ty-2,2);ctx.fillStyle=C.hair;ctx.fillRect(x-2,ty-4,5,2);
+    if(C.long)ctx.fillRect(x-(fd>0?2:-2),ty-3,1,5);else ctx.fillRect(x-(fd>0?2:-2),ty-3,1,2);};
   if(dy<y){dog();leash();walker();}else{walker();leash();dog();}
 }
 function complain(p,msg){
@@ -2921,7 +2948,7 @@ function updatePlayer(dt){
   // a passenger just rides along in the cab
   if(cur.riding){const [x,y]=fromTruck(2,TRUCK_HW-5);P.x=x;P.y=y;P.vx=P.vy=0;power=0;mode=0;return;}
   let ix=0,iy=0;
-  const usesKeys=cur.dev.t!=='pad';
+  const usesKeys=cur.dev.t==='auto';
   if(usesKeys){if(keys.KeyA||keys.ArrowLeft)ix--;if(keys.KeyD||keys.ArrowRight)ix++;if(keys.KeyW||keys.ArrowUp)iy--;if(keys.KeyS||keys.ArrowDown)iy++;}
   ix+=pad.lx;iy+=pad.ly;
   if(tieT>0)tieT-=dt;
@@ -3145,17 +3172,33 @@ function drawCar(c,cx,cy){
   const j=c.jolt>0?Math.round((rnd()-.5)*3*c.jolt*4):0;
   drawRotated(c.can,mx+j,my,a,cx,cy,true);
 }
+// legs that actually stride: walking sideways they swing past each other (the leg coming forward lifts a pixel);
+// walking up or down the sidewalk they step alternately. len = how tall the legs are
+// a slim torso: 5px wide with the top corners rounded off, thin arms in a darker shade either side
+function pedBody(x,ty,shirt,stripe){
+  ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(x-3,ty+1,7,4);
+  ctx.fillStyle=shadeHex(shirt,.68);ctx.fillRect(x-3,ty+1,1,3);ctx.fillRect(x+3,ty+1,1,3);
+  ctx.fillStyle=shirt;ctx.fillRect(x-1,ty,3,1);ctx.fillRect(x-2,ty+1,5,4);
+  ctx.fillStyle=shadeHex(shirt,1.18);ctx.fillRect(x-1,ty+1,2,1);
+  if(stripe){ctx.fillStyle=stripe;ctx.fillRect(x-2,ty+2,5,1);ctx.fillRect(x-2,ty+4,5,1);}
+}
+function pedLegs(p,x,y,col,len,shoe){
+  const moving=!(p.stop>0),ph=p.walk,sw=moving?Math.sin(ph):0,lift=moving?Math.cos(ph):0,side=Math.abs(p.mx)>=Math.abs(p.my);
+  const put=(lx,ly)=>{ctx.fillStyle=col;ctx.fillRect(lx,ly-len+1,2,len);if(shoe){ctx.fillStyle=shoe;ctx.fillRect(lx,ly,2,1);}};
+  if(side){const st=Math.round(sw*2)*(p.mx>=0?1:-1);put(x-1+st,y-(lift>.3?1:0));put(x-1-st,y-(lift<-.3?1:0));}
+  else{const f=p.my>0?1:-1,st=Math.round(sw);put(x-2,y+st*f-(sw>.3?1:0));put(x+1,y-st*f-(sw<-.3?1:0));}
+}
 function drawPed(p,cx,cy){
   const x=Math.round(p.x-cx),y=Math.round(p.y-cy);if(x<-20||x>VW+20||y<-20||y>VH+30)return;
   const fd=p.fdir;
-  const s=p.stop>0?0:Math.sin(p.walk)*2,shake=p.mad>0?Math.round(Math.sin(time*40)):0;
+  const shake=p.mad>0?Math.round(Math.sin(time*40)):0;
   if(p.dog){const dx=Math.round(x-p.mx*10),dy=Math.round(y+3-p.my*10),ds=p.stop>0?0:Math.round(Math.sin(p.walk*1.6));ctx.fillStyle='rgba(0,0,0,.25)';ctx.fillRect(dx-3,dy+1,7,2);
     ctx.fillStyle='#7a4a2a';ctx.fillRect(dx-3,dy-2,6,3);ctx.fillStyle='#5a341f';ctx.fillRect(dx+(fd>0?3:-4),dy-3+ds,2,3);ctx.fillRect(dx-(fd>0?4:-3),dy-3,1,1);
     ctx.fillStyle='#c9352b';pline(ctx,dx+fd*3,dy-2,x-fd*2,y-3,1);}
-  ctx.fillStyle='rgba(0,0,0,.28)';pellipse(ctx,x+1,y+1,4,2);
-  ctx.fillStyle='#2b2b3a';ctx.fillRect(x-2+Math.round(s)*fd,y-1,2,2);ctx.fillRect(x+1-Math.round(s)*fd,y-1,2,2);
-  ctx.fillStyle='rgba(0,0,0,.35)';pcircle(ctx,x+shake,y-3,4);ctx.fillStyle=p.shirt;pcircle(ctx,x+shake,y-4,3);
-  ctx.fillStyle='#f2c29a';pcircle(ctx,x+shake,y-7,2);ctx.fillStyle=p.hair;ctx.fillRect(x-2+shake,y-9,5,2);ctx.fillRect(x-(fd>0?2:-2)+shake,y-8,1,2);
+  ctx.fillStyle='rgba(0,0,0,.28)';pellipse(ctx,x+1,y+1,3,2);
+  pedLegs(p,x,y,'#2b2b3a',3);
+  pedBody(x+shake,y-7,p.shirt,null);
+  ctx.fillStyle='#f2c29a';pcircle(ctx,x+shake,y-9,2);ctx.fillStyle=p.hair;ctx.fillRect(x-2+shake,y-11,5,2);ctx.fillRect(x-(fd>0?2:-2)+shake,y-10,1,2);
   if(p.mad>0){ctx.fillStyle='#fe5f55';ctx.fillRect(x+shake,y-16,2,4);ctx.fillRect(x+shake,y-11,2,1);}
 }
 function drawZoneHints(cx,cy,L){
@@ -3211,7 +3254,7 @@ function drawCursor(cx,cy){
   if(driving||cur.riding||state!=='play')return;
   if(inputMode==='pad')drawAimLine(cx,cy);
   else{
-    if(cur.dev.t==='pad')return;
+    if(cur.dev.t!=='auto')return;
     const mx=Math.floor((mouse.x-HV.left+canOff.x)/scale),my=Math.floor((mouse.y+canOff.y)/scale);if(mx<0||mx>VW)return;
     const col=bundle?'#8a9a9d':mode===2?'#fe5f55':mode===1?'#009dff':'#ffffff',g=2+(mode?Math.round(Math.sin(time*30)*.6+power*.7):0);
     const bars=[[mx-g-3,my,3,1],[mx+g+1,my,3,1],[mx,my-g-3,1,3],[mx,my+g+1,1,3],[mx,my,1,1]];
@@ -3323,14 +3366,28 @@ function updateHUD(dt){
   // the reputation readout, day and clock live in the first view on your own, or the shared bar in co-op
   const C=coop(),RT=C?$('sRepT'):$('repT'),RB=C?$('sRepBox'):$('repBox');
   if(C){setIfG('sday',day,v=>{$('sDay').textContent='DAY '+v;});setIfG('sclock',fmtHour(hour),v=>{$('sClock').textContent=v;});
-    setIfG('spot',Math.round(today?today.pot:0),v=>{$('sPot').innerHTML=`TODAY'S TAKE <b>${fmt$(v)}</b> &middot; SPLIT 50/50`;});}
+    players.forEach((pl,i)=>setIfG('sm'+i,Math.round(pl===cur?money:pl.money),v=>{$('sM'+i).textContent=fmt$(v);}));}
   if(state==='play'||state==='menu'||state==='closeout'){const t=repTally().total;
     if(t!==repShown||RT.dataset.v===undefined){RT.dataset.v=1;const el=RT,tot=rep+t;el.textContent=(tot<0?'\u2212':'')+Math.abs(tot);el.className=tot<0?'neg':'';
-      if(repShown!=null&&state==='play'){const d=t-repShown,p=document.createElement('span');p.className='reppop';p.textContent=(d>0?'+':'\u2212')+Math.abs(d);p.style.color=d>0?'var(--green)':'var(--red)';RB.querySelectorAll('.reppop').forEach(q=>q.remove());RB.appendChild(p);setTimeout(()=>p.remove(),1500);}
+      if(repShown!=null&&state==='play'&&t!==repShown){const d=t-repShown,p=document.createElement('span');p.className='reppop';p.textContent=(d>0?'+':'\u2212')+Math.abs(d);p.style.color=d>0?'var(--green)':'var(--red)';RB.querySelectorAll('.reppop').forEach(q=>q.remove());RB.appendChild(p);setTimeout(()=>p.remove(),1500);}
       repShown=t;}}
   setIfG('menuShow',state==='play'||state==='menu',v=>{menuBtn.style.display=v?'flex':'none';});
   for(const v of views){HV=v;withPl(v.pl,()=>hudView(dt));}
   HV=views[0];
+  // co-op, both at the same house (or only one of you at one): a single house panel along the bottom middle
+  const SL=$('sharedLot'),lots=C?[...new Set(players.map(p=>p.curLot).filter(Boolean))]:[],one=lots.length===1?lots[0]:null,who=one&&players.find(p=>p.curLot===one);
+  setIfG('slShow',!!(one&&who.statsCache&&state==='play'),v=>{SL.style.display=v?'block':'none';});
+  if(one&&who.statsCache){const st=who.statsCache;setIfG('sl',one.k+':'+st.good+':'+st.total+':'+st.pct.toFixed(3)+':'+one.done,()=>paintLot(id=>SL.querySelector('#'+id),one,st));}
+}
+function paintLot(q,L,s){
+  const pct=Math.round(s.pct*100);
+  q('lotName').textContent=L.name;q('lotTag').textContent=`#${L.k+1} · ${L.tag}`;
+  q('lotBar').style.width=pct+'%';q('lotBar').style.background=pct>=90?'#4bc26a':pct>=70?'#ffcf4a':pct>=50?'#ff9800':'#fe5f55';
+  const marks=[50,70,90];q('lotPanel').querySelectorAll('.bar i').forEach((m,i)=>m.classList.toggle('hit',pct>=marks[i]));
+  q('lotGood').textContent=s.good;q('lotTotal').textContent=s.total;
+  const bd=q('lotBadge');bd.className='lotbadge '+(L.done?'paid':'open');
+  bd.innerHTML=L.done?'<svg class="px" width="16" height="16" viewBox="0 0 8 8"><path d="M1 4h1v1h1v1h1V5h1V4h1V3h1V2h1v2H7v1H6v1H5v1H4v1H3V7H2V6H1z" fill="#fff"/></svg>'
+    :'<svg class="px" width="16" height="16" viewBox="0 0 8 8"><path d="M3 0h2v1h2v1H3v1h3v1h1v2H6v1H5v1H3V7H1V6h4V5H2V4H1V2h1V1h1z" fill="#fff"/></svg>';
 }
 // one view's HUD, as its own player
 function hudView(dt){
@@ -3345,7 +3402,8 @@ function hudView(dt){
   const top=battery>0&&rate>0?Math.min(9,Math.ceil(bp*10)-1):-1;
   setIf('usecell',top,v=>{E('cellEls').forEach((c,i)=>c.parentNode.classList.toggle('use',i===v));});
   setIf('rate',rate.toFixed(2),()=>{E('bbar').style.setProperty('--spd',rate>0?(1.6/rate).toFixed(2)+'s':'1s');});
-  setIf('spares',bed.map(c=>Math.round(c*12)).join()+(charging()?'s':''),()=>{E('spares').innerHTML=bed.map(c=>`<i class="${c<.05?'used':''}"><b style="height:${Math.round(c*100)}%;background:${levelCol(c)}"></b></i>`).join('')+(charging()?SUN_SVG:'');});
+  // the truck's spares: one battery icon (filled to the best one's charge) and how many there are
+  setIf('spares',bed.length+':'+Math.round(bestSpare()*10)+(charging()?'s':''),()=>{const b=bestSpare();E('spares').innerHTML=`<i class="${b<.05?'used':''}"><b style="height:${Math.round(b*100)}%;background:${levelCol(b)}"></b></i><b class="${b<.05?'neg':''}">&times;${bed.length}</b>${charging()?SUN_SVG:''}`;});
   setIf('cash',Math.round(money),v=>{E('cash').textContent=fmt$(v);});
   setIf('day',day,v=>{E('dayl').textContent='DAY '+v;});
   setIf('clock',fmtHour(hour),v=>{E('clock').textContent=v;});
@@ -3359,21 +3417,15 @@ function hudView(dt){
   const L=driving?lotAtPoint(TR.x,TR.y,FRONT+30):lotAtPoint(P.x,P.y);
   if(L!==curLot){curLot=L;statsCache=null;statsT=1;}
   statsT+=dt;
-  setIf('lotShow',!!L,v=>{E('lotPanel').style.display=v?'block':'none';});
-  if(L&&(statsT>.25||!statsCache)){statsT=0;statsCache=lotStats(L);
-    const s=statsCache,pct=Math.round(s.pct*100);
-    E('lotName').textContent=L.name;E('lotTag').textContent=`#${L.k+1} · ${L.tag}`;
-    E('lotBar').style.width=pct+'%';E('lotBar').style.background=pct>=90?'#4bc26a':pct>=70?'#ffcf4a':pct>=50?'#ff9800':'#fe5f55';
-    const marks=[50,70,90];E('lotPanel').querySelectorAll('.bar i').forEach((m,i)=>m.classList.toggle('hit',pct>=marks[i]));
-    E('lotGood').textContent=s.good;E('lotTotal').textContent=s.total;
-    const bd=E('lotBadge');bd.className='lotbadge '+(L.done?'paid':'open');
-    bd.innerHTML=L.done?'<svg class="px" width="16" height="16" viewBox="0 0 8 8"><path d="M1 4h1v1h1v1h1V5h1V4h1V3h1V2h1v2H7v1H6v1H5v1H4v1H3V7H2V6H1z" fill="#fff"/></svg>'
-      :'<svg class="px" width="16" height="16" viewBox="0 0 8 8"><path d="M3 0h2v1h2v1H3v1h3v1h1v2H6v1H5v1H3V7H1V6h4V5H2V4H1V2h1V1h1z" fill="#fff"/></svg>';
-  }
+  // in co-op a view only shows its own house panel when the two of you are at different houses
+  const showL=!!L&&(!coop()||new Set(players.map(p=>p===cur?L:p.curLot).filter(Boolean)).size===2);
+  setIf('lotShow',showL,v=>{E('lotPanel').style.display=v?'':'none';});
+  if(L&&(statsT>.25||!statsCache)){statsT=0;statsCache=lotStats(L);paintLot(E,L,statsCache);}
   let cls='',txt='';
   if(state==='play'){
-    const part=truckPart(),door=nearDoor();
-    if(swapT>0){cls='busy';txt='SWAPPING BATTERY...';E('pfill').style.width=((1-swapT/SWAP_TIME)*100).toFixed(1)+'%';}
+    const part=truckPart(),door=nearDoor(),a=autoPl();
+    if(cur.dev.t==='wait'){cls='swap';txt=`PRESS ANY BUTTON ON A CONTROLLER${a&&a.autoMode==='pad'?' (OR A KEY)':''} TO PLAY`;}
+    else if(swapT>0){cls='busy';txt='SWAPPING BATTERY...';E('pfill').style.width=((1-swapT/SWAP_TIME)*100).toFixed(1)+'%';}
     else if(tieT>0){cls='busy';txt='TYING UP THE TARP...';E('pfill').style.width=((1-tieT/TIE_T)*100).toFixed(1)+'%';}
     else if(mode===2&&hour>=LATE_HOUR){cls='dead';txt='IT\'S AFTER 8 PM! HIGH SPEED IS HURTING YOUR REPUTATION';}
     else if(cur.riding){if(Math.abs(TR.v)<=35){cls='info';txt=`RIDING ALONG  ·  ${G('use')} GET OUT`;}}
