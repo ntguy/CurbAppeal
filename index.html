@@ -641,6 +641,8 @@ function zoneOutline(z,house){
   }
   return Int16Array.from(out);
 }
+// side fences closing off the backyard, with a gate each side; switched off but kept for later
+const BACKYARD_FENCES=false;
 function makeLot(k,s,w,d,R,filler,custom){
   const L={k,style:s,w,d,filler:!!filler,lz:[],lpaved:[],lcars:[],ltrees:[],lpots:[],lnets:[],deco:[],name:filler?'':NAMES[k],tag:filler?'':TAGS[k],done:false,hauled:0,paidAmt:0};
   L.lfences=[{x0:0,y0:0,x1:6,y1:d},{x0:w-6,y0:0,x1:w,y1:d},{x0:0,y0:0,x1:w,y1:6}];
@@ -652,9 +654,9 @@ function makeLot(k,s,w,d,R,filler,custom){
   const door=L.ldoor,occ=[{x0:hx-4,y0:hy-4,x1:hx+hw+4,y1:hy+hh+8}];
   L.lpaved.push({x0:door.x-5,y0:hy+hh+6,x1:door.x+5,y1:d,kind:'path'});
   occ.push({x0:door.x-8,y0:hy+hh,x1:door.x+8,y1:d});
-  // backyard fence: from each side of the house out to the side fence, with a gate gap in each run
+  // backyard fence: from each side of the house out to the side fence, with a gate gap in each run (off for now)
   const fy=hy+Math.round(hh*.45),GATE=20;L.gates=[];
-  for(const [a,b] of [[6,hx],[hx+hw,w-6]]){const len=b-a;if(len<GATE+12){if(len>0)occ.push({x0:a,y0:fy-6,x1:b,y1:fy+12});continue;}
+  if(BACKYARD_FENCES)for(const [a,b] of [[6,hx],[hx+hw,w-6]]){const len=b-a;if(len<GATE+12){if(len>0)occ.push({x0:a,y0:fy-6,x1:b,y1:fy+12});continue;}
     const gx=a<hx?a+Math.round((len-GATE)*.5):a+Math.round((len-GATE)*.5);
     if(gx-a>2)L.lfences.push({x0:a,y0:fy,x1:gx,y1:fy+6,wing:true});if(b-gx-GATE>2)L.lfences.push({x0:gx+GATE,y0:fy,x1:b,y1:fy+6,wing:true});
     L.gates.push({x0:gx,x1:gx+GATE,y:fy});occ.push({x0:a,y0:fy-2,x1:b,y1:fy+8},{x0:gx-2,y0:fy-16,x1:gx+GATE+2,y1:fy+22});}
@@ -750,7 +752,7 @@ function makeLot(k,s,w,d,R,filler,custom){
     if(L.lcars.some(c=>inRect(carRect(c),tx,ty,8)))continue;
     if(L.lz.some(z=>!z.good&&inRect(zoneBox(z),tx,ty,10)))continue;
     if(L.ltrees.some(t=>Math.hypot(t.x-tx,t.y-ty)<(t.r+r)*.75))continue;
-    if(Math.abs(ty-fy-3)<9||L.gates.some(g=>tx>g.x0-10&&tx<g.x1+10&&Math.abs(ty-fy)<22))continue;
+    if((BACKYARD_FENCES&&Math.abs(ty-fy-3)<9)||L.gates.some(g=>tx>g.x0-10&&tx<g.x1+10&&Math.abs(ty-fy)<22))continue;
     L.ltrees.push({x:tx,y:ty,r,pal:(R()*4)|0,rate:.22+s*.1});i++;
   }
   return finish();
@@ -1216,8 +1218,8 @@ function makeView(root){const cv=root.querySelector('canvas');cv.classList.add('
   return{root,cvs:cv,ctx:cv.getContext('2d'),fx:root.querySelector('#fx'),cache:{},els:{},canOff:{x:-1,y:-1},left:0,pw:innerWidth,w:VW,h:VH,sc:3,pl:null};}
 function layoutViews(){
   const n=views.length,W=innerWidth,Hh=innerHeight,base=Math.max(2,Math.round(Math.min(W/390,Hh/245)));
-  // two players get a slightly wider look at the world each
-  const sc=n>1?Math.max(2,base-1):base;
+  // two players each see a touch more of the world: about 10% further out than full screen
+  const sc=n>1?base/1.1:base;
   views.forEach((v,i)=>{const pw=n>1?Math.floor(W/2):W;v.pw=pw;v.left=i?W-pw:0;v.root.style.left=v.left+'px';v.root.style.width=pw+'px';
     v.sc=sc;v.w=Math.ceil(pw/sc)+1;v.h=Math.ceil(Hh/sc)+1;v.cvs.width=v.w;v.cvs.height=v.h;v.cvs.style.width=v.w*sc+'px';v.cvs.style.height=v.h*sc+'px';v.ctx.imageSmoothingEnabled=false;
     v.gCan=mk(v.w,v.h);v.aCan=mk(v.w,v.h);v.lCan=mk(v.w,v.h);v.gCtx=v.gCan.getContext('2d');v.aCtx=v.aCan.getContext('2d');v.lCtx=v.lCan.getContext('2d');
