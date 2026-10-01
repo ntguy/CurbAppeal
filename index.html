@@ -192,11 +192,11 @@ svg.px{shape-rendering:crispEdges;display:block;}
 .sbar{height:6px;background:#cfc7b2;border-radius:3px;overflow:hidden;} .sbar i{display:block;height:100%;background:var(--blue);border-radius:3px;}
 .ucard .btn{font-size:14px;padding:8px 10px;}
 /* ---------- live reputation readout ---------- */
-.repbox{display:flex;align-items:center;gap:7px;padding:5px 11px 5px 9px;align-self:flex-start;position:relative;}
-.repbox .lbl{font-size:10px;color:#9fb5b8;letter-spacing:1px;}
-.repbox b{font-size:15px;color:#cfe3e6;text-shadow:0 2px 0 rgba(0,0,0,.4);}
-.repbox b.pos{color:var(--green);} .repbox b.neg{color:var(--red);}
-.reppop{position:absolute;left:100%;top:50%;margin-left:8px;font-size:13px;font-weight:700;white-space:nowrap;text-shadow:0 2px 0 rgba(0,0,0,.55);animation:reppop 1.5s ease-out forwards;}
+.reprow{display:flex;align-items:center;gap:8px;margin-top:10px;position:relative;}
+.reprow b{font-size:17px;color:#cfe3e6;text-shadow:0 2px 0 rgba(0,0,0,.4);}
+.reprow b.pos{color:var(--green);} .reprow b.neg{color:var(--red);}
+.reprow .lbl{font-size:10px;color:#9fb5b8;letter-spacing:1px;}
+.reppop{position:absolute;right:0;top:50%;font-size:22px;font-weight:700;white-space:nowrap;text-shadow:0 3px 0 rgba(0,0,0,.55);animation:reppop 1.6s ease-out forwards;}
 @keyframes reppop{0%{opacity:0;transform:translateY(-50%) scale(.6)}12%{opacity:1;transform:translateY(-50%) scale(1.2)}25%{transform:translateY(-50%) scale(1)}100%{opacity:0;transform:translateY(-150%)}}
 /* ---------- controller: glyphs, controls sheet, menu focus ---------- */
 [data-k]:empty{display:none;}
@@ -241,6 +241,29 @@ body.pad .padfocus{outline:3px solid #fff;outline-offset:4px;transform:translate
 body.pad .ucard:has(.padfocus){transform:translateY(-6px) rotate(0);}
 #padToast{position:fixed;right:16px;bottom:16px;z-index:8;background:var(--panel);border:3px solid var(--edge);border-radius:10px;padding:8px 12px;font-size:11px;box-shadow:0 5px 0 var(--shadow);opacity:0;transform:translateY(10px);transition:opacity .2s,transform .2s;pointer-events:none;}
 #padToast.on{opacity:1;transform:none;}
+.sum2{display:flex;flex-direction:column;gap:18px;width:100%;}
+.heroes{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media (max-width:720px){.heroes{grid-template-columns:1fr;}}
+.hero{display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 14px 16px;}
+.hero .big{font-size:46px;font-weight:700;line-height:1;display:flex;align-items:center;gap:12px;}
+.hero .big.gold{color:var(--gold);text-shadow:0 4px 0 #6b4a00,0 7px 0 rgba(0,0,0,.35);}
+.hero .big.pos{color:var(--green);text-shadow:0 4px 0 var(--green-d),0 7px 0 rgba(0,0,0,.35);}
+.hero .big.neg{color:var(--red);text-shadow:0 4px 0 var(--red-d),0 7px 0 rgba(0,0,0,.35);}
+.hero .small{font-size:11px;color:#9fb5b8;letter-spacing:2px;}
+.rankname{font-size:14px;color:var(--gold);letter-spacing:2px;text-shadow:0 2px 0 rgba(0,0,0,.4);}
+.rankbar{width:100%;max-width:280px;height:10px;background:var(--panel-in);border-radius:5px;overflow:hidden;}
+.rankbar i{display:block;height:100%;background:var(--gold);border-radius:5px;transition:width 1.1s cubic-bezier(.3,1,.5,1);}
+.rankrow{display:flex;justify-content:space-between;width:100%;max-width:280px;font-size:9px;color:#7f9396;margin-top:-4px;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:4px;}
+.chip{display:flex;align-items:center;gap:6px;background:var(--panel-in);border-radius:8px;padding:5px 9px 5px 6px;font-size:10px;box-shadow:0 3px 0 var(--shadow);animation:chipin .4s cubic-bezier(.3,1.6,.6,1) backwards;}
+.chip .cl{color:#cfe3e6;letter-spacing:1px;} .chip b{font-size:12px;} .chip b.pos,.htile .pos{color:var(--green);} .chip b.neg{color:var(--red);}
+@keyframes chipin{from{opacity:0;transform:scale(.3)}}
+.htiles{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+.htile{width:112px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;padding:10px 8px;background:var(--panel);border:3px solid var(--edge);border-radius:12px;box-shadow:0 5px 0 var(--shadow);animation:chipin .45s cubic-bezier(.3,1.6,.6,1) backwards;}
+.htile.paid{border-color:var(--green);}
+.htile .hn{font-size:10px;color:#fff;text-align:center;letter-spacing:1px;}
+.htile .hb{width:100%;height:7px;background:var(--panel-in);border-radius:4px;overflow:hidden;} .htile .hb i{display:block;height:100%;}
+.htile .hp{font-size:11px;} .htile .gold{color:var(--gold);} .htile .dim{color:#9fb5b8;}
 /* ---------- yard editor ---------- */
 #editor{position:fixed;inset:0;z-index:7;background:#10171a;display:flex;flex-direction:column;cursor:default;}
 #editor.hide{display:none;}
@@ -269,8 +292,8 @@ body.pad .ucard:has(.padfocus){transform:translateY(-6px) rotate(0);}
   <div class="panel bob">
     <div class="cash" id="cash">$0</div>
     <div class="clock"><span class="day" id="dayl">DAY 1</span><span class="time" id="clock">7:00 AM</span></div>
+    <div class="reprow" id="repBox"><svg class="px" width="22" height="20" viewBox="0 0 11 10"><rect x="5" y="0" width="1" height="1" fill="#fff1b0"/><rect x="4" y="1" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="1" width="1" height="1" fill="#fff1b0"/><rect x="6" y="1" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="2" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="2" width="1" height="1" fill="#fff1b0"/><rect x="6" y="2" width="1" height="1" fill="#ffcf4a"/><rect x="0" y="3" width="1" height="1" fill="#b9861a"/><rect x="1" y="3" width="1" height="1" fill="#fff1b0"/><rect x="2" y="3" width="1" height="1" fill="#fff1b0"/><rect x="3" y="3" width="1" height="1" fill="#fff1b0"/><rect x="4" y="3" width="1" height="1" fill="#fff1b0"/><rect x="5" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="9" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="10" y="3" width="1" height="1" fill="#b9861a"/><rect x="1" y="4" width="1" height="1" fill="#b9861a"/><rect x="2" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="9" y="4" width="1" height="1" fill="#b9861a"/><rect x="2" y="5" width="1" height="1" fill="#b9861a"/><rect x="3" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="5" width="1" height="1" fill="#b9861a"/><rect x="3" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="6" width="1" height="1" fill="#b9861a"/><rect x="6" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="2" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="7" width="1" height="1" fill="#b9861a"/><rect x="6" y="7" width="1" height="1" fill="#b9861a"/><rect x="7" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="2" y="8" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="8" width="1" height="1" fill="#b9861a"/><rect x="7" y="8" width="1" height="1" fill="#b9861a"/><rect x="8" y="8" width="1" height="1" fill="#ffcf4a"/><rect x="1" y="9" width="1" height="1" fill="#b9861a"/><rect x="2" y="9" width="1" height="1" fill="#b9861a"/><rect x="8" y="9" width="1" height="1" fill="#b9861a"/><rect x="9" y="9" width="1" height="1" fill="#b9861a"/></svg><b id="repT">0</b><span class="lbl">REPUTATION</span></div>
   </div>
-  <div class="panel bob2 repbox" id="repBox"><svg class="px" width="14" height="14" viewBox="0 0 7 7"><path d="M3 0h1v2h3v1H6v1H5v3H4V6H3v1H2V4H1V3H0V2h3z" fill="#ffcf4a"/></svg><b id="repT">+0</b><span class="lbl">REP TODAY</span></div>
   <div class="panel bob2">
     <div class="batt">
       <div class="bbar" id="bbar"><div class="cells" id="cells"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div></div>
@@ -428,6 +451,7 @@ const UPG={
   boots:{name:'WORK BOOTS',ic:'>',col:'#009dff',desc:'+8% move speed.',max:4,price:n=>Math.round(110*Math.pow(1.6,n))},
   tarp:{name:'EXTRA TARP',ic:'#',col:'#3d86e0',desc:'One more tarp a day. A tied tarp that goes in the truck stays there till morning.',max:5,price:n=>Math.round(150*Math.pow(1.8,n))},
   bigtarp:{name:'BIG TARP',ic:'[]',col:'#8a5ae0',desc:'+25% tarp size. Bigger bundles.',max:2,price:n=>Math.round(160*Math.pow(1.7,n))},
+  light:{name:'FLASHLIGHT',ic:'!',col:'#ffcf4a',desc:'A head lamp for working after dark. Shines where you aim. Second level: a wider, longer beam.',max:2,price:n=>[140,380][n]},
   sticky:{name:'STICKY TARP',ic:'*',col:'#e2742a',desc:'Grippy coating. Leaves that land on a tarp slow down fast and take more air to blow off.',max:3,price:n=>[220,520,1100][n]},
 };
 const ATT=[
@@ -440,7 +464,7 @@ const ATT=[
 ];
 const TUNE={force:[1,1.25,1.55,1.9],range:[1,1.07,1.14,1.22],lift:[1,1.2,1.45,1.7],drain:[1,1.06,1.12,1.18]};
 const BASE={lowF:600,highF:731,lowR:74,highR:90,liftHi:.18};
-let upg={spare:0,cap:0,tune:0,boots:0,tarp:0,bigtarp:0,sticky:0};
+let upg={spare:0,cap:0,tune:0,boots:0,tarp:0,bigtarp:0,sticky:0,light:0};
 let owned=['std'],equipped='std';
 const att=()=>ATT.find(a=>a.id===equipped)||ATT[0];
 const capacity=()=>100*(1+.2*upg.cap);
@@ -1568,7 +1592,7 @@ function confirmCloseout(){
 }
 
 // ============================================================ day cycle + night screens
-const newToday=()=>({houseEarn:0,hauled:0,bundles:0,houses:0,complaints:0,damage:0,pots:0,potDamage:0,crashes:0,damageRep:0,lateHigh:0,tickets:0,ticketCost:0,mailSent:false,copSent:false,vanSent:false,vanHour:10+rnd()*5.5,courierHits:0,pkgReturns:0,copHour:9.5+rnd()*9,carHour:DAY_START+.4+rnd()*.8,startMoney:money});
+const newToday=()=>({houseEarn:0,hauled:0,bundles:0,houses:0,complaints:0,damage:0,pots:0,potDamage:0,crashes:0,damageRep:0,lateHigh:0,tickets:0,ticketCost:0,mailSent:false,copSent:false,vanSent:false,vanHour:7+rnd()*4,courierHits:0,pkgReturns:0,copHour:9.5+rnd()*9,carHour:DAY_START+.4+rnd()*.8,startMoney:money});
 function resetDay(){
   N=0;for(const L of ALL_LOTS)L.potsBroken=0;
   for(const p of POTS){p.broken=false;p.stress=0;p.wob=0;p.touch=false;}
@@ -1666,36 +1690,49 @@ function renderNight(){
   const tabs=`<div class="tabs">${G('tabL')}<button class="tab ${nightTab==='sum'?'on':''}" data-tab="sum">DAY SUMMARY</button><button class="tab ${nightTab==='shop'?'on':''}" data-tab="shop">HARDWARE STORE</button>${G('tabR')}</div>`;
   let body='';
   if(nightTab==='sum'){
-    const earned=today.houseEarn;
-    const houses=daySummary.map(h=>{const pct=Math.round(h.pct*100);
-      const tag=h.done?`<span class="tagp g">PAID ${fmt$(h.paid)}</span>`:pct>0?`<span class="tagp y">UNFINISHED &middot; ${pct}%</span>`:`<span class="tagp x">NOT STARTED</span>`;
-      return `<div class="house"><span><span class="n">#${h.k+1} ${h.name}</span><span class="t">${h.tag}${h.hauled?' &middot; '+h.hauled+' HAULED':''}${h.rep?` &middot; <span style="color:var(--green)">+${h.rep} REP</span>`:''}</span></span>${tag}</div>`;}).join('');
-    const r=today.rep,sg=v=>v>0?'+'+v:v<0?'&minus;'+(-v):'0',cl=v=>v>0?'pos':v<0?'neg':'dim';
-    const rline=(label,v)=>`<div class="line"><span>${label}</span><span class="${cl(v)}">${sg(v)}</span></div>`;
-    const repPanel=`<div class="panel"><div class="label">REPUTATION</div>
-        <div class="bigstat" style="font-size:26px">${sg(r.total)}</div>
-        ${rline(`HOUSES FINISHED${r.houseN?' &times;'+r.houseN:''}`,r.houses)}
-        ${rline(`DAMAGE${r.damageN?' &times;'+r.damageN:''}`,r.damage)}
-        ${rline(`SCARED PEDESTRIANS${r.pedN?' &times;'+r.pedN:''}`,r.peds)}
-        ${rline(`LEAVES IN THE ROAD${r.roadN?' &times;'+r.roadN:''}`,r.road)}
-        ${rline(`LOUD BLOWING AFTER 8 PM${r.lateSec>=.5?' &middot; '+Math.round(r.lateSec)+'S':''}`,r.late)}
-        ${rline(`PARKING TICKETS${r.ticketN?' &times;'+r.ticketN:''}`,r.tickets)}
-        ${rline(`BLOWING ON THE DELIVERY DRIVER${r.courierN?' &times;'+r.courierN:''}`,r.courier)}
-        ${rline(`PACKAGES CARRIED TO THE DOOR${r.pkgBackN?' &times;'+r.pkgBackN:''}`,r.pkgBack)}
-        ${rline(`PACKAGES LEFT ASTRAY${r.pkgN?' &times;'+r.pkgN:''}`,r.pkg)}
-        <div class="line total"><span>${repRank(rep)}</span><span>${rep}</span></div></div>`;
-    body=`<div class="sumwrap"><div style="display:flex;flex-direction:column;gap:16px">
-      <div class="panel"><div class="label">EARNED TODAY</div><div class="bigstat">${fmt$(earned)}</div>
-        <div class="line"><span>HOUSES PAID</span><span>${today.houses} / ${LOTS.length}</span></div>
-        <div class="line"><span>FROM HOMEOWNERS</span><span class="pos">${fmt$(today.houseEarn)}</span></div>
-        <div class="line"><span>LEAVES HAULED</span><span>${today.hauled}${today.bundles?` &middot; ${today.bundles} TARP${today.bundles>1?'S':''}`:''}</span></div>
-        ${today.damage?`<div class="line"><span>FENDER BENDERS</span><span class="neg">-${fmt$(today.damage)}</span></div>`:''}
-        ${today.pots?`<div class="line"><span>BROKEN FLOWERPOTS &times;${today.pots}</span><span class="neg">-${fmt$(today.potDamage)}</span></div>`:''}
-        ${today.tickets?`<div class="line"><span>PARKING TICKETS &times;${today.tickets}</span><span class="neg">-${fmt$(today.ticketCost)}</span></div>`:''}
-        <div class="line"><span>ANGRY PEDESTRIANS</span><span class="${today.complaints?'neg':'dim'}">${today.complaints}</span></div>
-        <div class="line total"><span>BANK</span><span>${fmt$(money)}</span></div></div>
-      ${repPanel}</div>
-      <div class="panel"><div class="label">THE NEIGHBORHOOD</div>${houses}</div></div>`;
+    // only what actually happened today: a chip per thing, nothing for zeros, houses you never touched left out
+    const r=today.rep,sg=v=>(v>0?'+':'&minus;')+Math.abs(v),net=Math.round(money-today.startMoney);
+    const chip=(ic,label,val,cls,i)=>`<div class="chip" style="animation-delay:${.25+i*.07}s">${pxIcon(ic)}<span class="cl">${label}</span>${val!=null?`<b class="${cls}">${val}</b>`:''}</div>`;
+    const money$=[
+      today.houseEarn&&['house',`${today.houses} PAID`,'+'+fmt$(today.houseEarn),'pos'],
+      today.hauled&&['bag',`${today.hauled} HAULED`,null],
+      today.damage&&['crash',today.crashes>1?`DENTS &times;${today.crashes}`:'DENT',fmt$(-today.damage),'neg'],
+      today.potDamage&&['pot',today.pots>1?`POTS &times;${today.pots}`:'POT',fmt$(-today.potDamage),'neg'],
+      today.ticketCost&&['ticket','TICKET',fmt$(-today.ticketCost),'neg'],
+    ].filter(Boolean);
+    const x=n=>n>1?` &times;${n}`:'';
+    const repC=[
+      r.houses&&['house','HOUSES'+x(r.houseN),sg(r.houses),'pos'],
+      r.pkgBack&&['box','PACKAGES'+x(r.pkgBackN),sg(r.pkgBack),'pos'],
+      r.damage&&['crash','DAMAGE'+x(r.damageN),sg(r.damage),'neg'],
+      r.peds&&['face','SCARED'+x(r.pedN),sg(r.peds),'neg'],
+      r.road&&['road',`${r.roadN} IN ROAD`,sg(r.road),'neg'],
+      r.late&&['moon','LATE NOISE',sg(r.late),'neg'],
+      r.tickets&&['ticket','TICKET'+x(r.ticketN),sg(r.tickets),'neg'],
+      r.courier&&['courier','COURIER'+x(r.courierN),sg(r.courier),'neg'],
+      r.pkg&&['lostbox','LOST'+x(r.pkgN),sg(r.pkg),'neg'],
+    ].filter(Boolean);
+    // where reputation sits in its rank, and how far to the next one
+    const ranks=REP_RANKS.slice().reverse(),ri=ranks.findIndex((t,i)=>rep>=t[0]&&(i===ranks.length-1||rep<ranks[i+1][0])),floor=v=>isFinite(v)?v:-100;
+    const nxt=ranks[ri+1],fill=v=>nxt?clamp((v-floor(ranks[ri][0]))/(nxt[0]-floor(ranks[ri][0])),0,1):1;
+    const worked=daySummary.filter(h=>h.done||h.pct>=.01);
+    const tiles=worked.map((h,i)=>{const pct=Math.round(h.pct*100),col=pct>=90?'#4bc26a':pct>=70?'#ffcf4a':pct>=50?'#ff9800':'#fe5f55';
+      return`<div class="htile ${h.done?'paid':''}" style="animation-delay:${.4+i*.08}s">${pxIcon(h.done?'house':'housegray',4+Math.round(h.k/2.5))}
+        <div class="hn">${h.name.replace(/^THE /,'')}</div>
+        ${h.done?`<div class="hp"><span class="pos">${fmt$(h.paid)}</span>${h.rep?` <span class="gold">+${h.rep}&#9733;</span>`:''}</div>`:`<div class="hb"><i style="width:${pct}%;background:${col}"></i></div><div class="hp dim">${pct}%</div>`}</div>`;}).join('');
+    body=`<div class="sum2">
+      <div class="heroes">
+        <div class="panel hero"><div class="big ${net>0?'gold':net<0?'neg':'gold'}"><span data-count="${net}" data-fmt="money">$0</span></div>
+          <div class="small">BANK ${fmt$(money)}</div>
+          ${money$.length?`<div class="chips">${money$.map((c,i)=>chip(c[0],c[1],c[2],c[3],i)).join('')}</div>`:''}</div>
+        <div class="panel hero"><div class="big ${r.total>0?'pos':r.total<0?'neg':'gold'}">${STAR_SVG}<span data-count="${r.total}" data-fmt="signed">0</span></div>
+          <div class="rankname">${repRank(rep)}</div>
+          <div class="rankbar"><i data-to="${(fill(rep)*100).toFixed(1)}" style="width:${(ranks[ri][0]<=r.before?fill(r.before)*100:0).toFixed(1)}%"></i></div>
+          <div class="rankrow"><span>${rep}</span><span>${nxt?nxt[0]+' &middot; '+nxt[1]:'TOP RANK'}</span></div>
+          ${repC.length?`<div class="chips">${repC.map((c,i)=>chip(c[0],c[1],c[2],c[3],i)).join('')}</div>`:''}</div>
+      </div>
+      ${tiles?`<div class="htiles">${tiles}</div>`:''}
+    </div>`;
   }else{
     const cards=Object.entries(UPG).map(([id,u])=>{
       const lvl=upg[id],maxed=lvl>=u.max,price=maxed?0:u.price(lvl),can=!maxed&&money>=price;
@@ -1720,7 +1757,35 @@ function renderNight(){
   modalEl.querySelectorAll('[data-eq]').forEach(b=>b.onclick=()=>{equipped=b.dataset.eq;blip(700,.05);renderNight();});
   document.getElementById('bDay').onclick=startDay;
   focusRestore(fs);
+  if(nightTab==='sum')animateSummary();
 }
+// numbers tick up from zero and the rank bar slides to where it's got to
+function animateSummary(){
+  const els=[...modalEl.querySelectorAll('[data-count]')],t0=performance.now(),T=900;
+  const show=(el,v)=>{el.innerHTML=el.dataset.fmt==='money'?(v>0?'+':v<0?'&minus;':'')+fmt$(Math.abs(v)):(v>0?'+':v<0?'&minus;':'')+Math.abs(v);};
+  const step=now=>{const k=Math.min(1,(now-t0)/T),e=1-Math.pow(1-k,3);for(const el of els)if(el.isConnected)show(el,Math.round(+el.dataset.count*e));if(k<1)requestAnimationFrame(step);};
+  requestAnimationFrame(step);
+  setTimeout(()=>modalEl.querySelectorAll('.rankbar i[data-to]').forEach(i=>i.style.width=i.dataset.to+'%'),250);
+}
+// tiny pixel icons for the summary chips and house tiles: rows of palette letters, '.' is empty
+const STAR_SVG='<svg class="px" width="40" height="36" viewBox="0 0 11 10"><rect x="5" y="0" width="1" height="1" fill="#fff1b0"/><rect x="4" y="1" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="1" width="1" height="1" fill="#fff1b0"/><rect x="6" y="1" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="2" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="2" width="1" height="1" fill="#fff1b0"/><rect x="6" y="2" width="1" height="1" fill="#ffcf4a"/><rect x="0" y="3" width="1" height="1" fill="#b9861a"/><rect x="1" y="3" width="1" height="1" fill="#fff1b0"/><rect x="2" y="3" width="1" height="1" fill="#fff1b0"/><rect x="3" y="3" width="1" height="1" fill="#fff1b0"/><rect x="4" y="3" width="1" height="1" fill="#fff1b0"/><rect x="5" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="9" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="10" y="3" width="1" height="1" fill="#b9861a"/><rect x="1" y="4" width="1" height="1" fill="#b9861a"/><rect x="2" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="9" y="4" width="1" height="1" fill="#b9861a"/><rect x="2" y="5" width="1" height="1" fill="#b9861a"/><rect x="3" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="5" width="1" height="1" fill="#b9861a"/><rect x="3" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="6" width="1" height="1" fill="#b9861a"/><rect x="6" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="2" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="7" width="1" height="1" fill="#b9861a"/><rect x="6" y="7" width="1" height="1" fill="#b9861a"/><rect x="7" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="2" y="8" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="8" width="1" height="1" fill="#b9861a"/><rect x="7" y="8" width="1" height="1" fill="#b9861a"/><rect x="8" y="8" width="1" height="1" fill="#ffcf4a"/><rect x="1" y="9" width="1" height="1" fill="#b9861a"/><rect x="2" y="9" width="1" height="1" fill="#b9861a"/><rect x="8" y="9" width="1" height="1" fill="#b9861a"/><rect x="9" y="9" width="1" height="1" fill="#b9861a"/></svg>';
+const PX_PAL={r:'#c9352b',w:'#e9e2cf',d:'#6b4428',o:'#ff9800',s:'#f2c29a',k:'#2a3033',y:'#ffcf4a',t:'#d9774a',g:'#4bc26a',f:'#ff5f8f',b:'#2a6fc9',l:'#d9ab72',n:'#b98a54',e:'#efe2c4',m:'#7f9396',x:'#fe5f55',u:'#3d474c',v:'#5b6f73'};
+const PX_ICONS={
+  house:['...r...','..rrr..','.rrrrr.','rrrrrrr','.wwwww.','.wwdww.','.wwdww.'],
+  housegray:['...m...','..mmm..','.mmmmm.','mmmmmmm','.vvvvv.','.vvdvv.','.vvdvv.'],
+  bag:['...y...','..ooo..','.bbbbb.','bbbbbbb','bbbbbbb','bbbbbbb','.bbbbb.'],
+  crash:['...y...','.y.y.y.','..yxy..','yyxxxyy','..yxy..','.y.y.y.','...y...'],
+  pot:['..f.f..','.ggfgg.','..ggg..','ttttttt','.ttttt.','.ttttt.','..ttt..'],
+  ticket:['.......','wwwwwww','wxxxxxw','wkkkkww','wkkkwww','wwwwwww','.......'],
+  face:['.sssss.','sksssks','sskskss','sssssss','sskkkss','sksssks','.sssss.'],
+  road:['.......','...oo..','..ooo..','.ooo...','.......','kkkkkkk','kwkkwkk'],
+  moon:['..yyy..','.yy....','yy.....','yy.....','yy.....','.yy....','..yyy..'],
+  courier:['.bbbbb.','bbbbbbb','.sssss.','.skssk.','.sssss.','.skkks.','..sss..'],
+  box:['.......','lllllll','nnnennn','nnnennn','nnnennn','nnnnnnn','.......'],
+  lostbox:['x.....x','lxllxll','nnxexnn','nnnxnnn','nnxexnn','nxnnnxn','x.....x'],
+};
+function pxIcon(name,sc=2){const g=PX_ICONS[name];let r='';g.forEach((row,y)=>[...row].forEach((c,x)=>{if(c!=='.')r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${PX_PAL[c]}"/>`;}));
+  return`<svg class="px pxi" width="${7*sc}" height="${7*sc}" viewBox="0 0 7 7">${r}</svg>`;}
 function startDay(){day++;resetDay();save();modalEl.classList.add('hide');state='play';document.body.style.cursor='none';blip(660,.1,'square',.05);}
 
 // ============================================================ physics
@@ -2104,9 +2169,11 @@ function newVehicle(kind){
   if(kind==='van'){const drops=planDrops();if(!drops.length)return null;return Object.assign(v,{vmax:88,hl:19,hw:9,can:vanCan,drops});}
   return null;
 }
+let lastSpawnT=-99;
 function trySpawn(){
-  if(!pendingTraffic.length||traffic.some(v=>v.s<80||Math.hypot(v.x-TPX[0],v.y-TPY[0])<80))return;
-  const v=newVehicle(pendingTraffic.shift());if(v){trafficPos(v);traffic.push(v);}
+  // a few seconds between arrivals as well as a clear entrance, so nothing rolls in alongside the last one
+  if(!pendingTraffic.length||time-lastSpawnT<5||traffic.some(v=>v.s<80||Math.hypot(v.x-TPX[0],v.y-TPY[0])<80))return;
+  const v=newVehicle(pendingTraffic.shift());if(v){trafficPos(v);traffic.push(v);lastSpawnT=time;}
 }
 // visitors park along the curb in the parking lane, on a straight run clear of driveways, cars and the truck
 const PARK_LAT=Math.round(RH*.72)-TRAFFIC_LANE,visitors=[];
@@ -2193,8 +2260,8 @@ function corridor(v,near,lat0,lat1,L,dir=1,m=2){
   return{d:Infinity,o:null};
 }
 const alongV=(o,v)=>o?o.v*Math.cos(o.a-v.a):0;
-// something moving our way at a decent clip is traffic to follow, not an obstacle to pass
-const isFlow=(o,v)=>!!o&&(o.ref==='truck'||!!(o.ref&&o.ref.kind))&&alongV(o,v)>35;
+// a vehicle ahead that's still moving our way is traffic to follow; only one that's stopped in the lane gets passed
+const isFlow=(o,v)=>!!o&&(o.ref==='truck'||!!(o.ref&&o.ref.kind))&&alongV(o,v)>5;
 // before drifting sideways into a lane, look over the shoulder: anything coming up behind in that lane needs room to stop
 function mergeOk(v,c){
   const ca=Math.cos(v.a),sa=Math.sin(v.a);
@@ -2299,31 +2366,44 @@ function vanSpotOk(p,self){
   if(CARS.some(c=>rectsHit(c,b,2))||Math.hypot(TR.x-p.x,TR.y-p.y)<46||parkedNear(p.x,p.y,self,42))return false;
   return roadAt(p.x+p.nx*10,p.y+p.ny*10)&&roadAt(p.x-p.nx*10,p.y-p.ny*10);
 }
+// which houses get parcels today. Smaller houses get most of them early on; as reputation grows the bigger
+// homes come into it. NOTE: keep this in step with the reputation system when that gets fleshed out
+function deliveryPick(){
+  const lvl=clamp(rep/700,0,1),n=LOTS.length,pool=LOTS.slice(),out=[];
+  const w=L=>.08+Math.exp(-((L.k/(n-1)-lvl*.85)**2)/(2*.3*.3));
+  while(pool.length){let tot=0;for(const L of pool)tot+=w(L);let r=rnd()*tot,i=0;for(;i<pool.length-1;i++){r-=w(pool[i]);if(r<=0)break;}out.push(pool.splice(i,1)[0]);}
+  return out;
+}
 function planDrops(){
-  const lots=LOTS.slice().sort(()=>rnd()-.5).slice(0,3+((rnd()*3)|0)),drops=[];
-  for(const L of lots){const [bx,by]=L.T(L.ldoor.x,L.d-2);let best=-1,bd=130*130;
+  const want=4+((rnd()*4)|0),drops=[];
+  for(const L of deliveryPick()){if(drops.length>=want)break;const [bx,by]=L.T(L.ldoor.x,L.d-2);let best=-1,bd=130*130;
     for(let i=40;i<TPX.length-40;i++){const dx=bx-TPX[i],dy=by-TPY[i],d=dx*dx+dy*dy;if(d<bd&&dx*-Math.sin(TPA[i])+dy*Math.cos(TPA[i])>0){bd=d;best=i;}}
     if(best>=0&&!drops.some(q=>Math.abs(q.j-best)<20))drops.push({...vanSpot(best),lot:L});}
-  return drops.sort((a,b)=>a.s-b.s);
+  drops.sort((a,b)=>a.s-b.s);drops.forEach((d,i)=>{d.idx=i;d.n=drops.length;});
+  return drops;
 }
+// find a free bit of curb near the planned stop, preferring just past it; null if there's none
+function vanRespot(dr,v){for(const k of [8,-8,16,-16,24,32,-24,40]){const q=vanSpot(clamp(dr.j+k,0,TPX.length-1));if(q.s-v.s>25&&vanSpotOk(q,v))return q;}return null;}
 function updateVan(v,dt){
   if(v.state!=='drive')return null;
   while(v.drops.length&&v.drops[0].s-v.s<-20)v.drops.shift();
   const dr=v.drops[0];if(!dr){v.prefLat=0;return null;}
   const d=dr.s-v.s;
-  // just before pulling in, make sure the curb's free, or shuffle along it a little
-  if(d<130&&!dr.checked){dr.checked=true;if(!vanSpotOk(dr,v)){let alt=null;for(const k of [10,-10,20,-20]){const q=vanSpot(clamp(dr.j+k,0,TPX.length-1));if(q.s-v.s>30&&vanSpotOk(q,v)){alt=q;break;}}
-    if(alt)Object.assign(dr,alt);else{v.drops.shift();return null;}}}
-  if(d<95){v.prefLat=PARK_LAT;v.parkT+=dt;
-    if(d<1.5&&v.v<4){v.parkT=0;if(Math.abs(v.lat-PARK_LAT)<5){v.state='parked';startCourier(v,dr);}else v.drops.shift();}
-    else if(v.parkT>10){v.parkT=0;v.drops.shift();}}
+  // keep an eye on the curb on the way in: if the spot fills up, shuffle along, and if the whole curb is full,
+  // double-park in the lane (traffic will go round) rather than skip the house
+  if(d<130&&!dr.dbl&&!vanSpotOk(dr,v)){const q=vanRespot(dr,v);if(q)Object.assign(dr,q);else dr.dbl=true;}
+  if(d<95){v.prefLat=dr.dbl?0:PARK_LAT;v.parkT+=dt;
+    if((d<1.5&&v.v<4)||(v.parkT>6&&v.v<4&&d<60)){v.parkT=0;v.state='parked';startCourier(v,dr);}}
   else v.prefLat=0;
   return dr.s;
 }
 function startCourier(v,dr){
   const L=dr.lot,B=L.T(L.ldoor.x,L.d-3),C=L.T(L.ldoor.x+Math.round((rnd()-.5)*8),L.ldoor.y+8);
-  // about one in three doesn't quite make it, and leaves the box a little way short of the door
-  const lazy=rnd()<.35,pl=Math.hypot(B[0]-C[0],B[1]-C[1])||1,sh=Math.min(pl,20+rnd()*25),E=lazy?[C[0]+(B[0]-C[0])/pl*sh+(rnd()-.5)*8,C[1]+(B[1]-C[1])/pl*sh]:C;
+  // about one in three is a short drop: either a near miss a little way from the door, or the driver gives up and
+  // leaves it off the sidewalk, nowhere near the door. Giving up gets likelier with each stop (30% first, 70% last)
+  const lazy=rnd()<.35,pl=Math.hypot(B[0]-C[0],B[1]-C[1])||1,quit=lazy&&rnd()<.3+.4*(dr.n>1?dr.idx/(dr.n-1):0);
+  const sh=quit?Math.max(Math.min(pl,20+rnd()*25),Math.min(pl-4,90+rnd()*20)):Math.min(pl,20+rnd()*25),jit=quit?18:8;
+  const E=lazy?[C[0]+(B[0]-C[0])/pl*sh+(rnd()-.5)*jit,C[1]+(B[1]-C[1])/pl*sh+(rnd()-.5)*(quit?8:0)]:C;
   couriers.push({x:v.x+v.rx*(v.hw+5),y:v.y+v.ry*(v.hw+5),wps:[B,E],B,home:C,lazy,st:'out',van:v,lot:L,shirt:'#2f6fd0',hair:HAIRS[(rnd()*HAIRS.length)|0],
     fdir:1,walk:0,stop:0,mad:0,cool:0,mx:1,my:0,dog:false,carry:true,t:0});
 }
@@ -2410,30 +2490,37 @@ function updateTraffic(dt){
 function drawTraffic(v,cx,cy){if(v.x-cx<-50||v.x-cx>VW+50||v.y-cy<-50||v.y-cy>VH+50)return;drawRotated(v.can,v.x,v.y,v.a,cx,cy,true);}
 function drawCourier(o,cx,cy){
   drawPed(o,cx,cy);if(!o.carry)return;
-  const x=Math.round(o.x-cx)+o.fdir*3,y=Math.round(o.y-cy)-7;ctx.fillStyle='#7a5a34';ctx.fillRect(x-3,y,6,5);ctx.fillStyle='#b98a54';ctx.fillRect(x-3,y,6,4);ctx.fillStyle='#d9ab72';ctx.fillRect(x-3,y,6,1);ctx.fillStyle='#efe2c4';ctx.fillRect(x,y,1,4);
+  const x=Math.round(o.x-cx)+o.fdir*3,y=Math.round(o.y-cy)-7;ctx.fillStyle='#120c08';ctx.fillRect(x-4,y-1,8,7);ctx.fillStyle='#7a5a34';ctx.fillRect(x-3,y,6,5);ctx.fillStyle='#b98a54';ctx.fillRect(x-3,y,6,4);ctx.fillStyle='#d9ab72';ctx.fillRect(x-3,y,6,1);ctx.fillStyle='#efe2c4';ctx.fillRect(x,y,1,4);
 }
 function drawPackage(k,cx,cy){
   const x=Math.round(k.x-cx),y=Math.round(k.y-cy),z=Math.round(k.z);if(x<-8||x>VW+8||y<-8||y>VH+8)return;
-  ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(x-3,y,7,2);
+  ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(x-3,y+1,7,2);
+  ctx.fillStyle='#120c08';ctx.fillRect(x-4,y-5-z,9,7);
   ctx.fillStyle='#7a5a34';ctx.fillRect(x-3,y-4-z,7,5);ctx.fillStyle='#b98a54';ctx.fillRect(x-3,y-4-z,7,4);ctx.fillStyle='#d9ab72';ctx.fillRect(x-3,y-4-z,7,2);ctx.fillStyle='#efe2c4';ctx.fillRect(x,y-4-z,1,4);
 }
-// a package blown off the step: flash an arrow at it pointing home, and ring the spot it belongs
-function drawArrow(x,y,a,col){
-  const c=Math.cos(a),s=Math.sin(a);ctx.fillStyle='#1a0f0a';
-  for(const o of [[1,0],[-1,0],[0,1],[0,-1]]){pline(ctx,x+o[0],y+o[1],x+c*9+o[0],y+s*9+o[1],1);pline(ctx,x+c*9+o[0],y+s*9+o[1],x+c*5-s*4+o[0],y+s*5+c*4+o[1],1);pline(ctx,x+c*9+o[0],y+s*9+o[1],x+c*5+s*4+o[0],y+s*5-c*4+o[1],1);}
-  ctx.fillStyle=col;pline(ctx,x,y,x+c*9,y+s*9,1);pline(ctx,x+c*9,y+s*9,x+c*5-s*4,y+s*5+c*4,1);pline(ctx,x+c*9,y+s*9,x+c*5+s*4,y+s*5-c*4,1);
-}
+// a package away from its door: a small outlined arrow beside it pointing home, and a ring where it belongs.
+// The arrows are hand-drawn pixel sprites (straight and diagonal, turned in 90 degree steps) so they stay crisp
+const ARROW_E=['...#..','...##.','######','...##.','...#..'],ARROW_SE=['#.....','.#....','..#..#','...#.#','....##','..####'];
+const rotGrid=g=>g[0].split('').map((_,x)=>g.map(r=>r[x]).reverse().join(''));
+function arrowCan(g){const w=g[0].length+2,h=g.length+2,c=mk(w,h),q=c.getContext('2d');
+  q.fillStyle='#120c08';for(let y=0;y<g.length;y++)for(let x=0;x<g[0].length;x++)if(g[y][x]==='#')q.fillRect(x,y,3,3);
+  q.fillStyle='#ff9800';for(let y=0;y<g.length;y++)for(let x=0;x<g[0].length;x++)if(g[y][x]==='#')q.fillRect(x+1,y+1,1,1);return c;}
+const ARROWS=(()=>{const out=[];let e=ARROW_E,d=ARROW_SE;for(let k=0;k<4;k++){out[k*2]=arrowCan(e);out[k*2+1]=arrowCan(d);e=rotGrid(e);d=rotGrid(d);}return out;})();
+function drawArrow(x,y,a){const c=ARROWS[((Math.round(a/(Math.PI/4))%8)+8)%8];ctx.drawImage(c,Math.round(x-c.width/2),Math.round(y-c.height/2));}
 function drawPackageCues(cx,cy){
-  if((time*3)%1>.62)return;
+  // slow, soft pulse at half strength
+  const pulse=.5*(.35+.65*(.5+.5*Math.sin(time*2.4)));
+  ctx.globalAlpha=pulse;
   for(const k of packages){if(!k.far)continue;
-    const hx=k.hx-cx,hy=k.hy-cy;ctx.fillStyle='rgba(255,152,0,.85)';
-    for(let i=0;i<16;i+=2){const a=i/16*Math.PI*2+time;ctx.fillRect(Math.round(hx+Math.cos(a)*PKG_RANGE),Math.round(hy+Math.sin(a)*PKG_RANGE*.7),1,1);}
-    const x=k.x-cx,y=k.y-cy-k.z-4,a=Math.atan2(k.hy-k.y,k.hx-k.x);
-    if(x>-6&&x<VW+6&&y>-6&&y<VH+6)drawArrow(Math.round(x+Math.cos(a)*6),Math.round(y+Math.sin(a)*6),a,'#ff9800');
-    else{const ex=clamp(x,14,VW-14),ey=clamp(y,14,VH-14);ctx.fillStyle='#1a0f0a';pcircle(ctx,ex,ey,7);ctx.fillStyle='#ff9800';pcircle(ctx,ex,ey,6);
-      ctx.fillStyle='#7a5a34';ctx.fillRect(ex-2,ey-2,5,4);ctx.fillStyle='#d9ab72';ctx.fillRect(ex-2,ey-2,5,1);
-      drawArrow(Math.round(ex+(x-ex)/(Math.hypot(x-ex,y-ey)||1)*9),Math.round(ey+(y-ey)/(Math.hypot(x-ex,y-ey)||1)*9),Math.atan2(y-ey,x-ex),'#ff9800');}
+    const hx=k.hx-cx,hy=k.hy-cy;ctx.fillStyle='#ff9800';
+    for(let i=0;i<16;i+=2){const a=i/16*Math.PI*2;ctx.fillRect(Math.round(hx+Math.cos(a)*PKG_RANGE),Math.round(hy+Math.sin(a)*PKG_RANGE*.7),1,1);}
+    const x=k.x-cx,y=k.y-cy-k.z-2,a=Math.atan2(k.hy-k.y,k.hx-k.x);
+    if(x>-6&&x<VW+6&&y>-6&&y<VH+6)drawArrow(x+Math.cos(a)*9,y+Math.sin(a)*9,a);
+    else{const ex=clamp(x,12,VW-12),ey=clamp(y,12,VH-12),dl=Math.hypot(x-ex,y-ey)||1;ctx.fillStyle='#120c08';pcircle(ctx,ex,ey,6);ctx.fillStyle='#ff9800';pcircle(ctx,ex,ey,5);
+      ctx.fillStyle='#120c08';ctx.fillRect(ex-3,ey-2,6,5);ctx.fillStyle='#b98a54';ctx.fillRect(ex-2,ey-1,4,3);
+      drawArrow(ex+(x-ex)/dl*10,ey+(y-ey)/dl*10,Math.atan2(y-ey,x-ex));}
   }
+  ctx.globalAlpha=1;
 }
 function drawMailFlag(m,cx,cy){const x=Math.round(m.x-cx),y=Math.round(m.y-cy);if(x<-8||x>VW+8||y<-12||y>VH+8)return;
   ctx.fillStyle='#2a2e33';ctx.fillRect(x+5,y-7,1,5);ctx.fillStyle='#fe3b3b';ctx.fillRect(x+6,y-7,3,2);}
@@ -2795,15 +2882,23 @@ function drawLighting(cx,cy){
   const L=lCtx;L.globalCompositeOperation='source-over';L.clearRect(0,0,VW,VH);L.fillStyle=`rgba(8,12,38,${s.dark})`;L.fillRect(0,0,VW,VH);
   L.globalCompositeOperation='destination-out';
   const lights=[];
-  if(!driving)lights.push([P.x,P.y-4,58,1]);
   const [c,sn]=tdir();lights.push([TR.x+c*48,TR.y+sn*48,36,.95],[TR.x+c*78,TR.y+sn*78,32,.7],[TR.x,TR.y,22,.5]);
   for(const Lt of ALL_LOTS)lights.push([Lt.door.x+Lt.front[0]*8,Lt.door.y+Lt.front[1]*8,30,.85]);
   for(const st of STREETLIGHTS)lights.push([st.x+1,st.y-18,62,.9]);
   const glows=[];
   for(const [wx,wy,r,a] of lights){const x=wx-cx,y=wy-cy;if(x<-r||x>VW+r||y<-r||y>VH+r)continue;
     const g=L.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(0,0,0,${a})`);g.addColorStop(.6,`rgba(0,0,0,${a*.6})`);g.addColorStop(1,'rgba(0,0,0,0)');L.fillStyle=g;L.fillRect(x-r,y-r,r*2,r*2);glows.push([x,y,r]);}
+  // on foot: a faint glow so you can see yourself, plus a flashlight beam once it's bought
+  let beam=null;
+  if(!driving){const px=P.x-cx,py=P.y-4-cy,g=L.createRadialGradient(px,py,0,px,py,16);g.addColorStop(0,'rgba(0,0,0,.55)');g.addColorStop(1,'rgba(0,0,0,0)');L.fillStyle=g;L.fillRect(px-16,py-16,32,32);
+    if(upg.light>0){const lv=upg.light,R=lv>1?118:78,hw=lv>1?.5:.32,a=Math.atan2(aim.y,aim.x),ox=px+aim.x*5,oy=py+aim.y*5;beam={ox,oy,R,hw,a};
+      // soft edges: a few stacked wedges, widest and faintest first
+      for(const [k,al] of [[1.35,.3],[1,.45],[.6,.35]]){const gr=L.createRadialGradient(ox,oy,0,ox,oy,R);gr.addColorStop(0,`rgba(0,0,0,${al})`);gr.addColorStop(.75,`rgba(0,0,0,${al*.7})`);gr.addColorStop(1,'rgba(0,0,0,0)');
+        L.fillStyle=gr;L.beginPath();L.moveTo(ox,oy);L.arc(ox,oy,R,a-hw*k,a+hw*k);L.closePath();L.fill();}}}
   ctx.drawImage(lCan,0,0);
   ctx.globalCompositeOperation='lighter';
+  if(beam){const {ox,oy,R,hw,a}=beam,g=ctx.createRadialGradient(ox,oy,0,ox,oy,R);g.addColorStop(0,`rgba(255,240,200,${.16*s.dark})`);g.addColorStop(1,'rgba(255,240,200,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(ox,oy);ctx.arc(ox,oy,R,a-hw,a+hw);ctx.closePath();ctx.fill();}
   for(const [x,y,r] of glows){const g=ctx.createRadialGradient(x,y,0,x,y,r*.7);g.addColorStop(0,`rgba(255,170,80,${.12*s.dark})`);g.addColorStop(1,'rgba(255,170,80,0)');ctx.fillStyle=g;ctx.fillRect(x-r,y-r,r*2,r*2);}
   ctx.globalCompositeOperation='source-over';
 }
@@ -2869,7 +2964,7 @@ let repShown=null;
 function updateHUD(dt){
   if(state==='play'){roadT-=dt;if(roadT<=0){roadT=1;roadLeaves=countRoadLeaves();}}
   if(state==='play'||state==='menu'||state==='closeout'){const t=repTally().total;
-    if(t!==repShown){const el=$('repT');el.textContent=(t>0?'+':t<0?'\u2212':'+')+Math.abs(t);el.className=t>0?'pos':t<0?'neg':'';
+    if(t!==repShown){const el=$('repT'),tot=rep+t;el.textContent=(tot<0?'\u2212':'')+Math.abs(tot);el.className=tot<0?'neg':'';
       if(repShown!=null&&state==='play'){const d=t-repShown,p=document.createElement('span');p.className='reppop';p.textContent=(d>0?'+':'\u2212')+Math.abs(d);p.style.color=d>0?'var(--green)':'var(--red)';$('repBox').querySelectorAll('.reppop').forEach(q=>q.remove());$('repBox').appendChild(p);setTimeout(()=>p.remove(),1500);}
       repShown=t;}}
   const cap=capacity(),bp=battery/cap;
@@ -2927,7 +3022,7 @@ function updateHUD(dt){
     else if(tarps.some(t=>t.st==='down'&&Math.hypot(Math.max(t.x0-P.x,0,P.x-t.x1),Math.max(t.y0-P.y,0,P.y-t.y1))<10)){cls='info';txt=`${G('tarp')} TIE UP THE TARP`;}
     else if(POOLS.some(pl=>pl.cnt>0&&pl.lot===curLot&&!pl.lot.done&&Math.hypot(Math.max(pl.x0-P.x,0,P.x-pl.x1),Math.max(pl.y0-P.y,0,P.y-pl.y1))<14)){cls='info';txt='LEAVES STUCK IN THE POOL  ·  FISH THEM OUT WITH THE NET';}
     else if(nearPkg()&&!bundle&&nearPkg().far){cls='swap';txt=`${G('use')} PICK UP THE PACKAGE`;}
-    else if(packages.some(k=>k.far&&Math.hypot(k.x-P.x,k.y-P.y)<70)){const k=packages.find(k=>k.far&&Math.hypot(k.x-P.x,k.y-P.y)<70);cls='info';txt=k.moved?'THAT PACKAGE BELONGS AT THE DOOR  ·  CARRY OR BLOW IT BACK':'THE DRIVER LEFT A PACKAGE SHORT OF THE DOOR';}
+    else if(packages.some(k=>k.far&&k.moved&&Math.hypot(k.x-P.x,k.y-P.y)<70)){cls='info';txt='THAT PACKAGE BELONGS AT THE DOOR  ·  CARRY OR BLOW IT BACK';}
     else if(nearPkg()&&!bundle){cls='info';txt=`${G('use')} PICK UP THE PACKAGE`;}
     else if(hour>=21){cls='dead';txt='IT\'S LATE! THE DAY ENDS AT 10 PM';}
   }
