@@ -43,12 +43,16 @@ body.coop .lotpanel .lotbar{flex:1;margin-top:0;min-width:110px;} body.coop .lot
 body.coop .lotpanel .lotbadge{position:static;order:3;flex:none;width:22px;height:22px;}
 body.coop .view #hudR{top:auto;bottom:12px;left:16px;transform:none;width:min(400px,calc(100% - 32px));}
 body.coop #view1 #hudR{left:auto;right:16px;}
-body.coop .view #hotbar{bottom:62px;} body.coop .view #prompt{bottom:118px;}
+body.coop .view #hotbar{bottom:62px;} body.coop .view #prompt{bottom:62px;} body.coop .view.hb #prompt{bottom:130px;}
 /* player 2's panel sits in the far corner, clear of the shared bar */
 body.coop #view1 #hud{left:auto;right:16px;}
 body.coop #menuBtn{display:none!important;}
 #fx{position:fixed;inset:0;pointer-events:none;z-index:3;overflow:hidden;}
 .float{position:absolute;left:0;top:0;font-weight:700;font-size:16px;text-shadow:0 3px 0 rgba(0,0,0,.55);white-space:nowrap;}
+.fullcue{position:absolute;left:0;top:0;display:none;font-size:22px;pointer-events:none;}
+/* just the letter or button symbol, no keycap or button face behind it */
+.fullcue .gb{background:none!important;box-shadow:none!important;border:0!important;color:#fff;text-shadow:none;margin:0;}
+.fullcue{filter:drop-shadow(1px 0 0 #10171a) drop-shadow(-1px 0 0 #10171a) drop-shadow(0 1px 0 #10171a) drop-shadow(0 -1px 0 #10171a);}
 .bubble{position:absolute;left:0;top:0;background:#fff;color:#1a2224;font-size:11px;font-weight:700;padding:5px 8px;border-radius:8px;white-space:nowrap;box-shadow:0 3px 0 rgba(0,0,0,.35);}
 .bubble:after{content:'';position:absolute;left:50%;bottom:-6px;margin-left:-5px;border:5px solid transparent;border-top-color:#fff;border-bottom:0;}
 svg.px{shape-rendering:crispEdges;display:block;}
@@ -113,16 +117,15 @@ svg.px{shape-rendering:crispEdges;display:block;}
 #menuBtn{position:fixed;right:16px;top:16px;z-index:4;width:48px;height:48px;padding:0;display:none;align-items:center;justify-content:center;cursor:pointer;background:var(--panel);border:3px solid var(--edge);border-radius:12px;box-shadow:0 6px 0 var(--shadow);}
 #menuBtn:hover{border-color:#fff;}
 #menuBtn:active{transform:translateY(3px);box-shadow:0 3px 0 var(--shadow);}
-/* rake prototype switch, bottom right */
-#rakeBtn{position:fixed;right:16px;bottom:16px;z-index:4;display:none;flex-direction:column;align-items:flex-end;gap:2px;padding:7px 11px;cursor:pointer;font-family:inherit;color:#fff;text-align:right;background:var(--panel);border:3px solid var(--edge);border-radius:12px;box-shadow:0 6px 0 var(--shadow);}
-#rakeBtn:hover{border-color:#fff;}
-#rakeBtn:active{transform:translateY(3px);box-shadow:0 3px 0 var(--shadow);}
-#rakeBtn span{font-size:9px;letter-spacing:1px;color:#9fb5b8;} #rakeBtn b{font-size:13px;letter-spacing:1px;color:#e0a85a;} #rakeBtn small{font-size:8px;color:#6f8386;letter-spacing:1px;}
-body.coop #rakeBtn{bottom:70px;}
 .pause{width:min(780px,94vw);box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:14px;padding:18px 20px 20px;margin:auto;}
 .pause h2{margin:0;font-size:26px;color:var(--gold);text-shadow:0 3px 0 rgba(0,0,0,.4);}
 .pause .sub{font-size:11px;max-width:560px;}
 .pause .btns{flex-wrap:wrap;justify-content:center;}
+.mlist{display:flex;flex-direction:column;align-items:stretch;gap:12px;width:min(340px,84vw);} .mlist .netbox{margin:-4px 0 2px;}
+.setlist{display:flex;flex-direction:column;align-items:center;gap:16px;width:min(500px,88vw);}
+.setrow{display:flex;align-items:center;gap:10px;width:100%;font-size:13px;letter-spacing:1px;}
+.setrow .setlab{flex:0 0 150px;text-align:left;} .setrow .setlab small{display:block;font-size:8px;color:#7f9396;margin-top:3px;}
+.setrow input{flex:1;min-width:0;accent-color:var(--gold);cursor:pointer;} .setrow .btn{width:34px;padding:6px 0;} .setrow .setval{width:46px;text-align:right;color:var(--gold);}
 /* ---------- controls sheet (pause menu + first-play) ---------- */
 .ctl{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;width:100%;}
 .ctlbox{flex:1 1 300px;background:var(--panel-in);border-radius:12px;padding:14px 12px 16px;box-shadow:inset 0 3px 0 rgba(0,0,0,.3);display:flex;flex-direction:column;align-items:center;gap:12px;}
@@ -162,9 +165,11 @@ body.coop #rakeBtn{bottom:70px;}
 .slot.on{transform:translateY(-6px);border-color:#fff;color:#fff;}
 .slot.on .k{color:var(--gold);}
 
-#prompt{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:4;pointer-events:none;
+#prompt{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:4;pointer-events:none;
   padding:10px 18px;border-radius:12px;font-size:15px;font-weight:700;text-shadow:0 3px 0 rgba(0,0,0,.4);
   border:3px solid rgba(255,255,255,.18);box-shadow:0 6px 0 var(--shadow);display:none;text-align:center;white-space:nowrap;}
+/* (sits just above the nozzle bar when there is one) */
+.view.hb #prompt{bottom:84px;}
 #prompt.swap{background:var(--blue);display:block;animation:pop 1s ease-in-out infinite;}
 #prompt.dead{background:var(--red);display:block;animation:shake .5s ease-in-out infinite;}
 #prompt.busy{background:var(--orange);display:block;}
@@ -173,7 +178,10 @@ body.coop #rakeBtn{bottom:70px;}
 #prompt.busy #pbar{display:block;}
 #pfill{height:100%;width:0;background:#fff;border-radius:5px;}
 @keyframes pop{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.05)}}
-@keyframes shake{0%,100%{transform:translateX(-50%) rotate(-1.5deg)}50%{transform:translateX(-50%) rotate(1.5deg)}}
+@keyframes shake{0%,100%{transform:translateX(-50%) rotate(-.6deg)}50%{transform:translateX(-50%) rotate(.6deg)}}
+/* the reputation lock is a standing notice, not an emergency: a much gentler, slower rock */
+#prompt.dead.calm{animation:shakeCalm 1.4s ease-in-out infinite;}
+@keyframes shakeCalm{0%,100%{transform:translateX(-50%) rotate(-.25deg)}50%{transform:translateX(-50%) rotate(.25deg)}}
 
 /* ---------- overlays ---------- */
 .overlay{position:fixed;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
@@ -388,7 +396,6 @@ body.pad .padfocus.pf1{outline-color:#6fd18e;}
 <div id="sharedBar" class="panel"><span class="sm p0" id="sM0">$0</span><span class="day" id="sDay">DAY 1</span><span class="time" id="sClock">7:00 AM</span><span class="srep" id="sRepBox"><svg class="px" width="22" height="20" viewBox="0 0 11 10"><rect x="5" y="0" width="1" height="1" fill="#fff1b0"/><rect x="4" y="1" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="1" width="1" height="1" fill="#fff1b0"/><rect x="6" y="1" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="2" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="2" width="1" height="1" fill="#fff1b0"/><rect x="6" y="2" width="1" height="1" fill="#ffcf4a"/><rect x="0" y="3" width="1" height="1" fill="#b9861a"/><rect x="1" y="3" width="1" height="1" fill="#fff1b0"/><rect x="2" y="3" width="1" height="1" fill="#fff1b0"/><rect x="3" y="3" width="1" height="1" fill="#fff1b0"/><rect x="4" y="3" width="1" height="1" fill="#fff1b0"/><rect x="5" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="9" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="10" y="3" width="1" height="1" fill="#b9861a"/><rect x="1" y="4" width="1" height="1" fill="#b9861a"/><rect x="2" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="9" y="4" width="1" height="1" fill="#b9861a"/><rect x="2" y="5" width="1" height="1" fill="#b9861a"/><rect x="3" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="5" width="1" height="1" fill="#b9861a"/><rect x="3" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="6" width="1" height="1" fill="#b9861a"/><rect x="6" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="2" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="7" width="1" height="1" fill="#b9861a"/><rect x="6" y="7" width="1" height="1" fill="#b9861a"/><rect x="7" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="2" y="8" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="8" width="1" height="1" fill="#b9861a"/><rect x="7" y="8" width="1" height="1" fill="#b9861a"/><rect x="8" y="8" width="1" height="1" fill="#ffcf4a"/><rect x="1" y="9" width="1" height="1" fill="#b9861a"/><rect x="2" y="9" width="1" height="1" fill="#b9861a"/><rect x="8" y="9" width="1" height="1" fill="#b9861a"/><rect x="9" y="9" width="1" height="1" fill="#b9861a"/></svg><b id="sRepT">0</b></span><span class="sm p1" id="sM1">$0</span></div>
 <div id="sharedLot"><div class="panel lotpanel" id="lotPanel"><div class="lotid"><div class="lotname" id="lotName">-</div><div class="lottag" id="lotTag">-</div></div><div class="lotbadge open" id="lotBadge"></div><div class="lotbar"><div class="bar"><div id="lotBar"></div><i style="left:50%"></i><i style="left:70%"></i><i style="left:90%"></i><span class="barnum" id="lotGood">0</span></div><b class="bartot" id="lotTotal">0</b></div></div></div>
 <button id="menuBtn" title="Menu (Esc)"><svg class="px" width="20" height="18" viewBox="0 0 10 9"><rect x="0" y="0" width="10" height="2" fill="#cfe3e6"/><rect x="0" y="3.5" width="10" height="2" fill="#cfe3e6"/><rect x="0" y="7" width="10" height="2" fill="#cfe3e6"/></svg></button>
-<button id="rakeBtn" title="Switch rake prototype"><span>RAKE PROTOTYPE</span><b id="rakeBtnT">A: NET STYLE</b><small>CLICK TO SWITCH</small></button>
 <div id="padToast"></div>
 <div id="netBadge"></div>
 <div id="netBanner">THE HOST PAUSED THE GAME</div>
@@ -474,29 +481,17 @@ const lotLocked=L=>!!L&&!L.filler&&repLevel(rep)<(LOT_LEVEL[L.k]||0);
 const TRUCK_HL=26,TRUCK_HW=12;
 // pools: COPE px of stone deck ring the water. The net is a stick NET_STICK long; held, its head sits NET_REACH from the player
 const COPE=3,NET_STICK=24,NET_REACH=26,NET_CAP=50,NET_R=5.5;
-// the rake (R / triangle swaps it for the blower) comes in four prototypes, picked with the button in the bottom right.
-// A 'net': a moving head scoops leaves up and carries them, like the pool net, until you dump the pile.
-// B 'drag': the tines only grip while a blow button is held; they shove whatever they meet the way the head moves,
-//   and the head reaches out as far as the mouse (or the right stick is pushed).
-// C 'pull': grips like B, but holding the button draws the head in toward you; let go and it lifts and swings back out.
-// D 'back': carries like A, but only scoops when the head is pulled back toward you. Pushed forward through
-//   leaves it just nudges them along a little and passes over them.
-// E 'long': D on a longer handle (RAKE_LONG out).
-// F 'shove': E, except pushing the head forward shoves leaves along like B instead of passing over them. The shoved
-//   bank sits RAKE_GAP px out in front of the crossbar, clear of the scoop band behind it, so turning a push into a
-//   pull leaves the bank behind instead of scooping it up.
-// RAKE_W is the head's width (+RAKE_WIDE per Wide Rake level); held, it sits RAKE_REACH out (B and C: anywhere from
-// RAKE_MIN to RAKE_MAX). A, D, E and F hold RAKE_CAP leaves, +50% of that per Rake Capacity level.
-// C pulls in at RAKE_PULL px/s and swings back out at RAKE_RETURN
-const RAKE_W=11,RAKE_WIDE=4,RAKE_REACH=17,RAKE_LONG=19,RAKE_MIN=8,RAKE_MAX=32,RAKE_CAP=42,RAKE_PULL=55,RAKE_RETURN=110,RAKE_GAP=2,RAKE_KEY='curbappeal-rake-v1';
-const rakeHW=pl=>(RAKE_W+RAKE_WIDE*(pl.upg.rakewide||0))/2,rakeCap=pl=>Math.round(RAKE_CAP*(1+.5*(pl.upg.rakecap||0)));
-const RAKE_PROTOS=[['net','A: NET STYLE'],['drag','B: DRAG STYLE'],['pull','C: HOLD TO PULL'],['back','D: PULL TO SCOOP'],['long','E: LONG, PULL TO SCOOP'],['shove','F: LONG, SCOOP + PUSH']];
-let rakeProto='net';try{const v=localStorage.getItem(RAKE_KEY);if(RAKE_PROTOS.some(p=>p[0]===v))rakeProto=v;}catch(e){}
-// A, D, E and F carry what they catch; B and C grip only while held down and leave the leaves on the ground.
-// D, E and F only scoop on the pull; E and F are the long ones
-const rakeCarries=()=>rakeProto!=='drag'&&rakeProto!=='pull',rakeGrips=()=>!rakeCarries();
-const rakePullOnly=()=>rakeProto==='back'||rakeProto==='long'||rakeProto==='shove',rakeLong=()=>rakeProto==='long'||rakeProto==='shove';
-const rakeReach=()=>rakeLong()?RAKE_LONG:RAKE_REACH;
+// the rake (R / triangle swaps it for the blower). Pulled back toward you, its head scoops up the leaves it passes over
+// and carries them in its teeth until you dump the pile. Pushed forward it just nudges leaves a little and passes over
+// them, unless you've bought the Rake Shovel: then it shoves them along in a bank RAKE_GAP px out in front of the
+// crossbar, clear of the scoop band behind it, so turning a push into a pull leaves the bank behind.
+// Held, the head sits RAKE_REACH out. Its width is RAKE_WIDTHS[Wide Rake level], and it holds RAKE_CAP leaves, +50% of
+// that per Rake Capacity level. Every RAKE_SLOW_PER of a full rake you're hauling (carried, plus however many you're
+// shoving, which can go past full) costs RAKE_SLOW of walking speed, never below RAKE_SLOW_MIN
+const RAKE_REACH=19,RAKE_WIDTHS=[10,13,16,20],RAKE_CAP=30,RAKE_GAP=2,RAKE_SLOW=.1,RAKE_SLOW_PER=.4,RAKE_SLOW_MIN=.35;
+const rakeHW=pl=>RAKE_WIDTHS[Math.min(RAKE_WIDTHS.length-1,pl.upg.rakewide||0)]/2,rakeCap=pl=>Math.round(RAKE_CAP*(1+.5*(pl.upg.rakecap||0)));
+const rakeShoves=pl=>(pl.upg.rakeshovel||0)>0;
+const rakeSpeed=pl=>pl.raking?Math.max(RAKE_SLOW_MIN,1-RAKE_SLOW*pl.rake.load/RAKE_SLOW_PER):1;
 // how hard walking through leaves shoves them aside (1 = the original full-strength kick)
 const BODY_PUSH=.2;
 const POOL_CHANCE=[0,0,.12,.3,.5,.7,.9,1],POTS_PER=[1,2,2,3,4,5,6,8];
@@ -540,36 +535,37 @@ const SHAPES=[
 
 // ============================================================ upgrades + attachments
 const UPG={
-  spare:{name:'SPARE BATTERY',ic:'+',col:'#4bc26a',desc:'+1 charged battery kept in the truck. Spent ones recharge overnight.',max:6,price:n=>Math.round(120*Math.pow(1.55,n))},
-  cap:{name:'BIG BATTERY',ic:'B',col:'#2a9a5a',desc:'+20% battery capacity. Heavier: -5% move speed.',max:5,price:n=>Math.round(180*Math.pow(1.7,n))},
-  tune:{name:'ENGINE TUNE-UP',ic:'~',col:'#fe5f55',desc:'More airflow for every nozzle. +25% force, +7% reach, +20% lift. Drains a bit faster.',max:3,price:n=>[300,750,1600][n]},
-  boots:{name:'WORK BOOTS',ic:'>',col:'#009dff',desc:'+8% move speed.',max:4,price:n=>Math.round(110*Math.pow(1.6,n))},
-  tarp:{name:'EXTRA TARP',ic:'#',col:'#3d86e0',desc:'One more tarp a day. A tied tarp that goes in the truck stays there till morning.',max:5,price:n=>Math.round(150*Math.pow(1.8,n))},
-  bigtarp:{name:'BIG TARP',ic:'[]',col:'#8a5ae0',desc:'+25% tarp size. Bigger bundles.',max:2,price:n=>Math.round(160*Math.pow(1.7,n))},
+  spare:{name:'SPARE BATTERY',ic:'+',col:'#4bc26a',desc:'+1 charged battery kept in the truck. Spent ones recharge overnight.',max:5,price:n=>[100,300,600,1000,1500][n]},
+  cap:{name:'BIG BATTERY',ic:'B',col:'#2a9a5a',desc:'+20% battery capacity. Heavier: -5% move speed.',max:5,price:n=>[100,200,400,700,1200][n]},
+  tune:{name:'ENGINE TUNE-UP',ic:'~',col:'#fe5f55',desc:'More airflow for every nozzle: more force, reach and lift. Drains a bit faster.',max:4,price:n=>[250,500,1000,2000][n]},
+  boots:{name:'WORK BOOTS',ic:'>',col:'#009dff',desc:'+7% move speed.',max:5,price:n=>[150,200,275,375,500][n]},
+  tarp:{name:'EXTRA TARP',ic:'#',col:'#3d86e0',desc:'One more tarp a day. A tied tarp that goes in the truck stays there till morning.',max:5,price:n=>[200,400,600,800,1000][n]},
+  bigtarp:{name:'BIG TARP',ic:'[]',col:'#8a5ae0',desc:'+25% tarp size. Bigger bundles.',max:2,price:n=>[300,500][n]},
   solar:{name:'SOLAR PANEL',ic:'S',col:'#e0a82a',desc:'Panels on the cab roof trickle-charge the spare batteries in the bed while the sun is up. Strongest at midday.',max:1,price:n=>[1000][n]},
-  light:{name:'FLASHLIGHT',ic:'!',col:'#ffcf4a',desc:'A head lamp for working after dark. Shines where you aim. Second level: a wider, longer beam.',max:2,price:n=>[140,380][n]},
-  rakecap:{name:'RAKE CAPACITY',ic:'R+',col:'#e0a85a',desc:'A deeper rake head. Holds 50% more leaves before it\'s full.',max:2,price:n=>[160,380][n]},
-  rakewide:{name:'WIDE RAKE',ic:'&lt;R&gt;',col:'#c08a4a',desc:'A wider rake head. Covers more ground with every stroke.',max:2,price:n=>[200,450][n]},
-  sticky:{name:'STICKY TARP',ic:'*',col:'#e2742a',desc:'Grippy coating. Leaves that land on a tarp slow down fast and take more air to blow off.',max:3,price:n=>[220,520,1100][n]},
+  light:{name:'FLASHLIGHT',ic:'!',col:'#ffcf4a',desc:'A head lamp for working after dark. Shines where you aim. Second level: a wider, longer beam.',max:2,price:n=>[49,199][n]},
+  rakecap:{name:'RAKE CAPACITY',ic:'R+',col:'#e0a85a',desc:'A deeper rake head. Holds 15 more leaves before it\'s full.',max:2,price:n=>[300,800][n]},
+  rakewide:{name:'WIDE RAKE',ic:'&lt;R&gt;',col:'#c08a4a',desc:'A wider rake head. Covers more ground with every stroke.',max:3,price:n=>[150,350,500][n]},
+  rakeshovel:{name:'RAKE SHOVEL',ic:'R&gt;',col:'#b07a48',desc:'Rake can push leaves. Pushed forward, it shoves leaves along in front of it instead of passing over them.',max:1,price:n=>[500][n]},
+  sticky:{name:'STICKY TARP',ic:'*',col:'#e2742a',desc:'Grippy coating. Leaves that land on a tarp slow down fast and take more air to blow off.',max:3,price:n=>[222,555,1111][n]},
 };
 const ATT=[
   {id:'std',name:'STANDARD TIP',short:'STANDARD',desc:'The one that came in the box. Does a bit of everything.',price:0,range:1,coneLo:31,coneHi:24,force:1,lift:1,drain:1,tube:14,tip:'#ff9800'},
-  {id:'fan',name:'FAN NOZZLE',short:'FAN',desc:'Wide, short, flat sheet of air. Keeps leaves on the ground. Sweeps lawns into rows.',price:180,range:.72,coneLo:58,coneHi:50,force:.9,lift:.3,drain:.9,tube:13,tip:'#009dff',wide:true},
-  {id:'long',name:'LONG TUBE',short:'LONG',desc:'Extension tube. +45% reach and a tighter stream for pushing piles from far away.',price:220,range:1.45,coneLo:23,coneHi:17,force:.95,lift:.9,drain:1,tube:22,tip:'#ffcf4a'},
-  {id:'jet',name:'JET TIP',short:'JET',desc:'Needle-thin and brutal. Blasts leaves out of corners and off fences. Launches them high.',price:320,range:1.2,coneLo:11,coneHi:8,force:2.1,lift:1.6,drain:1.15,tube:16,tip:'#fe5f55'},
-  {id:'eco',name:'ECO TIP',short:'ECO',desc:'Gentler air, but uses 45% less battery. Great for long days.',price:150,range:.9,coneLo:30,coneHi:24,force:.72,lift:.8,drain:.55,tube:14,tip:'#4bc26a'},
-  {id:'twin',name:'TWIN NOZZLE',short:'TWIN',desc:'Splits the air out the front and the back at the same time. Clears both sides of a path in one pass.',price:400,range:.85,coneLo:30,coneHi:24,force:.8,lift:.8,drain:1.3,tube:14,tip:'#ff5f8f',twin:true},
-  {id:'vortex',name:'VORTEX TIP',short:'VORTEX',desc:'Spins the air so leaves swirl in toward one spot. Builds piles right where you aim.',price:480,range:1,coneLo:36,coneHi:30,force:.85,lift:.45,drain:1.1,tube:15,tip:'#b06cff',vortex:true},
+  {id:'fan',name:'FAN NOZZLE',short:'FAN',desc:'Wide, short, flat sheet of air. Keeps leaves on the ground. Sweeps lawns into rows.',price:149,range:.72,coneLo:58,coneHi:50,force:.9,lift:.3,drain:.9,tube:13,tip:'#009dff',wide:true},
+  {id:'long',name:'LONG TUBE',short:'LONG',desc:'Extension tube. +45% reach and a tighter stream for pushing piles from far away.',price:199,range:1.45,coneLo:23,coneHi:17,force:.95,lift:.9,drain:1,tube:22,tip:'#ffcf4a'},
+  {id:'jet',name:'JET TIP',short:'JET',desc:'Needle-thin and brutal. Blasts leaves out of corners and off fences. Launches them high.',price:299,range:1.2,coneLo:11,coneHi:8,force:2.1,lift:1.6,drain:1.15,tube:16,tip:'#fe5f55'},
+  {id:'eco',name:'ECO TIP',short:'ECO',desc:'Gentler air, but uses 45% less battery. Great for long days.',price:139,range:.9,coneLo:30,coneHi:24,force:.72,lift:.8,drain:.55,tube:14,tip:'#4bc26a'},
+  {id:'twin',name:'TWIN NOZZLE',short:'TWIN',desc:'Splits the air out the front and the back at the same time. Clears both sides of a path in one pass.',price:499,range:.85,coneLo:30,coneHi:24,force:.8,lift:.8,drain:1.3,tube:14,tip:'#ff5f8f',twin:true},
+  {id:'vortex',name:'VORTEX TIP',short:'VORTEX',desc:'Spins the air so leaves swirl in toward one spot. Builds piles right where you aim.',price:499,range:1,coneLo:36,coneHi:30,force:.85,lift:.45,drain:1.1,tube:15,tip:'#b06cff',vortex:true},
 ];
-const TUNE={force:[1,1.25,1.55,1.9],range:[1,1.07,1.14,1.22],lift:[1,1.2,1.45,1.7],drain:[1,1.06,1.12,1.18]};
+const TUNE={force:[1,1.2,1.4,1.6,2],range:[1,1.05,1.12,1.22,1.35],lift:[1,1.15,1.25,1.35,1.65],drain:[1,1.05,1.12,1.2,1.35]};
 const BASE={lowF:600,highF:731,lowR:74,highR:90,liftHi:.18};
-let upg={spare:0,cap:0,tune:0,boots:0,tarp:0,bigtarp:0,sticky:0,light:0,solar:0,rakecap:0,rakewide:0};
+let upg={spare:0,cap:0,tune:0,boots:0,tarp:0,bigtarp:0,sticky:0,light:0,solar:0,rakecap:0,rakewide:0,rakeshovel:0};
 let owned=['std'],equipped='std';
 const att=()=>ATT.find(a=>a.id===equipped)||ATT[0];
 const capacity=()=>100*(1+.2*upg.cap);
-const spareMax=()=>2+upg.spare;
-const moveMul=()=>(1-.05*upg.cap)*(1+.08*upg.boots);
-const tarpsOwned=()=>1+upg.tarp;
+const spareMax=()=>1+upg.spare;
+const moveMul=()=>(1-.05*upg.cap)*(1+.07*upg.boots);
+const tarpsOwned=()=>upg.tarp;
 const tarpDims=()=>{const k=1+.25*upg.bigtarp;return[Math.round(44*k),Math.round(32*k)];};
 const DRAIN_LO=1.25,DRAIN_HI=3.6;
 const drainRate=m=>m===0?0:(m===2?DRAIN_HI:DRAIN_LO)*att().drain*TUNE.drain[upg.tune];
@@ -1193,7 +1189,7 @@ let P={x:110,y:Y1-26,vx:0,vy:0,walk:0};
 const TR={x:100,y:Y1-34,a:0,v:0,steer:0};
 let aim={x:1,y:-.3};
 let power=0,mode=0,battery=100,bed=[1,1],swapT=0,tieT=0,time=0,airCount=0;
-let state='title',driving=false,money=20000,day=1,hour=DAY_START,rep=0;
+let state='title',driving=false,money=0,day=1,hour=DAY_START,rep=0;
 let today=null,bumpT=0;
 // truckBundles: leaf counts of the tied tarps loaded today. Each one used up a tarp until tomorrow
 const tarps=[],truckBundles=[];let bundle=null,tarpSeq=1,tarpsUsed=0,heldNet=null;
@@ -1217,12 +1213,14 @@ const PLAYER_PALS=[
 // truck upgrades are bought once for the whole crew; everything else is personal gear
 const SHARED_UPG=['spare','cap','solar'];
 const players=[];let cur=null,PPAL=PLAYER_PALS[0];
+// upgrade levels capped at each upgrade's current top level (older saves can have more)
+function clampUpg(u){for(const k in UPG)u[k]=Math.min(u[k]||0,UPG[k].max);return u;}
 function newPlayer(i,dev,prof){
   const pr=prof||{money:0,upg:{},owned:['std'],equipped:'std'};
   return{i,dev,pal:PLAYER_PALS[i],P:{x:0,y:0,vx:0,vy:0,walk:0},aim:{x:1,y:-.3},cam:{x:0,y:0},
     power:0,mode:0,battery:100,swapT:0,tieT:0,bundle:null,heldNet:null,carryPkg:null,driving:false,riding:false,
-    equipped:pr.equipped||'std',owned:(pr.owned||['std']).slice(),upg:{spare:0,cap:0,tune:0,boots:0,tarp:0,bigtarp:0,sticky:0,light:0,solar:0,rakecap:0,rakewide:0,...pr.upg},money:pr.money||0,tarpsUsed:0,
-    bl:{nx:0,ny:0,range:0,cosH:1,tx:0,ty:0},raking:false,rakeN:0,rake:{reach:RAKE_REACH,eff:RAKE_REACH,vL:-RAKE_W/2,vR:RAKE_W/2,down:false,prev:null,hx:0,hy:0,contact:0,drop:null,fullT:-9},lastEmptyBuzz:0,wasEmpty:false,netPrev:null,netFullT:-9,curLot:null,statsCache:null,statsT:0,autoMode:'kbm',vortexD:40,autoPad:-1};
+    equipped:pr.equipped||'std',owned:(pr.owned||['std']).slice(),upg:clampUpg({spare:0,cap:0,tune:0,boots:0,tarp:0,bigtarp:0,sticky:0,light:0,solar:0,rakecap:0,rakewide:0,rakeshovel:0,...pr.upg}),money:pr.money||0,tarpsUsed:0,
+    bl:{nx:0,ny:0,range:0,cosH:1,tx:0,ty:0},raking:false,rakeN:0,rake:{eff:RAKE_REACH,vL:-RAKE_WIDTHS[0]/2,vR:RAKE_WIDTHS[0]/2,prev:null,hx:0,hy:0,contact:0,load:0,drop:null,fullT:-9},lastEmptyBuzz:0,wasEmpty:false,netPrev:null,netFullT:-9,curLot:null,statsCache:null,statsT:0,autoMode:'kbm',vortexD:40,autoPad:-1};
 }
 function usePl(pl){if(cur)storePl();cur=pl;P=pl.P;aim=pl.aim;PPAL=pl.pal;power=pl.power;mode=pl.mode;battery=pl.battery;swapT=pl.swapT;tieT=pl.tieT;bundle=pl.bundle;heldNet=pl.heldNet;
   carryPkg=pl.carryPkg;driving=pl.driving;equipped=pl.equipped;owned=pl.owned;upg=pl.upg;money=pl.money;tarpsUsed=pl.tarpsUsed;bl=pl.bl;lastEmptyBuzz=pl.lastEmptyBuzz;
@@ -1245,7 +1243,7 @@ const blowers=(min)=>players.filter(pl=>pl.power>min&&onFoot(pl));
 // yours in its place, where the solar panel (if you have one) can top it back up
 const bestSpare=()=>bed.length?Math.max(...bed):0;
 function swapBattery(){const i=bed.indexOf(bestSpare());if(i<0)return;const got=bed[i];bed[i]=clamp(battery/capacity(),0,1);battery=got*capacity();}
-const SOLAR_RATE=.35;
+const SOLAR_RATE=.25;
 // sunlight on the panels: nothing before 7 AM or after 7 PM, strongest at 1 PM
 const sunAt=h=>clamp(Math.sin(Math.PI*(h-7)/12),0,1);
 const charging=()=>players[0].upg.solar>0&&sunAt(hour)>.02&&bed.some(c=>c<1);
@@ -1278,6 +1276,7 @@ function leavePlayer(pl){
   if(pl.dev.t==='net'){padToast('YOUR ONLINE FRIEND LEFT');}
   for(const p of peds.concat(couriers))if(p.bub){p.bub.el.remove();p.bub=null;}
   for(const f of floats)if(f.els[1])f.els[1].remove();
+  for(const e of pl.fullEls||[])if(e)e.remove();
   players.splice(players.indexOf(pl),1);const v=pl.view;if(v){v.root.remove();views.splice(views.indexOf(v),1);}
   const p1=players[0],was=p1.dev;if(was.t==='pad'){p1.autoPad=was.i;p1.autoMode='pad';}p1.dev={t:'auto'};
   layoutViews();usePl(p1);padToast('PLAYER 2 LEFT');save();
@@ -1320,7 +1319,26 @@ const floats=[];
 function floatText(x,y,txt,col,big){const els=views.map(v=>{const el=document.createElement('div');el.className='float';el.textContent=txt;el.style.color=col;if(big)el.style.fontSize='22px';v.fx.appendChild(el);return el;});floats.push({els,x,y,t:0,life:1.4});}
 function bubble(p,txt){if(p.bub)p.bub.el.remove();const els=views.map(v=>{const el=document.createElement('div');el.className='bubble';el.textContent=txt;v.fx.appendChild(el);return el;});
   p.bub={els,t:2.2,el:{remove:()=>els.forEach(e=>e.remove()),get textContent(){return els[0].textContent;}}};}
+// a full rake or pool net: the button that empties it pulses slowly on the head of the rake or net, fading up to
+// FULLCUE_MAX opacity and back over FULLCUE_FADE seconds, then staying hidden for FULLCUE_GAP. It shows the key, or
+// the controller button if that's what they're playing with
+const FULLCUE_MAX=.7,FULLCUE_FADE=1.6,FULLCUE_GAP=.5;
+function updateFullCues(){
+  for(const pl of players){
+    const full=onFoot(pl)&&((pl.heldNet&&pl.heldNet.n>=NET_CAP)||(pl.raking&&pl.rakeN>=rakeCap(pl))),els=pl.fullEls||(pl.fullEls=[]);
+    views.forEach((v,j)=>{let el=els[j];
+      if(!full||!v.pl){if(el)el.style.display='none';return;}
+      if(!el||!el.isConnected){el=document.createElement('div');el.className='fullcue';v.fx.appendChild(el);els[j]=el;}
+      const g=withPl(pl,()=>glyphInner('tarp'));if(el.dataset.g!==g){el.dataset.g=g;el.innerHTML=g;}
+      const t=time%(FULLCUE_FADE+FULLCUE_GAP),o=t<FULLCUE_FADE?FULLCUE_MAX*.5*(1-Math.cos(t*Math.PI*2/FULLCUE_FADE)):0;
+      // the middle of the rake head (as drawn, stopped short of fences), or of the net's hoop
+      const net=!!pl.heldNet,d=net?NET_REACH:pl.rake.eff,hx=pl.P.x+pl.aim.x*d,hy=pl.P.y+pl.aim.y*d-(net?4:0);
+      el.style.display='block';el.style.opacity=o.toFixed(3);
+      el.style.transform=`translate(${(hx-v.pl.cam.x)*v.sc}px,${(hy-v.pl.cam.y)*v.sc}px) translate(-50%,-50%)`;});
+  }
+}
 function updateFx(dt){
+  updateFullCues();
   for(let i=floats.length-1;i>=0;i--){const f=floats[i];f.t+=dt;if(f.t>f.life){f.els.forEach(e=>e.remove());floats.splice(i,1);continue;}
     views.forEach((v,j)=>{const el=f.els[j];if(!el||!v.pl)return;const sx=(f.x-v.pl.cam.x)*v.sc,sy=(f.y-v.pl.cam.y-f.t*18)*v.sc;
       el.style.transform=`translate(${sx}px,${sy}px) translate(-50%,-50%) scale(${1+Math.max(0,.3-f.t)})`;el.style.opacity=f.t>f.life-.4?(f.life-f.t)/.4:1;});}
@@ -1460,10 +1478,10 @@ function menuNav(dt){
   else if((navT-=dt)<=0){navT=.11;moveFocus(dx,dy,it);}
   if(state!=='title'&&Math.abs(pad.ry)>.2)(navScrollEl||modalEl).scrollTop+=pad.ry*700*dt;
   if(padHit(BTN.use)&&padFocus){padFocus.click();return;}
-  if(padHit(BTN.honk)){if(state==='menu')closeMenu();else if(state==='closeout')closeModal();else if(state==='joinpad')closeKeypad();return;}
+  if(padHit(BTN.honk)){if(state==='menu')menuBack();else if(state==='closeout')closeModal();else if(state==='joinpad')closeKeypad();return;}
   if(padHit(BTN.pause)){if(state==='menu')closeMenu();else if(state==='shop')startDay();else if(state==='joinpad')kpPress('>');else if(state==='title')(padFocus||defaultFocus())?.click();return;}
   if(padHit(BTN.prev)||padHit(BTN.next)){const d=padHit(BTN.next)?1:-1;
-    if(state==='menu'){const v=['kbm','xbox','ps'];pickCtl(v[(v.indexOf(ctlView)+d+3)%3]);}
+    if(state==='menu'){if(document.getElementById('ctlWrap')){const v=['kbm','xbox','ps'];pickCtl(v[(v.indexOf(ctlView)+d+3)%3]);}}
     else if(state==='shop'){nightTab=nightTab==='sum'?'shop':'sum';renderNight();setFocus(modalEl.querySelector('[data-tab].on'));blip(500,.04,'square',.03);}}
 }
 // re-rendered screens (the shop) keep the ring on the same button, or the one nearest where it was
@@ -1643,7 +1661,7 @@ addEventListener('keydown',e=>{
       const m=/^Digit([1-6])$/.exec(e.code);if(m){const list=ATT.filter(a=>owned.includes(a.id));const a=list[+m[1]-1];if(a)equip(a.id);}
     });
   }else if(state==='menu'){
-    if(e.code==='Escape'||(menuFirst&&(e.code==='Enter'||e.code==='Space')))closeMenu();
+    if(e.code==='Escape')menuBack();else if(menuFirst&&(e.code==='Enter'||e.code==='Space'))closeMenu();
   }else if(state==='closeout'){
     if(e.code==='KeyE'||e.code==='Enter')confirmCloseout();
     if(e.code==='Escape')closeModal();
@@ -1677,7 +1695,7 @@ function setupTitle(){
   const s=loadSave(),b=document.getElementById('titleBtns');
   b.innerHTML='';
   const mkb=(txt,cls,fn)=>{const el=document.createElement('button');el.className='btn '+cls;el.textContent=txt;el.onclick=e=>{e.stopPropagation();fn();};b.appendChild(el);};
-  if(s){mkb(`CONTINUE - DAY ${s.day}`,'bounce',()=>{money=s.money;day=s.day;rep=s.rep||0;upg={...upg,...s.upg};upg.bigtarp=Math.min(upg.bigtarp,UPG.bigtarp.max);owned=s.owned||['std'];equipped=s.equipped||'std';p2Profile=s.p2||null;beginGame();});mkb('NEW GAME','red',()=>{try{localStorage.removeItem(SAVE_KEY);}catch(e){}money=20000;rep=0;day=1;beginGame(true);});}
+  if(s){mkb(`CONTINUE - DAY ${s.day}`,'bounce',()=>{money=s.money;day=s.day;rep=s.rep||0;upg=clampUpg({...upg,...s.upg});owned=s.owned||['std'];equipped=s.equipped||'std';p2Profile=s.p2||null;beginGame();});mkb('NEW GAME','red',()=>{try{localStorage.removeItem(SAVE_KEY);}catch(e){}money=0;rep=0;day=1;beginGame(true);});}
   else mkb('START DAY 1','bounce',()=>beginGame(true));
   mkb('JOIN ONLINE','',openKeypad);
   mkb('YARD EDITOR','gold',openEditor);
@@ -1685,24 +1703,30 @@ function setupTitle(){
 function beginGame(fresh){titleEl.classList.add('hide');ensureAudio();resetDay();state='play';document.body.style.cursor='none';if(fresh===true)openMenu(true);}
 
 // ============================================================ audio
-let AC=null,nGain,nFilt,mOsc,mGain,eOsc,eGain,master;
+let AC=null,nGain,nFilt,mOsc,mGain,eOsc,eGain,master,sfxBus,musicBus;
+// volume settings (0..1), kept in the browser
+const SET_KEY='curbappeal-settings-v1',settings={music:.7,sfx:1};
+try{Object.assign(settings,JSON.parse(localStorage.getItem(SET_KEY))||{});}catch(e){}
+function saveSettings(){try{localStorage.setItem(SET_KEY,JSON.stringify(settings));}catch(e){}}
+function applyVolumes(){if(!AC)return;const t=AC.currentTime;sfxBus.gain.setTargetAtTime(settings.sfx,t,.02);musicBus.gain.setTargetAtTime(settings.music,t,.02);}
 function ensureAudio(){
   if(AC){if(AC.state==='suspended')AC.resume();return;}
   try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){return;}
   master=AC.createGain();master.gain.value=.7;master.connect(AC.destination);
+  sfxBus=AC.createGain();sfxBus.gain.value=settings.sfx;sfxBus.connect(master);musicBus=AC.createGain();musicBus.gain.value=settings.music;musicBus.connect(master);
   const len=AC.sampleRate*2,buf=AC.createBuffer(1,len,AC.sampleRate),d=buf.getChannelData(0);
   let b0=0,b1=0,b2=0;for(let i=0;i<len;i++){const w=Math.random()*2-1;b0=.99765*b0+w*.099;b1=.963*b1+w*.2965;b2=.57*b2+w*1.0526;d[i]=(b0+b1+b2+w*.1848)*.18;}
   const src=AC.createBufferSource();src.buffer=buf;src.loop=true;
   nFilt=AC.createBiquadFilter();nFilt.type='bandpass';nFilt.Q.value=.6;nFilt.frequency.value=600;
   const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=5000;
-  nGain=AC.createGain();nGain.gain.value=0;src.connect(nFilt);nFilt.connect(lp);lp.connect(nGain);nGain.connect(master);src.start();
+  nGain=AC.createGain();nGain.gain.value=0;src.connect(nFilt);nFilt.connect(lp);lp.connect(nGain);nGain.connect(sfxBus);src.start();
   mOsc=AC.createOscillator();mOsc.type='sawtooth';mOsc.frequency.value=80;
   const mLP=AC.createBiquadFilter();mLP.type='lowpass';mLP.frequency.value=500;
   mGain=AC.createGain();mGain.gain.value=0;
   const lfo=AC.createOscillator();lfo.frequency.value=9;const lg=AC.createGain();lg.gain.value=2.5;lfo.connect(lg);lg.connect(mOsc.frequency);lfo.start();
-  mOsc.connect(mLP);mLP.connect(mGain);mGain.connect(master);mOsc.start();
+  mOsc.connect(mLP);mLP.connect(mGain);mGain.connect(sfxBus);mOsc.start();
   eOsc=AC.createOscillator();eOsc.type='square';eOsc.frequency.value=38;const eLP=AC.createBiquadFilter();eLP.type='lowpass';eLP.frequency.value=260;
-  eGain=AC.createGain();eGain.gain.value=0;eOsc.connect(eLP);eLP.connect(eGain);eGain.connect(master);eOsc.start();
+  eGain=AC.createGain();eGain.gain.value=0;eOsc.connect(eLP);eLP.connect(eGain);eGain.connect(sfxBus);eOsc.start();
 }
 function updateAudio(){
   if(!AC)return;const loud=players.reduce((m,pl)=>pl.power>m.power?pl:m,players[0]),t=AC.currentTime,p=state==='play'?loud.power:0,a=withPl(loud,att),tn=loud.upg.tune;
@@ -1718,7 +1742,7 @@ function updateAudio(){
 function blip(f,dur,type='square',vol=.06,to){
   if(!AC)return;const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();
   o.type=type;o.frequency.setValueAtTime(f,t);if(to)o.frequency.exponentialRampToValueAtTime(to,t+dur);
-  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(master);o.start(t);o.stop(t+dur+.02);
+  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(sfxBus);o.start(t);o.stop(t+dur+.02);
 }
 function chaChing(){blip(988,.08,'square',.05);setTimeout(()=>blip(1319,.25,'square',.05),80);}
 function honk(){rumble(.15,.3,140);blip(392,.28,'square',.05);blip(494,.28,'square',.04);for(const p of peds)if(Math.abs(p.x-TR.x)<120&&!p.bub&&rnd()<.6)bubble(p,['BEEP BEEP!','WHOA!','HI!'][(rnd()*3)|0]);}
@@ -1781,7 +1805,7 @@ function tarpAction(){
   }
   let best=null,bd=1e9;for(const t of tarps){if(t.st!=='down'||t.owner!==cur)continue;const dx=Math.max(t.x0-P.x,0,P.x-t.x1),dy=Math.max(t.y0-P.y,0,P.y-t.y1),d=Math.hypot(dx,dy);if(d<10&&d<bd){bd=d;best=t;}}
   if(best){startTie(best);return;}
-  if(tarpsLeft()<=0){floatText(P.x,P.y-14,tarpsUsed?'NO TARPS LEFT TODAY':'NO TARPS LEFT','#fe5f55');return;}
+  if(tarpsLeft()<=0){if(tarpsOwned())floatText(P.x,P.y-14,tarpsUsed?'NO TARPS LEFT TODAY':'NO TARPS LEFT','#fe5f55');return;}
   const [tw,th]=tarpDims(),cx=P.x+aim.x*(tw*.5+10),cy=P.y+aim.y*(th*.5+10);
   if(wet(cx,cy)){floatText(P.x,P.y-14,'NOT IN THE POOL!','#fe5f55');return;}
   const t={id:tarpSeq++,owner:cur,st:'fly',t:0,fx:P.x,fy:P.y-6,x0:Math.round(cx-tw/2),y0:Math.round(cy-th/2),pins:[]};t.x1=t.x0+tw;t.y1=t.y0+th;
@@ -1855,16 +1879,16 @@ function toggleRake(){
   if(cur.raking){stopRake();return;}
   if(bundle||carryPkg){floatText(P.x,P.y-14,'HANDS FULL','#fe5f55');blip(150,.12,'sawtooth',.04,90);return;}
   if(heldNet)putNetDown();
-  const k=cur.rake;cur.raking=true;cur.rakeN=0;k.reach=k.eff=rakeReach();k.vL=-rakeHW(cur);k.vR=rakeHW(cur);k.down=false;k.prev=null;k.drop=null;k.contact=0;
+  const k=cur.rake;cur.raking=true;cur.rakeN=0;k.eff=RAKE_REACH;k.vL=-rakeHW(cur);k.vR=rakeHW(cur);k.prev=null;k.drop=null;k.contact=0;k.load=0;
   dropInputs();rumble(0,.3,60);floatText(P.x,P.y-16,'RAKE','#e0a85a');blip(420,.05,'square',.05);setTimeout(()=>blip(560,.06,'square',.04),60);
 }
 // back to the blower. Anything still in the rake is left where the head is
 function stopRake(quiet){
   if(!cur.raking)return;rakeDump(true);
-  const k=cur.rake;cur.raking=false;k.down=false;k.prev=null;k.drop=null;k.contact=0;dropInputs();
+  const k=cur.rake;cur.raking=false;k.prev=null;k.drop=null;k.contact=0;k.load=0;dropInputs();
   if(!quiet){const a=att();floatText(P.x,P.y-16,a.name,a.tip);blip(560,.05,'square',.05);setTimeout(()=>blip(420,.06,'square',.04),60);}
 }
-// net style: drop the catch in a neat pile at the head. It has to be on dry ground unless we're putting the rake away
+// drop the catch in a neat pile at the head. It has to be on dry ground unless we're putting the rake away
 function rakeDump(force){
   const pl=cur,n=pl.rakeN;if(!n)return;
   const k=pl.rake,hx=P.x+aim.x*k.eff,hy=P.y+aim.y*k.eff,S=rakeSolids(pl);
@@ -1877,12 +1901,6 @@ function rakeDump(force){
   // back up. It goes away once the whole head has left it
   k.drop={x:hx,y:hy,r:Math.max(rakeHW(pl),r)+3};pl.rakeN=0;statsT=1;
   if(!force){floatText(hx,hy-10,`PILED ${n}`,'#4bc26a');blip(200,.1,'triangle',.06,140);rumble(.15,.25,80);}
-}
-function setRakeProto(p){
-  if(p===rakeProto)return;
-  for(const pl of players)withPl(pl,()=>{rakeDump(true);const k=cur.rake;k.down=false;k.drop=null;k.contact=0;if(cur.raking)k.reach=rakeReach();});
-  rakeProto=p;try{localStorage.setItem(RAKE_KEY,p);}catch(e){}
-  rakeBtnLabel();blip(600,.05,'square',.04);for(const v of views)v.cache.rake=null;
 }
 // ---------- flowerpots
 function breakPot(p){
@@ -1955,16 +1973,13 @@ function resetDay(){
   for(const p of peds)if(p.bub)p.bub.el.remove();peds.length=0;spawnCameo();
   TR.v=0;TR.steer=0;
   for(const pl of players)withPl(pl,()=>{bundle=null;tarpsUsed=0;battery=capacity();swapT=0;tieT=0;driving=false;cur.riding=false;heldNet=null;carryPkg=null;
-    cur.raking=false;cur.rakeN=0;Object.assign(cur.rake,{reach:RAKE_REACH,down:false,prev:null,drop:null,contact:0});
+    cur.raking=false;cur.rakeN=0;Object.assign(cur.rake,{eff:RAKE_REACH,prev:null,drop:null,contact:0,load:0});
     const [x,y]=fromTruck(-6-pl.i*14,-(TRUCK_HW+8));P.x=x;P.y=y;P.vx=P.vy=0;collidePlayer();
     const v=pl.view||views[0];pl.cam.x=clamp(P.x-v.w/2,0,WORLD_W-v.w);pl.cam.y=clamp(P.y-v.h/2,0,H-v.h);});
   camX=players[0].cam.x;camY=players[0].cam.y;
   statsCache=null;statsT=1;for(const v of views)v.cache.hot=null;
 }
-const menuBtn=document.getElementById('menuBtn'),rakeBtn=document.getElementById('rakeBtn');
-const rakeBtnLabel=()=>{$('rakeBtnT').textContent=(RAKE_PROTOS.find(p=>p[0]===rakeProto)||RAKE_PROTOS[0])[1];};
-rakeBtn.addEventListener('mousedown',e=>e.stopPropagation());
-rakeBtn.addEventListener('click',e=>{e.stopPropagation();rakeBtn.blur();const i=RAKE_PROTOS.findIndex(p=>p[0]===rakeProto);setRakeProto(RAKE_PROTOS[(i+1)%RAKE_PROTOS.length][0]);});
+const menuBtn=document.getElementById('menuBtn');
 menuBtn.addEventListener('mousedown',e=>e.stopPropagation());
 menuBtn.addEventListener('click',e=>{e.stopPropagation();openMenu();});
 // the controls, drawn as keys and a mouse. Shared by the pause menu and the first-play screen
@@ -2001,25 +2016,54 @@ function openMenu(first,owner){
   if(state!=='play')return;
   menuOwner=owner||players[0];return withPl(menuOwner,()=>openMenuAs(first));
 }
+// the pause menu has three pages: the main list, the controls sheet and settings (the first-play screen is just the controls)
+let menuPage='main';
 function openMenuAs(first){
   state='menu';menuFirst=!!first;dropInputs();for(const k in keys)keys[k]=false;document.body.style.cursor='default';
-  ctlView=inputMode==='pad'?padStyle():'kbm';ctlPicked=false;
-  const head=first?`<h2>HOW TO PLAY</h2><div class="goal">BLOW LEAVES INTO THE <span style="color:var(--green)">GREEN</span> BEDS AND KEEP THEM OUT OF THE <span style="color:var(--red)">RED</span> ZONES.<br>THEN KNOCK ON THE FRONT DOOR TO GET PAID.</div>`
-    :`<h2>PAUSED</h2><div class="sub">DAY ${day} &middot; ${fmtHour(hour)}</div>`;
+  ctlView=inputMode==='pad'?padStyle():'kbm';ctlPicked=false;menuPage='main';
   if(NET.role==='guest')NET.localMenu=true;
-  const btns=first?`<button class="btn green bounce" id="mResume">GOT IT! ${G('ok')}</button>`
-    :NET.role==='guest'?`<button class="btn green" id="mResume">RESUME ${G('back')}</button><button class="btn red" id="mNetLeave">LEAVE ONLINE GAME</button>`
-    :`<button class="btn green" id="mResume">RESUME ${G('back')}</button><button class="btn red" id="mEnd">END THE DAY</button>${cur!==players[0]?'<button class="btn gold" id="mLeave">LEAVE GAME</button>':''}${players.length<2&&!NET.role?'<button class="btn gold" id="mAdd">+ PLAYER 2</button>':''}`;
-  modalEl.innerHTML=`<div class="panel pause">${head}${ctlSeg()}<div id="ctlWrap"></div><div class="btns">${btns}</div>${first||NET.role==='guest'?'':'<div class="netbox" id="netBox"></div>'}</div>`;
-  modalEl.classList.remove('hide');
-  modalEl.querySelectorAll('[data-cv]').forEach(b=>b.onclick=()=>pickCtl(b.dataset.cv));showCtl(ctlView);
-  document.getElementById('mResume').onclick=closeMenu;
-  if(!first)document.getElementById('mEnd').onclick=()=>{modalEl.classList.add('hide');state='play';endDay();};
-  const nl=document.getElementById('mNetLeave');if(nl)nl.onclick=guestLeave;refreshMenuNet();
-  const ad=document.getElementById('mAdd');if(ad)ad.onclick=()=>{modalEl.classList.add('hide');state='play';document.body.style.cursor='none';joinPlayer({t:'wait'});};
-  const lv=document.getElementById('mLeave');if(lv){const who=cur;lv.onclick=()=>{modalEl.classList.add('hide');state='play';leavePlayer(who);};}
+  renderMenuAs();
 }
-function closeMenu(){if(state!=='menu')return;NET.localMenu=false;modalEl.classList.add('hide');state='play';document.body.style.cursor='none';}
+const renderMenu=()=>withPl(menuOwner,renderMenuAs);
+function menuGo(page){const from=menuPage;menuPage=page;renderMenu();blip(560,.04,'square',.04);
+  if(page==='main'&&inputMode==='pad'){const b=document.getElementById(from==='controls'?'mCtl':from==='settings'?'mSet':'mResume');if(b)setFocus(b);}}
+// Escape / B: back to the main list, or out of the menu from there
+function menuBack(){if(menuFirst||menuPage==='main')closeMenu();else menuGo('main');}
+function volRow(k,label,note){const v=Math.round(settings[k]*100);
+  return`<div class="setrow"><span class="setlab">${label}${note?`<small>${note}</small>`:''}</span><button class="btn small" data-vol="${k}" data-d="-1">&minus;</button>
+    <input type="range" min="0" max="100" step="5" value="${v}" data-vr="${k}"><button class="btn small" data-vol="${k}" data-d="1">+</button><b class="setval" id="vv_${k}">${v}%</b></div>`;}
+function renderMenuAs(){
+  const first=menuFirst,guest=NET.role==='guest',back=`<div class="btns"><button class="btn" id="mBack">BACK ${G('back')}</button></div>`;
+  let html;
+  if(first)html=`<h2>HOW TO PLAY</h2><div class="goal">BLOW LEAVES INTO THE <span style="color:var(--green)">GREEN</span> BEDS AND KEEP THEM OUT OF THE <span style="color:var(--red)">RED</span> ZONES.<br>THEN KNOCK ON THE FRONT DOOR TO GET PAID.</div>
+    ${ctlSeg()}<div id="ctlWrap"></div><div class="btns"><button class="btn green bounce" id="mResume">GOT IT! ${G('ok')}</button></div>`;
+  else if(menuPage==='controls')html=`<h2>CONTROLS</h2>${ctlSeg()}<div id="ctlWrap"></div>${back}`;
+  else if(menuPage==='settings')html=`<h2>SETTINGS</h2><div class="setlist">${volRow('music','MUSIC','NO MUSIC YET')}${volRow('sfx','SOUND EFFECTS')}
+    ${guest?'':'<button class="btn gold" id="mCheat">DEV CHEAT: +1K$</button>'}</div>${back}`;
+  else html=`<h2>PAUSED</h2><div class="sub">DAY ${day} &middot; ${fmtHour(hour)}</div><div class="mlist">
+    <button class="btn green" id="mResume">RESUME ${G('back')}</button>
+    <button class="btn" id="mCtl">CONTROLS</button>
+    <button class="btn" id="mSet">SETTINGS</button>
+    ${guest?'':'<button class="btn" id="mNet">HOST ONLINE</button><div class="netbox" id="netBox"></div>'}
+    ${players.length<2&&!NET.role?'<button class="btn gold" id="mAdd">LOCAL SPLITSCREEN</button>':''}
+    ${cur!==players[0]&&!guest?'<button class="btn gold" id="mLeave">LEAVE GAME</button>':''}
+    ${guest?'<button class="btn red" id="mNetLeave">LEAVE ONLINE GAME</button>':'<button class="btn red" id="mEnd">END THE DAY</button>'}</div>`;
+  modalEl.innerHTML=`<div class="panel pause">${html}</div>`;
+  modalEl.classList.remove('hide');
+  const on=(id,fn)=>{const b=document.getElementById(id);if(b)b.onclick=fn;};
+  if(document.getElementById('ctlWrap')){modalEl.querySelectorAll('[data-cv]').forEach(b=>b.onclick=()=>pickCtl(b.dataset.cv));showCtl(ctlView);}
+  on('mResume',closeMenu);on('mBack',()=>menuGo('main'));on('mCtl',()=>menuGo('controls'));on('mSet',()=>menuGo('settings'));
+  on('mEnd',()=>{modalEl.classList.add('hide');state='play';endDay();});on('mNetLeave',guestLeave);
+  on('mAdd',()=>{modalEl.classList.add('hide');state='play';document.body.style.cursor='none';joinPlayer({t:'wait'});});
+  {const who=cur;on('mLeave',()=>{modalEl.classList.add('hide');state='play';leavePlayer(who);});}
+  {const who=cur;on('mCheat',()=>{withPl(who,()=>{money+=1000;});chaChing();});}
+  const setVol=(k,v)=>{settings[k]=clamp(Math.round(v*20)/20,0,1);saveSettings();applyVolumes();const r=modalEl.querySelector(`[data-vr="${k}"]`);if(r)r.value=Math.round(settings[k]*100);
+    const t=document.getElementById('vv_'+k);if(t)t.textContent=Math.round(settings[k]*100)+'%';};
+  modalEl.querySelectorAll('[data-vol]').forEach(b=>b.onclick=()=>{const k=b.dataset.vol;setVol(k,settings[k]+.1*b.dataset.d);if(k==='sfx')blip(660,.05,'square',.05);});
+  modalEl.querySelectorAll('[data-vr]').forEach(r=>{r.oninput=()=>setVol(r.dataset.vr,r.value/100);if(r.dataset.vr==='sfx')r.onchange=()=>blip(660,.05,'square',.05);});
+  refreshMenuNet();
+}
+function closeMenu(){if(state!=='menu')return;menuPage='main';NET.localMenu=false;modalEl.classList.add('hide');state='play';document.body.style.cursor='none';}
 function endDay(){
   if(state!=='play')return;
   state='shop';storePl();for(const pl of players)withPl(pl,()=>{dropInputs();driving=false;cur.riding=false;});document.body.style.cursor='default';
@@ -2172,7 +2216,7 @@ function animateSummary(){
   setTimeout(()=>modalEl.querySelectorAll('.rankbar i[data-to]').forEach(i=>i.style.width=i.dataset.to+'%'),250);
 }
 // tiny pixel icons for the summary chips and house tiles: rows of palette letters, '.' is empty
-const STAR_ICON='<svg class="px" width="16" height="15" viewBox="0 0 11 10" style="vertical-align:-2px"><path d="M5 0h1v1h1v2h4v1h-1v1H9v1H8v1h1v2h1v1H9v-1H8V8H7V7H4v1H3v1H2v1H1V9h1V7h1V6H2V5H1V4H0V3h4V1h1z" fill="#ffcf4a"/></svg>';
+const STAR_ICON='<svg class="px" width="16" height="15" viewBox="0 0 11 10" style="display:inline-block;vertical-align:-2px"><path d="M5 0h1v1h1v2h4v1h-1v1H9v1H8v1h1v2h1v1H9v-1H8V8H7V7H4v1H3v1H2v1H1V9h1V7h1V6H2V5H1V4H0V3h4V1h1z" fill="#ffcf4a"/></svg>';
 const STAR_SVG='<svg class="px" width="40" height="36" viewBox="0 0 11 10"><rect x="5" y="0" width="1" height="1" fill="#fff1b0"/><rect x="4" y="1" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="1" width="1" height="1" fill="#fff1b0"/><rect x="6" y="1" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="2" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="2" width="1" height="1" fill="#fff1b0"/><rect x="6" y="2" width="1" height="1" fill="#ffcf4a"/><rect x="0" y="3" width="1" height="1" fill="#b9861a"/><rect x="1" y="3" width="1" height="1" fill="#fff1b0"/><rect x="2" y="3" width="1" height="1" fill="#fff1b0"/><rect x="3" y="3" width="1" height="1" fill="#fff1b0"/><rect x="4" y="3" width="1" height="1" fill="#fff1b0"/><rect x="5" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="9" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="10" y="3" width="1" height="1" fill="#b9861a"/><rect x="1" y="4" width="1" height="1" fill="#b9861a"/><rect x="2" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="9" y="4" width="1" height="1" fill="#b9861a"/><rect x="2" y="5" width="1" height="1" fill="#b9861a"/><rect x="3" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="5" width="1" height="1" fill="#b9861a"/><rect x="3" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="6" width="1" height="1" fill="#b9861a"/><rect x="6" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="2" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="7" width="1" height="1" fill="#b9861a"/><rect x="6" y="7" width="1" height="1" fill="#b9861a"/><rect x="7" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="2" y="8" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="8" width="1" height="1" fill="#b9861a"/><rect x="7" y="8" width="1" height="1" fill="#b9861a"/><rect x="8" y="8" width="1" height="1" fill="#ffcf4a"/><rect x="1" y="9" width="1" height="1" fill="#b9861a"/><rect x="2" y="9" width="1" height="1" fill="#b9861a"/><rect x="8" y="9" width="1" height="1" fill="#b9861a"/><rect x="9" y="9" width="1" height="1" fill="#b9861a"/></svg>';
 const PX_PAL={r:'#c9352b',w:'#e9e2cf',d:'#6b4428',o:'#ff9800',s:'#f2c29a',k:'#2a3033',y:'#ffcf4a',t:'#d9774a',g:'#4bc26a',f:'#ff5f8f',b:'#2a6fc9',l:'#d9ab72',n:'#b98a54',e:'#efe2c4',m:'#7f9396',x:'#fe5f55',u:'#3d474c',v:'#5b6f73'};
 const PX_ICONS={
@@ -2387,7 +2431,7 @@ function updatePool(dt){
     let caught=false;
     for(const h of NH){if(!h.hin)continue;const dx=x-h.hx,dy=y-h.hy;if(dx>-10&&dx<10&&dy>-10&&dy<10){const d=Math.hypot(dx,dy);
       if(d<NET_R&&h.hsp>16){if(h.n.n<NET_CAP){ST[i]=4;UN[i]=h.idx;h.n.n++;statsT=1;caught=true;break;}
-        if(time-h.pl.netFullT>2){h.pl.netFullT=time;floatText(h.hx,h.hy-10,'NET FULL!','#fe5f55');blip(150,.15,'sawtooth',.04,90);withPl(h.pl,()=>rumble(.3,.2,150));}}
+        if(time-h.pl.netFullT>2){h.pl.netFullT=time;blip(150,.15,'sawtooth',.04,90);withPl(h.pl,()=>rumble(.3,.2,150));}}
       if(d<10&&h.hsp>4){const k=(1-d/10)*Math.min(1,dt*8);vx+=(h.hvx-vx)*k;vy+=(h.hvy-vy)*k;}}}
     if(caught)continue;
     vx*=aD;vy*=aD;
@@ -2406,16 +2450,17 @@ function updatePool(dt){
 // The rake is an extension of the player: anything the player can't walk through, its head can't go through either.
 // These are the solids near one player (fences, houses, cars, shrubs and street cars, plus tree trunks, pots and the truck)
 function rakeSolids(pl){
-  const x=pl.P.x,y=pl.P.y,R=RAKE_MAX+RAKE_W+RAKE_WIDE*2+16,box=[],disc=[];
+  const x=pl.P.x,y=pl.P.y,R=RAKE_REACH+RAKE_WIDTHS[RAKE_WIDTHS.length-1]+16,box=[],disc=[];
   for(const w of WALLS)if(w.x1>x-R&&w.x0<x+R&&w.y1>y-R&&w.y0<y+R)box.push(w);
   for(const t of TREES)if(Math.abs(t.x-x)<R&&Math.abs(t.y-y)<R)disc.push([t.x,t.y,25]);
-  for(const p of POTS)if(!p.broken&&Math.abs(p.x-x)<R&&Math.abs(p.y-y)<R)disc.push([p.x,p.y,p.r*p.r]);
-  return{box,disc,truck:Math.abs(TR.x-x)<R+TRUCK_HL&&Math.abs(TR.y-y)<R+TRUCK_HL};
+  const pots=POTS.filter(p=>!p.broken&&Math.abs(p.x-x)<R&&Math.abs(p.y-y)<R);
+  return{box,disc,pots,truck:Math.abs(TR.x-x)<R+TRUCK_HL&&Math.abs(TR.y-y)<R+TRUCK_HL};
 }
-function rakeHit(S,x,y){
+function rakeHit(S,x,y,noPots){
   if(x<1||y<1||x>=WORLD_W-1||y>=H-1||REG[(y|0)*WORLD_W+(x|0)]===0)return true;
   for(const w of S.box)if(x>=w.x0&&x<w.x1&&y>=w.y0&&y<w.y1)return true;
   for(const c of S.disc){const dx=x-c[0],dy=y-c[1];if(dx*dx+dy*dy<c[2])return true;}
+  if(!noPots)for(const p of S.pots){const dx=x-p.x,dy=y-p.y;if(dx*dx+dy*dy<p.r*p.r)return true;}
   if(S.truck){const [lx,ly]=toTruck(x,y);if(Math.abs(lx)<TRUCK_HL&&Math.abs(ly)<TRUCK_HW)return true;}
   return false;
 }
@@ -2425,18 +2470,27 @@ function rakeReachPt(S,x0,y0,x1,y1){
   for(let k=1;k<=n;k++){const t=k/n,x=x0+(x1-x0)*t,y=y0+(y1-y0)*t;if(rakeHit(S,x,y))return[px,py];px=x;py=y;}
   return[px,py];
 }
-// A (and D-F, only when pulled back): a moving head scoops up ground leaves it passes over, and they ride in the tines
-// until dumped. B and C, and F on the push: the tines shove what they meet the way the head moves, so leaves bank up
-// against them (a thicker bank the more there are) and stay put wherever the stroke ends
+// Pulled back, a moving head scoops up the ground leaves it passes over and they ride in its teeth until dumped.
+// Pushed forward it nudges leaves a little and passes over them, or with the Rake Shovel shoves what it meets along
+// in a bank in front of it (a thicker bank the more there are), which stays put wherever the stroke ends
 function updateRakes(dt){
   const R=[];
   for(const pl of players){const k=pl.rake;
-    if(!pl.raking||!onFoot(pl)){k.prev=null;k.contact=0;continue;}
-    const ax=pl.aim.x,ay=pl.aim.y,tx=-ay,ty=ax,hw=rakeHW(pl),S=rakeSolids(pl);
+    if(!pl.raking||!onFoot(pl)){k.prev=k.fprev=null;k.contact=0;k.load=0;continue;}
+    const ax=pl.aim.x,ay=pl.aim.y,tx=-ay,ty=ax,hw=rakeHW(pl),S=rakeSolids(pl),reach=RAKE_REACH;
     // the head reaches out from the player's body and stops short of the first solid thing; then its tines reach out
     // each side of the handle, as far as they can before they'd poke into something
-    let eff=k.reach;for(let d=3;d<=k.reach+1;d++){const q=Math.min(d,k.reach),x=pl.P.x+ax*q,y=pl.P.y+ay*q;if(rakeHit(S,x,y)||rakeHit(S,x+ax,y+ay)){eff=Math.min(k.reach,Math.max(2,d-1));break;}}
-    const hx=pl.P.x+ax*eff,hy=pl.P.y+ay*eff;
+    const headAt=noPots=>{for(let d=3;d<=reach+1;d++){const q=Math.min(d,reach),x=pl.P.x+ax*q,y=pl.P.y+ay*q;if(rakeHit(S,x,y,noPots)||rakeHit(S,x+ax,y+ay,noPots))return Math.min(reach,Math.max(2,d-1));}return reach;};
+    const eff=headAt(false),hx=pl.P.x+ax*eff,hy=pl.P.y+ay*eff;
+    // flowerpots stop the head too, but where it would have gone without them is what hits the pot: knocked into one
+    // at walking speed, it breaks; a gentle bump only wobbles it, and scraping along one wears it down
+    {const ef=S.pots.length?headAt(true):eff,fx=pl.P.x+ax*ef,fy=pl.P.y+ay*ef,fp=k.fprev||[fx,fy],fsp=dt>0?Math.hypot(fx-fp[0],fy-fp[1])/dt:0;k.fprev=[fx,fy];
+      for(const p of S.pots){const dx=p.x-fx,dy=p.y-fy,v=clamp(dx*tx+dy*ty,-hw,hw),ex=dx-tx*v,ey=dy-ty*v,key='rtouch'+pl.i,touch=ex*ex+ey*ey<(p.r+.8)*(p.r+.8);
+        if(touch){
+          if(!p[key]&&fsp>12){p.stress+=Math.max(0,fsp-15)/45;p.wob=Math.min(1,fsp/45);blip(820+rnd()*200,.04,'square',.03);}
+          else if(fsp>4){p.stress+=fsp*dt*.02;p.wob=Math.max(p.wob,.25);}
+          if(p.stress>=1)withPl(pl,()=>breakPot(p));}
+        p[key]=touch;}}
     let vL=0,vR=0;for(let v=1;v<=hw;v++){if(rakeHit(S,hx-tx*v,hy-ty*v))break;vL=-v;}for(let v=1;v<=hw;v++){if(rakeHit(S,hx+tx*v,hy+ty*v))break;vR=v;}
     if(vL===-Math.floor(hw))vL=-hw;if(vR===Math.floor(hw))vR=hw;
     k.eff=eff;k.vL=vL;k.vR=vR;
@@ -2445,10 +2499,9 @@ function updateRakes(dt){
     if(k.drop&&Math.hypot(hx-k.drop.x,hy-k.drop.y)>k.drop.r+hw)k.drop=null;
     const ml=Math.hypot(mx,my),mu=mx*ax+my*ay;
     R.push({pl,k,S,idx:players.indexOf(pl),hx,hy,mx,my,mu,mv:mx*tx+my*ty,hsp:dt>0?ml/dt:0,ax,ay,tx,ty,vL,vR,M:hw+12,cap:rakeCap(pl),n:0,
-      pulling:mu<-.3*ml});
+      pulling:mu<-.3*ml,shoving:rakeShoves(pl)&&mu>.02&&mu>=-.3*ml});
   }
   if(!R.length)return;
-  const net=rakeCarries(),back=rakePullOnly(),shove=rakeProto==='shove';
   for(let i=0;i<N;i++){
     const st=ST[i];
     // carried leaves sit in the teeth, across whatever part of the head is clear
@@ -2459,40 +2512,36 @@ function updateRakes(dt){
     for(let q=0;q<R.length;q++){const r=R[q],dx=x-r.hx,dy=y-r.hy,M=r.M;
       if(dx<-M||dx>M||dy<-M||dy>M)continue;
       const v=dx*r.tx+dy*r.ty;if(v<r.vL-.5||v>r.vR+.5)continue;
-      const u=dx*r.ax+dy*r.ay,k=r.k;let grip=k.down;
-      // F: heading out (even partly) it shoves like B; only a real pull scoops
-      if(net&&shove&&!r.pulling&&r.mu>0)grip=true;
-      else if(net){
-        // the scoop band: around the crossbar, or (D-F, which only scoop on the pull) just the player's side of it
-        // plus the strip it swept over this frame, which never reaches out as far as F's shoved bank
-        if(u<-2.5||u>(back&&r.pulling?Math.min(1.7,-r.mu+.4):2.5)||(k.drop&&Math.hypot(x-k.drop.x,y-k.drop.y)<k.drop.r))continue;
-        // D-F going forward (or across): the tines only nudge the leaf a little the way they're moving, then pass over it
-        if(back&&!r.pulling){
-          if(r.hsp>8){LX[i]+=r.mx*.35;LY[i]+=r.my*.35;if(dt>0){VX[i]=r.mx/dt*.15;VY[i]=r.my/dt*.15;}VR[i]+=(PH[i]-.5)*3;}
-          continue;}
-        if(r.hsp<14)continue;
-        if(r.pl.rakeN<r.cap){ST[i]=5;UN[i]=r.idx;r.pl.rakeN++;VX[i]=VY[i]=VZ[i]=0;statsT=1;break;}
-        if(time-k.fullT>2){k.fullT=time;floatText(r.hx,r.hy-10,'RAKE FULL!','#fe5f55');blip(150,.15,'sawtooth',.04,90);withPl(r.pl,()=>rumble(.3,.2,150));}
-        continue;
+      const u=dx*r.ax+dy*r.ay,k=r.k;
+      if(r.shoving){
+        // only what the tines just swept over, or what's banked up against them (how deep this one sits in the bank)
+        const mu=r.mu,depth=RAKE_GAP+PH[i]*(1.2+Math.min(5,k.contact/14));
+        if(u<-(mu+.8)||u>=depth)continue;
+        // nothing gets shoved through a fence: a leaf on the far side of something solid is out of reach, and a shoved
+        // one stops against whatever's in its way
+        const bx=r.hx+r.tx*v,by=r.hy+r.ty*v;
+        if(u>.5){const [qx,qy]=rakeReachPt(r.S,bx,by,x,y);if(Math.abs(qx-x)+Math.abs(qy-y)>.01)continue;}
+        r.n++;const nv=clamp(v+r.mv*.6,r.vL,r.vR),cx=r.hx+r.tx*nv,cy=r.hy+r.ty*nv;
+        [LX[i],LY[i]]=rakeReachPt(r.S,cx,cy,cx+r.ax*depth,cy+r.ay*depth);
+        if(dt>0){VX[i]=r.mx/dt*.2;VY[i]=r.my/dt*.2;}VR[i]+=(PH[i]-.5)*4;
+        break;
       }
-      // B, C, and F on the push: the tines shove it. Which way they're moving across the leaf (s), and how deep this one
-      // sits in the bank in front of them
-      if(!grip)continue;
-      const mu=r.mu,mv=r.mv;if(mu*mu+mv*mv<.0004)continue;
-      const s=mu>=0?1:-1,us=u*s,depth=(net?RAKE_GAP:.6)+PH[i]*(1.2+Math.min(5,k.contact/14));
-      // only what the tines just swept over, or what's banked up against them
-      if(us<-(Math.abs(mu)+.8)||us>=depth)continue;
-      // nothing gets shoved through a fence: a leaf on the far side of something solid is out of reach, and a shoved
-      // one stops against whatever's in its way
-      const bx=r.hx+r.tx*v,by=r.hy+r.ty*v;
-      if(u>.5){const [qx,qy]=rakeReachPt(r.S,bx,by,x,y);if(Math.abs(qx-x)+Math.abs(qy-y)>.01)continue;}
-      r.n++;const nv=clamp(v+mv*.6,r.vL,r.vR),nu=s*depth,cx=r.hx+r.tx*nv,cy=r.hy+r.ty*nv;
-      [LX[i],LY[i]]=rakeReachPt(r.S,cx,cy,cx+r.ax*nu,cy+r.ay*nu);
-      if(dt>0){VX[i]=r.mx/dt*.2;VY[i]=r.my/dt*.2;}VR[i]+=(PH[i]-.5)*4;
-      break;
+      // the scoop band: on the pull, just the player's side of the crossbar plus the strip it swept over this frame
+      // (which never reaches out as far as a shoved bank). Nothing sticks in the no-stick zone left by a dump
+      if(u<-2.5||u>(r.pulling?Math.min(1.7,-r.mu+.4):2.5)||(k.drop&&Math.hypot(x-k.drop.x,y-k.drop.y)<k.drop.r))continue;
+      // going forward (or across): the tines only nudge the leaf a little the way they're moving, then pass over it
+      if(!r.pulling){
+        if(r.hsp>8){LX[i]+=r.mx*.35;LY[i]+=r.my*.35;if(dt>0){VX[i]=r.mx/dt*.15;VY[i]=r.my/dt*.15;}VR[i]+=(PH[i]-.5)*3;}
+        continue;}
+      if(r.hsp<14)continue;
+      if(r.pl.rakeN<r.cap){ST[i]=5;UN[i]=r.idx;r.pl.rakeN++;VX[i]=VY[i]=VZ[i]=0;statsT=1;break;}
+      if(time-k.fullT>2){k.fullT=time;blip(150,.15,'sawtooth',.04,90);withPl(r.pl,()=>rumble(.3,.2,150));}
     }
   }
-  for(const r of R)r.k.contact=r.n;
+  // what the rake is hauling, as a share of a full one: carried leaves plus what it's shoving (eased, since the
+  // shoved count jumps about from frame to frame). It slows the walk
+  for(const r of R){const k=r.k;k.contact=r.n;const want=(r.pl.rakeN+r.n)/r.cap;
+    k.load+=(want-k.load)*Math.min(1,dt*(want>k.load?6:2.5));}
 }
 // pots crack from a hard bump or from being blasted too hard for too long
 function updatePots(dt){
@@ -3208,19 +3257,10 @@ function updatePlayer(dt){
   ix+=pad.lx;iy+=pad.ly;
   if(ni){ix=ni.mx;iy=ni.my;}
   if(tieT>0)tieT-=dt;
-  // B and C: the tines are down while a blow button is held. On B the head reaches out toward the mouse (or as far as
-  // the right stick is pushed: let the stick go and it pulls back in); on C holding draws it in and letting go sends it back out
-  const rk=cur.rake;
-  if(cur.raking&&!driving&&rakeGrips()){
-    rk.down=swapT<=0&&tieT<=0&&!!((usesKeys&&(mouse.l||mouse.r))||(!pad.lock&&(pad.lt>.3||pad.rt>.3))||(ni&&(ni.lo||ni.hi)));
-    if(rakeProto==='pull'){const want=rk.down?RAKE_MIN:RAKE_MAX,d=want-rk.reach,step=(rk.down?RAKE_PULL:RAKE_RETURN)*dt;rk.reach+=clamp(d,-step,step);}
-    else{const f=ni?(ni.rr==null?.5:ni.rr):rakeReachFrac(),want=RAKE_MIN+(RAKE_MAX-RAKE_MIN)*f;
-      rk.reach+=(want-rk.reach)*Math.min(1,dt*(rk.down?9:16));}
-  }else{rk.down=false;rk.reach=rakeReach();}
   // in the truck: R2 is gas, L2 is reverse and the stick only steers (keys still use W/S)
   if(driving){if(ni)iy=ni.th;else if(usesKeys){iy=0;if(keys.KeyW||keys.ArrowUp)iy--;if(keys.KeyS||keys.ArrowDown)iy++;}else iy=0;if(!ni&&!pad.lock)iy+=pad.lt-pad.rt;updateTruck(dt,clamp(ix,-1,1),clamp(iy,-1,1));}
   else{
-    const il=Math.hypot(ix,iy)||1,im=Math.min(1,Math.hypot(ix,iy)),carry=bundle?1-Math.min(.35,bundle.total/1800):1,wade=wet(P.x,P.y)?.6:1,dig=rk.down?.7:1,spd=(swapT>0||tieT>0)?0:78*moveMul()*carry*wade*dig;
+    const il=Math.hypot(ix,iy)||1,im=Math.min(1,Math.hypot(ix,iy)),carry=bundle?1-Math.min(.35,bundle.total/1800):1,wade=wet(P.x,P.y)?.6:1,spd=(swapT>0||tieT>0)?0:78*moveMul()*carry*wade*rakeSpeed(cur);
     const acc=Math.min(1,dt*14);P.vx+=(ix/il*im*spd-P.vx)*acc;P.vy+=(iy/il*im*spd-P.vy)*acc;
     const ox=P.x,oy=P.y;P.x+=P.vx*dt;if(!walkable(P.x,P.y))P.x=ox;P.y+=P.vy*dt;if(!walkable(P.x,P.y))P.y=oy;collidePlayer();
     const sp=Math.hypot(P.vx,P.vy);if(sp>8)P.walk+=dt*sp*.16;
@@ -3250,18 +3290,12 @@ function updatePlayer(dt){
   if(att().vortex){const b=blowParams(Math.max(power,.01)),tube=att().tube,nx=P.x+aim.x*tube,ny=P.y+aim.y*tube;
     if(inputMode==='pad'||cur.dev.t==='pad'||cur.dev.t==='net')cur.vortexD=b.R*.55;else{const [mwx,mwy]=mouseWorld();cur.vortexD=clamp(Math.hypot(mwx-nx,mwy-ny),12,b.R*.85);}}
 }
-// how far out the drag-style rake should reach (0..1), from the mouse or the right stick
-function rakeReachFrac(){
-  if(inputMode==='pad')return clamp((Math.hypot(pad.rx,pad.ry)-.2)/.75,0,1);
-  const [mwx,mwy]=mouseWorld();return clamp((Math.hypot(mwx-P.x,mwy-P.y)-RAKE_MIN)/(RAKE_MAX-RAKE_MIN),0,1);
-}
 // follow this player (or the truck they're in), looking a little ahead
 function updateCamera(dt){
   const [c,s]=tdir();
   // look ahead toward the mouse's screen offset, not its world position: that moves with the camera and never settles.
   // On a controller, look the way the player faces
-  // (not while drag-raking with the mouse, where the cursor sets how far the rake reaches and a drifting view would move it)
-  const gp=inputMode==='pad'||cur.dev.t==='pad',[mox,moy]=mouseOff(),still=!gp&&cur.raking&&rakeProto==='drag',lx=gp?aim.x*120:still?0:mox,ly=gp?aim.y*120:still?0:moy;
+  const gp=inputMode==='pad'||cur.dev.t==='pad',[mox,moy]=mouseOff(),lx=gp?aim.x*120:mox,ly=gp?aim.y*120:moy;
   const inTruck=driving||cur.riding,fx=inTruck?TR.x+c*TR.v*.5:P.x+clamp(lx*.25,-60,60),fy=inTruck?TR.y-30+s*TR.v*.35:P.y+clamp(ly*.25,-40,40);
   const ck=Math.min(1,dt*(inTruck?4:8));camX+=(fx-VW/2-camX)*ck;camY+=(fy-VH/2-camY)*ck;
   camX=VW>=WORLD_W?(WORLD_W-VW)/2:clamp(camX,0,WORLD_W-VW);camY=VH>=H?(H-VH)/2:clamp(camY,0,H-VH);
@@ -3330,11 +3364,10 @@ function drawNetSprite(c,x0,y0,x1,y1,wetHead){
   c.fillStyle='rgba(255,255,255,.4)';for(let dy=-2;dy<=2;dy++)for(let dx=-3;dx<=3;dx++)if(((dx+dy)&1)===0&&dx*dx/12+dy*dy/5<1)c.fillRect(hx+dx,hy+dy,1,1);
   c.fillStyle='#e8eef2';for(let k=0;k<20;k++){const a=k/20*Math.PI*2;c.fillRect(Math.round(hx+Math.cos(a)*4),Math.round(hy+Math.sin(a)*3),1,1);}
 }
-// the rake: handle from the hands out to a crossbar of short teeth pointing back at the player. Lifted (drag style,
-// tines up) it floats a couple of pixels over its own shadow
-function drawRakeSprite(c,x0,y0,hx,hy,ax,ay,up,vL,vR){
-  const tx=-ay,ty=ax,y=hy-up,ex=hx+ax,ey=y+ay;
-  if(up){c.fillStyle='rgba(0,0,0,.28)';pline(c,hx+tx*vL,hy+ty*vL,hx+tx*vR,hy+ty*vR,1);}
+// the rake: handle from the hands out to a 2px crossbar (only as wide as it's clear of fences) with short teeth
+// pointing back at the player
+function drawRakeSprite(c,x0,y0,hx,hy,ax,ay,vL,vR){
+  const tx=-ay,ty=ax,y=hy,ex=hx+ax,ey=y+ay;
   c.fillStyle='#5a3a1a';pline(c,x0,y0+1,hx,y+1,1);c.fillStyle='#c08a4a';pline(c,x0,y0,hx,y,1);
   c.fillStyle='#8f989e';for(let k=vL;k<=vR+.01;k+=2){const bx=hx+tx*k,by=y+ty*k;pline(c,bx,by,bx-ax*2.5,by-ay*2.5,1);}
   c.fillStyle='#3a4045';pline(c,hx+tx*vL,y+ty*vL+1,hx+tx*vR,y+ty*vR+1,1);pline(c,ex+tx*vL,ey+ty*vL+1,ex+tx*vR,ey+ty*vR+1,1);
@@ -3389,8 +3422,8 @@ function drawPlayer(cx,cy){
   const by=y-3-bob+(inWater?1:0),busy=bundle||tieT>0||heldNet||cur.raking;
   const net=()=>{if(!heldNet)return;const [hx,hy]=netHead();drawNetSprite(ctx,x+ax*3,by+ay*3,hx-cx,hy-cy-4,wet(hx,hy));
     ctx.fillStyle='#f2c29a';ctx.fillRect(Math.round(x+ax*4)-1,Math.round(by+ay*4)-1,2,2);ctx.fillRect(Math.round(x+ax*9)-1,Math.round(by+ay*9)-1,2,2);};
-  const rake=()=>{if(!cur.raking||tieT>0)return;const k=cur.rake,up=rakeGrips()&&!k.down?2:0;
-    drawRakeSprite(ctx,x+ax*3,by+ay*3,P.x+ax*k.eff-cx,P.y+ay*k.eff-cy,ax,ay,up,k.vL,k.vR);
+  const rake=()=>{if(!cur.raking||tieT>0)return;const k=cur.rake;
+    drawRakeSprite(ctx,x+ax*3,by+ay*3,P.x+ax*k.eff-cx,P.y+ay*k.eff-cy,ax,ay,k.vL,k.vR);
     ctx.fillStyle='#f2c29a';ctx.fillRect(Math.round(x+ax*4)-1,Math.round(by+ay*4)-1,2,2);ctx.fillRect(Math.round(x+ax*8)-1,Math.round(by+ay*8)-1,2,2);};
   const tube=()=>{
     if(busy)return;
@@ -3659,8 +3692,6 @@ function updateHUD(dt){
       if(repShown!=null&&state==='play'&&t!==repShown){const d=t-repShown,p=document.createElement('span');p.className='reppop';p.textContent=(d>0?'+':'\u2212')+Math.abs(d);p.style.color=d>0?'var(--green)':'var(--red)';RB.querySelectorAll('.reppop').forEach(q=>q.remove());RB.appendChild(p);setTimeout(()=>p.remove(),1500);}
       repShown=t;}}
   setIfG('menuShow',state==='play'||state==='menu',v=>{menuBtn.style.display=v?'flex':'none';});
-  // the online guest plays whichever rake the host picked
-  setIfG('rakeShow',(state==='play'||state==='menu')&&NET.role!=='guest',v=>{rakeBtn.style.display=v?'flex':'none';});
   for(const v of views){HV=v;withPl(v.pl,()=>hudView(dt));}
   HV=views[0];
   // co-op, both at the same house (or only one of you at one): a single house panel along the bottom middle
@@ -3699,10 +3730,10 @@ function hudView(dt){
   setIf('tarps',tarpsLeft(),v=>{E('gTarps').innerHTML='&times;'+v;E('gTarps').style.color=v>0?'#fff':'#fe5f55';});
   setIf('carry',bundle?bundle.total:-1,v=>{E('gBundle').style.display=v<0?'none':'flex';E('gCarry').textContent=v;});
   setIf('net',heldNet?heldNet.n:-1,v=>{E('gNet').style.display=v<0?'none':'flex';E('gNetN').textContent=v;E('gNetN').style.color=v>=NET_CAP?'#fe5f55':'';E('gNetCap').textContent='/ '+NET_CAP;});
-  setIf('rake',cur.raking?rakeProto+':'+cur.rakeN+':'+rakeCap(cur):'',v=>{E('gRake').style.display=v?'flex':'none';if(!v)return;const net=rakeCarries();
-    E('gRakeN').textContent=net?cur.rakeN:'';E('gRakeN').style.color=cur.rakeN>=rakeCap(cur)?'#fe5f55':'';E('gRakeCap').textContent=net?'/ '+rakeCap(cur):rakeProto==='pull'?'HOLD TO PULL':'DRAG STYLE';});
+  setIf('rake',cur.raking?cur.rakeN+':'+rakeCap(cur):'',v=>{E('gRake').style.display=v?'flex':'none';if(!v)return;
+    E('gRakeN').textContent=cur.rakeN;E('gRakeN').style.color=cur.rakeN>=rakeCap(cur)?'#fe5f55':'';E('gRakeCap').textContent='/ '+rakeCap(cur);});
   setIf('hot',equipped+owned.join()+glyphStyle(),()=>{
-    const list=ATT.filter(a=>owned.includes(a.id)),gp=glyphStyle()!=='kbm';E('hotbar').style.display=list.length>1?'flex':'none';
+    const list=ATT.filter(a=>owned.includes(a.id)),gp=glyphStyle()!=='kbm';E('hotbar').style.display=list.length>1?'flex':'none';HV.root.classList.toggle('hb',list.length>1);
     E('hotbar').innerHTML=(gp?`<span class="hbb">${glyphInner('prev')}</span>`:'')+list.map((a,i)=>`<div class="slot ${a.id===equipped?'on':''}"><span class="k">${i+1}</span><span class="dot" style="background:${a.tip}"></span><span>${a.short}</span></div>`).join('')+(gp?`<span class="hbb">${glyphInner('next')}</span>`:'');
   });
   const L=driving?lotAtPoint(TR.x,TR.y,FRONT+30):lotAtPoint(P.x,P.y);
@@ -3723,17 +3754,14 @@ function hudView(dt){
     else if(driving){if(Math.abs(TR.v)<=35){cls='info';txt=`${G('use')} GET OUT  ·  ${G('end')} END THE DAY`;}}
     else if(carryPkg){cls=carryPkg.far?'info':'swap';txt=carryPkg.far?`TAKE IT TO THE FRONT DOOR  ·  ${G('use')} PUT IT DOWN`:`${G('use')} LEAVE IT AT THE DOOR`;}
     else if(heldNet){const full=heldNet.n>=NET_CAP;cls=full?'dead':'info';txt=full?`NET FULL!  ${G('tarp')} EMPTY IT ON DRY LAND`:heldNet.n?`${G('tarp')} EMPTY THE NET  ·  ${G('use')} PUT IT DOWN`:`SWEEP THE NET THROUGH THE WATER  ·  ${G('use')} PUT IT DOWN`;}
-    else if(lotLocked(curLot)){cls='dead';txt=`HOUSEHOLD WON'T PAY FOR SERVICES UNTIL REPUTATION ${lotNeed(curLot)} ${STAR_ICON}`;}
+    else if(lotLocked(curLot)){cls='dead calm';txt=`HOUSE REQUIRES REPUTATION ${lotNeed(curLot)} ${STAR_ICON}`;}
     else if(door){cls=door.done?'info':'swap';txt=door.done?`${door.name} ALREADY PAID TODAY`:`${G('use')} KNOCK ON THE DOOR`;}
     else if(nearNet()){cls='swap';txt=bundle?'HANDS FULL  ·  LOAD THE TARP FIRST':`${G('use')} GRAB THE POOL NET`;}
     else if(part==='back'&&(bundle||battery<cap-.5)){cls='swap';txt=bundle?`${G('use')} LOAD THE TIED TARP (${bundle.total} LEAVES)`:bestSpare()>.05?`${G('use')} SWAP BATTERY (BEST ONE ${Math.round(bestSpare()*100)}%)`:'NO CHARGED SPARES LEFT';}
     else if(part==='front'){cls='swap';txt=bundle?'LOAD THE TARP AT THE BACK FIRST':`${G('use')} DRIVE THE TRUCK`;}
-    else if(cur.raking&&rakeCarries()){const n=cur.rakeN,full=n>=rakeCap(cur);cls=full?'dead':'info';
+    else if(cur.raking){const n=cur.rakeN,full=n>=rakeCap(cur);cls=full?'dead':'info';
       txt=full?`RAKE FULL!  ${G('tarp')} DUMP THE PILE`:n?`${G('tarp')} DUMP THE PILE  ·  ${G('rake')} BLOWER`
-        :rakeProto==='shove'?`PULL BACK TO SCOOP, PUSH TO SHOVE  ·  ${G('rake')} BLOWER`
-        :rakePullOnly()?`BACK UP TO PULL THE RAKE THROUGH THE LEAVES  ·  ${G('rake')} BLOWER`:`SWEEP THE RAKE THROUGH THE LEAVES  ·  ${G('rake')} BLOWER`;}
-    else if(cur.raking){if(!cur.rake.down){cls='info';txt=rakeProto==='pull'?`HOLD ${G('low')} TO PULL THE RAKE IN  ·  ${G('rake')} BLOWER`
-      :inputMode==='pad'?`HOLD ${G('low')} AND LET ${G('rs')} GO TO PULL  ·  ${G('rake')} BLOWER`:`HOLD ${G('low')} AND DRAG TOWARD YOU  ·  ${G('rake')} BLOWER`;}}
+        :rakeShoves(cur)?`PULL BACK TO SCOOP, PUSH TO SHOVE  ·  ${G('rake')} BLOWER`:`BACK UP TO PULL THE RAKE THROUGH THE LEAVES  ·  ${G('rake')} BLOWER`;}
     else if(battery<=0){cls='dead';txt=bestSpare()>.05?'BATTERY DEAD! HEAD BACK TO THE TRUCK':`OUT OF BATTERIES! ${G('end')} IN TRUCK TO END DAY`;}
     else if(bundle){cls='info';txt=`CARRY THE BUNDLE TO THE BACK OF THE TRUCK  ·  ${G('tarp')} DROP`;}
     else if(tarps.some(t=>t.st==='down'&&t.owner===cur&&Math.hypot(Math.max(t.x0-P.x,0,P.x-t.x1),Math.max(t.y0-P.y,0,P.y-t.y1))<10)){cls='info';txt=`${G('tarp')} TIE UP THE TARP`;}
@@ -3887,27 +3915,48 @@ const carCache={};function makeCarCached(col){return carCache[col]||(carCache[co
 const NET={role:null,peer:null,conn:null,code:'',ready:false,acc:0,ev:[],in:{mx:0,my:0,th:0,ax:1,ay:0,lo:0,hi:0,cam:null},evOut:[],
   localMenu:false,hostPaused:false,repT:0,ls:null,lsT:0,nid:1,objs:new Map(),visKey:'',status:''};
 const NET_PREFIX='curbappeal-v1-',PEER_JS='https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js';
+// How the two browsers reach each other. STUN finds a direct route, which works between most home networks. When
+// one side is behind a strict router (mobile hotspots, offices, some ISPs) the game data has to go through a TURN
+// relay instead, and PeerJS's free public relays no longer exist. To get those players connected, make a free TURN
+// account and either set TURN_URL to a credentials URL that returns a list of ICE servers (Metered's looks like
+// https://<app>.metered.live/api/v1/turn/credentials?apiKey=<key>) or put the servers in TURN_SERVERS
+const TURN_URL='',TURN_SERVERS=[];
+const STUN_SERVERS=[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun2.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'}];
+const JOIN_TIMEOUT=15000;
+async function iceConfig(){
+  let turn=TURN_SERVERS.slice();
+  if(TURN_URL)try{const r=await fetch(TURN_URL),j=await r.json();if(Array.isArray(j))turn=turn.concat(j);else if(j&&Array.isArray(j.iceServers))turn=turn.concat(j.iceServers);}catch(e){}
+  return{iceServers:STUN_SERVERS.concat(turn)};
+}
+const NO_ROUTE="COULDN'T CONNECT. ONE OF YOUR NETWORKS BLOCKS DIRECT CONNECTIONS AND THE GAME HAS NO RELAY SET UP";
 function loadPeer(){return window.Peer?Promise.resolve():new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=PEER_JS;sc.onload=res;sc.onerror=()=>rej(new Error('load'));document.head.appendChild(sc);});}
 const netSend=m=>{const c=NET.conn;if(c&&c.open)try{c.send(m);}catch(e){}};
 // the online part of the host's pause menu: start, the code to share, and stop
-function refreshMenuNet(){const el=document.getElementById('netBox');if(!el)return;
-  if(NET.role==='host')el.innerHTML=`<span>ONLINE CODE</span><b>${NET.code||'......'}</b><span>${NET.status}</span><button class="btn small red" id="mNetStop">STOP ONLINE</button>`;
-  else if(players.length<2)el.innerHTML=`<button class="btn small" id="mNetHost">PLAY ONLINE</button><span>${NET.status||'GET A CODE A FRIEND CAN JOIN WITH'}</span>`;
-  else el.innerHTML='';
+// the pause menu's HOST ONLINE / STOP ONLINE button, and the code (or an error) under it
+function refreshMenuNet(){
+  const b=document.getElementById('mNet'),el=document.getElementById('netBox'),host=NET.role==='host',show=host||players.length<2;
+  if(b){b.style.display=show?'':'none';b.innerHTML=host?'STOP ONLINE':'HOST ONLINE';b.onclick=host?stopHost:startHost;}
+  if(el){el.style.display=show&&(host||NET.status)?'':'none';el.innerHTML=host?`<span>ONLINE CODE</span><b>${NET.code||'......'}</b><span>${NET.status}</span>`:`<span>${NET.status}</span>`;}
   const ad=document.getElementById('mAdd');if(ad)ad.style.display=NET.role?'none':'';
-  const h=document.getElementById('mNetHost');if(h)h.onclick=startHost;const st=document.getElementById('mNetStop');if(st)st.onclick=stopHost;}
+}
 function netBadge(txt){const el=$('netBadge');el.textContent=txt||'';el.style.display=txt?'block':'none';}
 // ---------- hosting
 async function startHost(){
   if(NET.role)return;NET.role='host';NET.status='STARTING...';refreshMenuNet();
-  try{await loadPeer();}catch(e){NET.role=null;NET.status='COULD NOT REACH THE ONLINE SERVICE';refreshMenuNet();return;}
-  const tryCode=()=>{NET.code=String(100000+Math.floor(Math.random()*900000));const pr=new Peer(NET_PREFIX+NET.code);NET.peer=pr;
+  let config;try{await loadPeer();config=await iceConfig();}catch(e){NET.role=null;NET.status='COULD NOT REACH THE ONLINE SERVICE';refreshMenuNet();return;}
+  if(NET.role!=='host')return;
+  const tryCode=()=>{NET.code=String(100000+Math.floor(Math.random()*900000));const pr=new Peer(NET_PREFIX+NET.code,{config});NET.peer=pr;
     pr.on('open',()=>{NET.status='WAITING FOR A FRIEND';refreshMenuNet();netBadge('ONLINE · '+NET.code);});
     pr.on('error',e=>{if(e.type==='unavailable-id'){pr.destroy();tryCode();}else{NET.status='ONLINE ERROR: '+String(e.type||e).toUpperCase();refreshMenuNet();}});
+    // lost touch with the matchmaking service (a network blip): get back on it so friends can still find the code
+    pr.on('disconnected',()=>{if(NET.peer===pr&&!pr.destroyed)setTimeout(()=>{try{if(!pr.destroyed)pr.reconnect();}catch(e){}},1000);});
     pr.on('connection',c=>{
       if(NET.conn&&NET.conn.open){c.on('open',()=>{c.send({t:'full'});setTimeout(()=>c.close(),300);});return;}
-      NET.conn=c;c.on('open',()=>netSend({t:'h',yards:YARDS}));
-      c.on('data',hostData);c.on('close',hostLost);c.on('error',hostLost);});};
+      NET.conn=c;NET.status='A FRIEND IS CONNECTING...';refreshMenuNet();
+      c.on('open',()=>netSend({t:'h',yards:YARDS}));
+      // a join that never gets through: free the slot and say why
+      setTimeout(()=>{if(NET.conn===c&&!c.open){NET.conn=null;try{c.close();}catch(e){}NET.status="A FRIEND COULDN'T CONNECT (THEIR NETWORK OR YOURS NEEDS A RELAY)";refreshMenuNet();}},JOIN_TIMEOUT+2000);
+      c.on('data',hostData);c.on('close',()=>{if(NET.conn===c)hostLost();});c.on('error',()=>{if(NET.conn===c)hostLost();});});};
   tryCode();
 }
 function stopHost(){const p2=players.find(pl=>pl.dev.t==='net');if(p2)leavePlayer(p2);try{NET.conn&&NET.conn.close();NET.peer&&NET.peer.destroy();}catch(e){}
@@ -3957,7 +4006,7 @@ function netHostTick(dt){
     pl:players.map(pl=>({x:R1(pl.P.x),y:R1(pl.P.y),vx:R1(pl.P.vx),vy:R1(pl.P.vy),w:R2(pl.P.walk),ax:R2(pl.aim.x),ay:R2(pl.aim.y),pw:R2(pl.power),md:pl.mode,bt:R1(pl.battery),dr:pl.driving?1:0,rd:pl.riding?1:0,
       bu:pl.bundle?pl.bundle.total:-1,hn:pl.heldNet?NETS.indexOf(pl.heldNet):-1,cp:pl.carryPkg?packages.indexOf(pl.carryPkg):-1,sw:R2(pl.swapT),ti:R2(pl.tieT),eq:pl.equipped,ow:pl.owned,up:pl.upg,mo:Math.round(pl.money),tu:pl.tarpsUsed,
       bl:[R1(pl.bl.nx),R1(pl.bl.ny),R2(pl.bl.cosH),pl.bl.vort?1:0,R1(pl.bl.tx||0),R1(pl.bl.ty||0)],b2:pl.bl2?[R1(pl.bl2.nx),R1(pl.bl2.ny)]:null,
-      rk:[pl.raking?1:0,R1(pl.rake.eff),pl.rake.down?1:0,pl.rakeN,R1(pl.rake.vL),R1(pl.rake.vR)]})),rp:rakeProto,
+      rk:[pl.raking?1:0,R1(pl.rake.eff),pl.rakeN,R1(pl.rake.vL),R1(pl.rake.vR)]})),
     tf:traffic.map(v=>[v.nid,v.kind,R1(v.x),R1(v.y),R2(v.a),v.col||'',v.lights?1:0]),
     pd:peds.map(p=>[p.nid,R1(p.x),R1(p.y),p.shirt||'',p.hair||'',p.dog?1:0,p.fdir,R2(p.mx),R2(p.my),R2(p.walk),p.stop>0?1:0,p.mad>0?1:0,p.cameo?1:0,p.who||'',p.run>0?1:0]),
     of:officers.map(o=>[R1(o.x),R1(o.y),R2(o.walk),o.stop>0?1:0,o.fdir,R2(o.mx),R2(o.my)]),
@@ -3985,7 +4034,7 @@ let kpCode='';
 function openKeypad(){
   state='joinpad';kpCode='';titleEl.classList.add('hide');
   const keys='123456789<0>'.split('').map(k=>`<button class="btn kpb ${k==='<'?'red':k==='>'?'green':''}" data-kp="${k}">${k==='<'?'&larr;':k==='>'?'JOIN':k}</button>`).join('');
-  modalEl.innerHTML=`<div class="panel pause keypad"><h2>JOIN ONLINE</h2><div class="sub">ENTER YOUR FRIEND'S 6-DIGIT CODE<br>(THEY GET ONE FROM <b>PLAY ONLINE</b> IN THEIR PAUSE MENU)</div>
+  modalEl.innerHTML=`<div class="panel pause keypad"><h2>JOIN ONLINE</h2><div class="sub">ENTER YOUR FRIEND'S 6-DIGIT CODE<br>(THEY GET ONE FROM <b>HOST ONLINE</b> IN THEIR PAUSE MENU)</div>
     <div class="codebox" id="kpBox"></div><div class="kp">${keys}</div><div class="sub" id="kpMsg"></div>
     <div class="btns"><button class="btn" id="kpBack">BACK ${G('back')}</button></div></div>`;
   modalEl.classList.remove('hide');document.body.style.cursor='default';
@@ -3995,19 +4044,27 @@ function kpShow(){$('kpBox').innerHTML=Array.from({length:6},(_,i)=>`<span class
 function kpPress(k){if(state!=='joinpad')return;if(k==='<')kpCode=kpCode.slice(0,-1);else if(k==='>'){if(kpCode.length===6)startJoin(kpCode);}else if(kpCode.length<6)kpCode+=k;blip(560,.04,'square',.04);kpShow();}
 function closeKeypad(){if(NET.role==='guest')return;modalEl.classList.add('hide');state='title';titleEl.classList.remove('hide');}
 function kpMsg(t){const el=$('kpMsg');if(el)el.textContent=t;}
+let joinTry=0;
 async function startJoin(code){
+  // one attempt at a time; pressing JOIN again starts over
+  const me=++joinTry;try{NET.conn&&NET.conn.close();NET.peer&&NET.peer.destroy();}catch(e){}NET.conn=null;NET.peer=null;
   kpMsg('CONNECTING...');
-  try{await loadPeer();}catch(e){kpMsg('COULD NOT REACH THE ONLINE SERVICE');return;}
-  const pr=new Peer();NET.peer=pr;NET.code=code;
-  pr.on('error',e=>{kpMsg(e.type==='peer-unavailable'?'NO GAME FOUND WITH THAT CODE':'ONLINE ERROR: '+String(e.type||e).toUpperCase());});
-  pr.on('open',()=>{const c=pr.connect(NET_PREFIX+code,{reliable:true});NET.conn=c;
-    c.on('data',m=>{
-      if(m.t==='full'){kpMsg('THAT GAME ALREADY HAS TWO PLAYERS');return;}
+  let config;try{await loadPeer();config=await iceConfig();}catch(e){kpMsg('COULD NOT REACH THE ONLINE SERVICE');return;}
+  if(me!==joinTry)return;
+  const pr=new Peer({config});NET.peer=pr;NET.code=code;
+  // give up cleanly (and leave JOIN ready to try again) if the connection never comes through
+  let timer=0;const fail=msg=>{if(me!==joinTry||NET.role==='guest')return;clearTimeout(timer);joinTry++;try{NET.conn&&NET.conn.close();pr.destroy();}catch(e){}NET.conn=null;NET.peer=null;kpMsg(msg);};
+  pr.on('error',e=>{fail(e.type==='peer-unavailable'?'NO GAME FOUND WITH THAT CODE':e.type==='network'||e.type==='server-error'?'COULD NOT REACH THE ONLINE SERVICE':'ONLINE ERROR: '+String(e.type||e).toUpperCase());});
+  pr.on('open',()=>{const c=pr.connect(NET_PREFIX+code,{reliable:true});NET.conn=c;kpMsg('FOUND THE GAME, CONNECTING...');
+    timer=setTimeout(()=>fail(NO_ROUTE),JOIN_TIMEOUT);
+    c.on('error',()=>fail(NO_ROUTE));
+    c.on('data',m=>{clearTimeout(timer);
+      if(m.t==='full'){joinTry++;kpMsg('THAT GAME ALREADY HAS TWO PLAYERS');return;}
       // the host's custom yards differ: reload once with theirs so both worlds match, then reconnect
       if(m.t==='h'){if(JSON.stringify(m.yards||{})!==JSON.stringify(YARDS)){try{sessionStorage.setItem('curbNetYards',JSON.stringify(m.yards||{}));}catch(e){}location.hash='join='+code;location.reload();return;}
         guestStart();netSend({t:'ready'});return;}
       guestData(m);});
-    c.on('close',guestLost);});
+    c.on('close',()=>{if(NET.role==='guest')guestLost();else fail(NO_ROUTE);});});
 }
 function guestLost(){if(NET.role!=='guest')return;NET.role=null;padToast('DISCONNECTED FROM THE HOST');setTimeout(()=>{location.hash='';location.reload();},1600);}
 function guestLeave(){try{NET.conn&&NET.conn.close();NET.peer&&NET.peer.destroy();}catch(e){}NET.role=null;location.hash='';location.reload();}
@@ -4031,7 +4088,7 @@ function guestData(m){
 function reloadPl(){const c=cur;cur=null;usePl(c);}
 function applySnapshot(j,lv){
   storePl();
-  hour=j.h;day=j.d;rep=j.rep;NET.repT=j.rt;rakeProto=j.rp||'net';truckTicket=!!j.tr[4];bed=j.bed;truckBundles.length=0;truckBundles.push(...j.tb);NET.ls=j.ls;
+  hour=j.h;day=j.d;rep=j.rep;NET.repT=j.rt;truckTicket=!!j.tr[4];bed=j.bed;truckBundles.length=0;truckBundles.push(...j.tb);NET.ls=j.ls;
   smooth(TR,j.tr[0],j.tr[1]);TR._a=j.tr[2];TR.v=j.tr[3];if(TR.a==null||Math.abs(TR.a-j.tr[2])>1)TR.a=j.tr[2];
   // small things: rebuilt from the snapshot, keeping per-object smoothing where they have an id
   const keep=(arr,rows,mk)=>{const old=new Map(arr.map(o=>[o.nid,o]));arr.length=0;for(const r of rows){const o=old.get(r[0])||mk(r);arr.push(o);}};
@@ -4059,7 +4116,7 @@ function applySnapshot(j,lv){
   j.pl.forEach((d,i)=>{const pl=players[i];if(!pl)return;smooth(pl.P,d.x,d.y);pl.P.vx=d.vx;pl.P.vy=d.vy;pl.P.walk=d.w;if(pl!==cur){pl.aim.x=d.ax;pl.aim.y=d.ay;}
     Object.assign(pl,{power:d.pw,mode:d.md,battery:d.bt,driving:!!d.dr,riding:!!d.rd,bundle:d.bu>=0?{total:d.bu,counts:{}}:null,heldNet:d.hn>=0?NETS[d.hn]:null,carryPkg:d.cp>=0?packages[d.cp]:null,
       swapT:d.sw,tieT:d.ti,equipped:d.eq,owned:d.ow,upg:d.up,money:d.mo,tarpsUsed:d.tu});
-    pl.bl={nx:d.bl[0],ny:d.bl[1],cosH:d.bl[2],vort:!!d.bl[3],tx:d.bl[4],ty:d.bl[5],range:60};pl.raking=!!d.rk[0];pl.rake.reach=pl.rake.eff=d.rk[1];pl.rake.down=!!d.rk[2];pl.rakeN=d.rk[3];pl.rake.vL=d.rk[4];pl.rake.vR=d.rk[5];pl.bl2=d.b2?{nx:d.b2[0],ny:d.b2[1],cosH:d.bl[2],range:60,ax:-pl.aim.x,ay:-pl.aim.y}:null;});
+    pl.bl={nx:d.bl[0],ny:d.bl[1],cosH:d.bl[2],vort:!!d.bl[3],tx:d.bl[4],ty:d.bl[5],range:60};pl.raking=!!d.rk[0];pl.rake.eff=d.rk[1];pl.rakeN=d.rk[2];pl.rake.vL=d.rk[3];pl.rake.vR=d.rk[4];pl.bl2=d.b2?{nx:d.b2[0],ny:d.b2[1],cosH:d.bl[2],range:60,ax:-pl.aim.x,ay:-pl.aim.y}:null;});
   reloadPl();
   for(const e of j.ev){if(e[0]==='f')floatText(e[1],e[2],e[3],e[4],!!e[5]);else if(e[0]==='s')blip(e[1],e[2],e[3],e[4],e[5]||undefined);
     else if(e[0]==='b'){const p=peds.find(q=>q.nid===e[1])||couriers.find(q=>q.nid===e[1]);if(p)bubble(p,e[2]);}}
@@ -4088,7 +4145,7 @@ function guestFrame(dt){
     for(const [b,e] of [[BTN.use,'use'],[BTN.tarp,'tarp'],[BTN.honk,'honk'],[BTN.end,'end'],[BTN.rake,'rake'],[BTN.prev,'prev'],[BTN.next,'next']])if(padHit(b))NET.evOut.push(e);
     if(pad.b.some((b,i)=>b&&!pad.pb[i]))ensureAudio();
     NET.acc+=dt;if(NET.acc>=1/30){NET.acc=0;const lo=mouse.l||(!pad.lock&&pad.lt>.3),hi=mouse.r||(!pad.lock&&pad.rt>.3);
-      netSend({t:'i',mx:R2(clamp(ix,-1,1)),my:R2(clamp(iy,-1,1)),th:R2(clamp(th,-1,1)),ax:R2(aim.x),ay:R2(aim.y),lo:lo?1:0,hi:hi?1:0,rr:R2(rakeReachFrac()),cam:[Math.round(camX),Math.round(camY),VW,VH],ev:NET.evOut.splice(0)});}
+      netSend({t:'i',mx:R2(clamp(ix,-1,1)),my:R2(clamp(iy,-1,1)),th:R2(clamp(th,-1,1)),ax:R2(aim.x),ay:R2(aim.y),lo:lo?1:0,hi:hi?1:0,cam:[Math.round(camX),Math.round(camY),VW,VH],ev:NET.evOut.splice(0)});}
     updateCamera(dt);viewOut(cur);
   }else if(state!=='play'||NET.localMenu){NET.acc+=dt;if(NET.acc>=.2){NET.acc=0;netSend({t:'i',mx:0,my:0,th:0,ax:R2(aim.x),ay:R2(aim.y),lo:0,hi:0,cam:[Math.round(camX),Math.round(camY),VW,VH],ev:[]});}}
   updateParticles(dt);
@@ -4104,7 +4161,7 @@ today=newToday();
 {const [x,y]=fromTruck(-6,-(TRUCK_HW+8));P.x=x;P.y=y;}
 camX=clamp(P.x-VW/2,0,WORLD_W-VW);camY=clamp(P.y-VH/2,0,H-VH);
 {const p1=newPlayer(0,{t:'auto'});p1.P=P;p1.aim=aim;p1.money=money;p1.upg=upg;p1.owned=owned;p1.equipped=equipped;players.push(p1);usePl(p1);views[0].pl=p1;p1.view=views[0];p1.cam.x=camX;p1.cam.y=camY;}
-setupTitle();rakeBtnLabel();
+setupTitle();
 if(location.hash.startsWith('#join=')){const c=location.hash.slice(6).replace(/\D/g,'').slice(0,6);if(c.length===6){openKeypad();kpCode=c;kpShow();startJoin(c);}}
 let last=performance.now();
 // holding Enter for a moment while player 1 is on a controller drops a second player in on the keyboard
