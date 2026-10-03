@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Curb Appeal</title>
+<title>Raking It In</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -116,6 +116,17 @@ svg.px{shape-rendering:crispEdges;display:block;}
 
 #menuBtn{position:fixed;right:16px;top:16px;z-index:4;width:48px;height:48px;padding:0;display:none;align-items:center;justify-content:center;cursor:pointer;background:var(--panel);border:3px solid var(--edge);border-radius:12px;box-shadow:0 6px 0 var(--shadow);}
 #menuBtn:hover{border-color:#fff;}
+/* tutorial: the current goal, top right beside the menu button */
+#tutBox{position:fixed;right:76px;top:16px;z-index:4;display:none;max-width:min(430px,calc(100vw - 110px));pointer-events:none;background:var(--panel);border:3px solid var(--edge);border-radius:12px;padding:8px 12px;box-shadow:0 6px 0 var(--shadow);text-align:right;transition:border-color .2s,background .2s;}
+#tutBox .tl{font-size:9px;letter-spacing:2px;color:#9fb5b8;margin-bottom:4px;}
+#tutBox .tt{font-size:14px;font-weight:700;line-height:1.5;text-shadow:0 2px 0 rgba(0,0,0,.4);}
+#tutBox .ts{font-size:10px;color:var(--gold);margin-top:4px;letter-spacing:1px;}
+#tutBox .ts:empty{display:none;}
+#tutBox.done{border-color:var(--green);background:#2c5a3a;}
+.tutpop{width:min(520px,92vw);display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px 22px;margin:auto;text-align:center;}
+.tutpop h2{margin:0;font-size:24px;color:var(--gold);text-shadow:0 3px 0 rgba(0,0,0,.4);}
+.tutpop .rl{display:flex;flex-direction:column;gap:9px;font-size:12px;line-height:1.5;text-align:left;width:100%;}
+.tutpop .rl b{display:inline-block;width:20px;} .tutpop .pos{color:var(--green);} .tutpop .neg{color:var(--red);}
 #menuBtn:active{transform:translateY(3px);box-shadow:0 3px 0 var(--shadow);}
 .pause{width:min(780px,94vw);box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:14px;padding:18px 20px 20px;margin:auto;}
 .pause h2{margin:0;font-size:26px;color:var(--gold);text-shadow:0 3px 0 rgba(0,0,0,.4);}
@@ -231,7 +242,6 @@ svg.px{shape-rendering:crispEdges;display:block;}
 .ucard{background:#e9e2cf;color:#2a3033;border-radius:12px;padding:10px;box-shadow:0 6px 0 #8a8272,0 10px 18px rgba(0,0,0,.35);border:3px solid #fff;display:flex;flex-direction:column;gap:8px;transition:transform .12s;}
 .ucard:nth-child(odd){transform:rotate(-1deg);} .ucard:nth-child(even){transform:rotate(1deg);}
 .ucard:hover{transform:translateY(-6px) rotate(0);}
-.ucard.eq{border-color:var(--gold);box-shadow:0 6px 0 #b08a20,0 10px 18px rgba(0,0,0,.35);}
 .ucard .t{font-size:14px;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:6px;}
 .ucard .ic{width:34px;height:34px;flex:none;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.35);box-shadow:0 3px 0 rgba(0,0,0,.25);}
 .ucard .d{font-size:10px;line-height:1.45;color:#4a5256;min-height:30px;}
@@ -239,6 +249,7 @@ svg.px{shape-rendering:crispEdges;display:block;}
 .stats{display:grid;grid-template-columns:auto 1fr;gap:3px 8px;font-size:9px;color:#5a6266;align-items:center;}
 .sbar{height:6px;background:#cfc7b2;border-radius:3px;overflow:hidden;} .sbar i{display:block;height:100%;background:var(--blue);border-radius:3px;}
 .ucard .btn{font-size:14px;padding:8px 10px;}
+.ucard>.btn,.ucard>.buy2{margin-top:auto;}
 /* ---------- live reputation readout ---------- */
 .reprow{display:flex;align-items:center;gap:8px;margin-top:10px;position:relative;}
 .reprow b{font-size:17px;color:#cfe3e6;text-shadow:0 2px 0 rgba(0,0,0,.4);}
@@ -396,6 +407,7 @@ body.pad .padfocus.pf1{outline-color:#6fd18e;}
 <div id="sharedBar" class="panel"><span class="sm p0" id="sM0">$0</span><span class="day" id="sDay">DAY 1</span><span class="time" id="sClock">7:00 AM</span><span class="srep" id="sRepBox"><svg class="px" width="22" height="20" viewBox="0 0 11 10"><rect x="5" y="0" width="1" height="1" fill="#fff1b0"/><rect x="4" y="1" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="1" width="1" height="1" fill="#fff1b0"/><rect x="6" y="1" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="2" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="2" width="1" height="1" fill="#fff1b0"/><rect x="6" y="2" width="1" height="1" fill="#ffcf4a"/><rect x="0" y="3" width="1" height="1" fill="#b9861a"/><rect x="1" y="3" width="1" height="1" fill="#fff1b0"/><rect x="2" y="3" width="1" height="1" fill="#fff1b0"/><rect x="3" y="3" width="1" height="1" fill="#fff1b0"/><rect x="4" y="3" width="1" height="1" fill="#fff1b0"/><rect x="5" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="9" y="3" width="1" height="1" fill="#ffcf4a"/><rect x="10" y="3" width="1" height="1" fill="#b9861a"/><rect x="1" y="4" width="1" height="1" fill="#b9861a"/><rect x="2" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="4" width="1" height="1" fill="#ffcf4a"/><rect x="9" y="4" width="1" height="1" fill="#b9861a"/><rect x="2" y="5" width="1" height="1" fill="#b9861a"/><rect x="3" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="6" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="5" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="5" width="1" height="1" fill="#b9861a"/><rect x="3" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="5" y="6" width="1" height="1" fill="#b9861a"/><rect x="6" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="7" y="6" width="1" height="1" fill="#ffcf4a"/><rect x="2" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="4" y="7" width="1" height="1" fill="#b9861a"/><rect x="6" y="7" width="1" height="1" fill="#b9861a"/><rect x="7" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="8" y="7" width="1" height="1" fill="#ffcf4a"/><rect x="2" y="8" width="1" height="1" fill="#ffcf4a"/><rect x="3" y="8" width="1" height="1" fill="#b9861a"/><rect x="7" y="8" width="1" height="1" fill="#b9861a"/><rect x="8" y="8" width="1" height="1" fill="#ffcf4a"/><rect x="1" y="9" width="1" height="1" fill="#b9861a"/><rect x="2" y="9" width="1" height="1" fill="#b9861a"/><rect x="8" y="9" width="1" height="1" fill="#b9861a"/><rect x="9" y="9" width="1" height="1" fill="#b9861a"/></svg><b id="sRepT">0</b></span><span class="sm p1" id="sM1">$0</span></div>
 <div id="sharedLot"><div class="panel lotpanel" id="lotPanel"><div class="lotid"><div class="lotname" id="lotName">-</div><div class="lottag" id="lotTag">-</div></div><div class="lotbadge open" id="lotBadge"></div><div class="lotbar"><div class="bar"><div id="lotBar"></div><i style="left:50%"></i><i style="left:70%"></i><i style="left:90%"></i><span class="barnum" id="lotGood">0</span></div><b class="bartot" id="lotTotal">0</b></div></div></div>
 <button id="menuBtn" title="Menu (Esc)"><svg class="px" width="20" height="18" viewBox="0 0 10 9"><rect x="0" y="0" width="10" height="2" fill="#cfe3e6"/><rect x="0" y="3.5" width="10" height="2" fill="#cfe3e6"/><rect x="0" y="7" width="10" height="2" fill="#cfe3e6"/></svg></button>
+<div id="tutBox"><div class="tl" id="tutL"></div><div class="tt" id="tutT"></div><div class="ts" id="tutS"></div></div>
 <div id="padToast"></div>
 <div id="netBadge"></div>
 <div id="netBanner">THE HOST PAUSED THE GAME</div>
@@ -444,22 +456,41 @@ const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
 // ============================================================ constants
 // street geometry: road half-width, grass verge, sidewalk. Lot fronts sit FRONT px from a road's centerline.
 const RH=50,VERGE=8,SWW=14,FRONT=RH+VERGE+SWW,PED_OFF=RH+VERGE+7;
-const Y1=420,XC=1160,Y2=1190,XB=2110,BULB_R=90,WORLD_W=2260,H=1870;
+// the tutorial (opened from the title screen as index.html#tutorial) is its own small map: one street, a corner, a
+// short side street with a turning circle, and just two houses to work
+const TUTORIAL=location.hash==='#tutorial';
+const Y1=420,XC=TUTORIAL?700:1160,Y2=TUTORIAL?960:1190,XB=TUTORIAL?1120:2110,BULB_R=90,WORLD_W=TUTORIAL?1260:2260,H=TUTORIAL?1100:1870;
 const ROADS=[{x0:0,y0:Y1-RH,x1:XC,y1:Y1+RH,h:1,c:Y1},{x0:XC-RH,y0:Y1,x1:XC+RH,y1:Y2,h:0,c:XC},{x0:XC,y0:Y2-RH,x1:XB,y1:Y2+RH,h:1,c:Y2}];
 const BULB={x:XB,y:Y2,r:BULB_R};
 // round pads at each bend give the turns a curved outside edge
 const CIRCLES=[{x:XC,y:Y1,r:RH},{x:XC,y:Y2,r:RH},BULB];
 // face = the side of the lot that looks onto the street
-const LAYOUT=[
+const LAYOUT=TUTORIAL?[
+  // the starter house beside the truck, and round the corner a tiny house with a pool (sizes given here, not by tier)
+  {k:0,face:'S',x:190,y:Y1-FRONT-180,w:220,d:180},{k:1,face:'E',x:XC-FRONT-190,y:560,w:210,d:190},
+]:[
   {k:0,face:'S',x:190,y:Y1-FRONT-170},{k:1,face:'N',x:220,y:Y1+FRONT},{k:2,face:'S',x:408,y:Y1-FRONT-220},{k:3,face:'N',x:468,y:Y1+FRONT},
   {k:4,face:'S',x:696,y:Y1-FRONT-310},{k:5,face:'E',x:XC-FRONT-380,y:762},{k:6,face:'W',x:XC+FRONT,y:520},{k:7,face:'N',x:1120,y:Y2+FRONT},
 ];
-const FILLERS=[
+const FILLERS=TUTORIAL?[
+  {s:0,face:'S',x:12,y:Y1-FRONT-160,w:160,d:160},{s:0,face:'N',x:20,y:Y1+FRONT,w:182,d:180},
+  {s:1,face:'S',x:430,y:Y1-FRONT-180,w:200,d:180},{s:2,face:'W',x:XC+FRONT,y:520,w:240,d:220},
+]:[
   {s:0,face:'S',x:12,y:Y1-FRONT-160,w:160,d:160},{s:0,face:'N',x:20,y:Y1+FRONT,w:182,d:180},
   {s:3,face:'N',x:806,y:Y1+FRONT,w:272,d:240},{s:4,face:'S',x:1712,y:Y2-FRONT-300,w:300,d:300},
 ];
+// the tutorial's two yards, laid out around wherever each house ends up (lot-local: the street runs along y=d)
+const TUT_YARDS={
+  // a rounded mulch bed in the front corner with a tree over it, and flowerpots to tiptoe round
+  0:L=>{const {w,d}=L,h=L.lhouse,dr=L.ldoor;return[
+    {t:'mulch',x0:6,y0:d-62,x1:74,y1:d},{t:'tree',x:92,y:d-46,r:22,pal:0},
+    {t:'pot',x:80,y:d-12},{t:'pot',x:dr.x-14,y:dr.y+9,big:true},{t:'pot',x:dr.x+14,y:dr.y+9,big:true},{t:'pot',x:w-30,y:h.y1+16}];},
+  // no beds at all: a pool out back with a tree leaning over it, so there are always leaves to fish out
+  1:L=>{const {w}=L,h=L.lhouse;return[
+    {t:'pool',x0:w-96,y0:10,x1:w-18,y1:Math.min(h.y0-6,60)},{t:'tree',x:w-112,y:34,r:22,pal:1}];},
+};
 const TIERS=[[200,170],[230,190],[270,220],[320,260],[380,310],[460,380],[580,470],[900,585]];
-const NAMES=['THE PATELS','THE NGUYENS','THE MORGANS','THE OKAFORS','THE LINDQVISTS','THE ABERNATHYS','THE WHITFORDS','THE VANDERMEERS'];
+const NAMES=['THE COOPERS','THE WANGS','THE MORGANS','THE SMITHS','THE PETROVS','THE PATELS','THE WHITFORDS','THE VANDERMEERS'];
 const TAGS=['STARTER HOME','COZY BUNGALOW','RANCH HOUSE','SPLIT LEVEL','COLONIAL','CRAFTSMAN','MANOR','THE ESTATE'];
 const DRIVE_CFG=[null,{w:30,cars:1,p:.7},null,{w:32,cars:1,p:.8},{w:34,cars:1,p:1},{w:52,cars:2,p:1},{w:56,cars:2,p:1},{loop:true}];
 const DAY_SECONDS=320,DAY_START=7,DAY_END=22;
@@ -477,7 +508,7 @@ const repLevel=r=>{let l=0;for(let i=1;i<REP_LEVELS.length;i++)if(r>=REP_LEVELS[
 const repRank=r=>r<0?'SKETCHY':REP_NAMES[repLevel(r)];
 // a house too grand for your reputation won't pay yet (checked against reputation banked at the start of the day)
 const lotNeed=L=>REP_LEVELS[LOT_LEVEL[L.k]||0];
-const lotLocked=L=>!!L&&!L.filler&&repLevel(rep)<(LOT_LEVEL[L.k]||0);
+const lotLocked=L=>!!L&&!L.filler&&!TUTORIAL&&repLevel(rep)<(LOT_LEVEL[L.k]||0);
 const TRUCK_HL=26,TRUCK_HW=12;
 // pools: COPE px of stone deck ring the water. The net is a stick NET_STICK long; held, its head sits NET_REACH from the player
 const COPE=3,NET_STICK=24,NET_REACH=26,NET_CAP=50,NET_R=5.5;
@@ -535,27 +566,27 @@ const SHAPES=[
 
 // ============================================================ upgrades + attachments
 const UPG={
-  spare:{name:'SPARE BATTERY',ic:'+',col:'#4bc26a',desc:'+1 charged battery kept in the truck. Spent ones recharge overnight.',max:5,price:n=>[100,300,600,1000,1500][n]},
+  spare:{name:'SPARE BATTERY',ic:'+',col:'#4bc26a',desc:'+1 charged battery kept in the truck, recharged overnight.',max:5,price:n=>[100,300,600,1000,1500][n]},
   cap:{name:'BIG BATTERY',ic:'B',col:'#2a9a5a',desc:'+20% battery capacity. Heavier: -5% move speed.',max:5,price:n=>[100,200,400,700,1200][n]},
-  tune:{name:'ENGINE TUNE-UP',ic:'~',col:'#fe5f55',desc:'More airflow for every nozzle: more force, reach and lift. Drains a bit faster.',max:4,price:n=>[250,500,1000,2000][n]},
+  tune:{name:'ENGINE TUNE-UP',ic:'~',col:'#fe5f55',desc:'More power for every nozzle; drains a bit faster.',max:4,price:n=>[250,500,1000,2000][n]},
   boots:{name:'WORK BOOTS',ic:'>',col:'#009dff',desc:'+7% move speed.',max:5,price:n=>[150,200,275,375,500][n]},
-  tarp:{name:'EXTRA TARP',ic:'#',col:'#3d86e0',desc:'One more tarp a day. A tied tarp that goes in the truck stays there till morning.',max:5,price:n=>[200,400,600,800,1000][n]},
-  bigtarp:{name:'BIG TARP',ic:'[]',col:'#8a5ae0',desc:'+25% tarp size. Bigger bundles.',max:2,price:n=>[300,500][n]},
-  solar:{name:'SOLAR PANEL',ic:'S',col:'#e0a82a',desc:'Panels on the cab roof trickle-charge the spare batteries in the bed while the sun is up. Strongest at midday.',max:1,price:n=>[1000][n]},
-  light:{name:'FLASHLIGHT',ic:'!',col:'#ffcf4a',desc:'A head lamp for working after dark. Shines where you aim. Second level: a wider, longer beam.',max:2,price:n=>[49,199][n]},
-  rakecap:{name:'RAKE CAPACITY',ic:'R+',col:'#e0a85a',desc:'A deeper rake head. Holds 15 more leaves before it\'s full.',max:2,price:n=>[300,800][n]},
-  rakewide:{name:'WIDE RAKE',ic:'&lt;R&gt;',col:'#c08a4a',desc:'A wider rake head. Covers more ground with every stroke.',max:3,price:n=>[150,350,500][n]},
-  rakeshovel:{name:'RAKE SHOVEL',ic:'R&gt;',col:'#b07a48',desc:'Rake can push leaves. Pushed forward, it shoves leaves along in front of it instead of passing over them.',max:1,price:n=>[500][n]},
-  sticky:{name:'STICKY TARP',ic:'*',col:'#e2742a',desc:'Grippy coating. Leaves that land on a tarp slow down fast and take more air to blow off.',max:3,price:n=>[222,555,1111][n]},
+  tarp:{name:'TARP COUNT',ic:'#',col:'#3d86e0',desc:'Number of tarps per day.',max:5,price:n=>[200,400,600,800,1000][n]},
+  bigtarp:{name:'BIG TARP',ic:'[]',col:'#8a5ae0',desc:'+25% tarp area.',max:2,price:n=>[300,500][n]},
+  solar:{name:'SOLAR PANEL',ic:'S',col:'#e0a82a',desc:'Charge drained batteries with the sun; strongest at midday.',max:1,price:n=>[1000][n]},
+  light:{name:'FLASHLIGHT',ic:'!',col:'#ffcf4a',desc:n=>['Mounted flashlight lets you see after 8PM.','Upgrade to a brighter and wider beam.','Add a full-body light suit to illuminate in a circle.','Mounted flashlight, bright wide beam and a full-body light suit.'][n],max:3,price:n=>[49,199,449][n]},
+  rakecap:{name:'RAKE CAPACITY',ic:'R+',col:'#e0a85a',desc:'Deeper rake head can hold +15 leaves.',max:2,price:n=>[300,800][n]},
+  rakewide:{name:'WIDE RAKE',ic:'&lt;R&gt;',col:'#c08a4a',desc:'+25% rake width.',max:3,price:n=>[150,350,500][n]},
+  rakeshovel:{name:'RAKE SHOVEL',ic:'R&gt;',col:'#b07a48',desc:'Rake can now push leaves in front of it.',max:1,price:n=>[500][n]},
+  sticky:{name:'STICKY TARP',ic:'*',col:'#e2742a',desc:'Increase tarp grip so leaves are harder to blow off.',max:3,price:n=>[222,555,1111][n]},
 };
 const ATT=[
   {id:'std',name:'STANDARD TIP',short:'STANDARD',desc:'The one that came in the box. Does a bit of everything.',price:0,range:1,coneLo:31,coneHi:24,force:1,lift:1,drain:1,tube:14,tip:'#ff9800'},
   {id:'fan',name:'FAN NOZZLE',short:'FAN',desc:'Wide, short, flat sheet of air. Keeps leaves on the ground. Sweeps lawns into rows.',price:149,range:.72,coneLo:58,coneHi:50,force:.9,lift:.3,drain:.9,tube:13,tip:'#009dff',wide:true},
   {id:'long',name:'LONG TUBE',short:'LONG',desc:'Extension tube. +45% reach and a tighter stream for pushing piles from far away.',price:199,range:1.45,coneLo:23,coneHi:17,force:.95,lift:.9,drain:1,tube:22,tip:'#ffcf4a'},
-  {id:'jet',name:'JET TIP',short:'JET',desc:'Needle-thin and brutal. Blasts leaves out of corners and off fences. Launches them high.',price:299,range:1.2,coneLo:11,coneHi:8,force:2.1,lift:1.6,drain:1.15,tube:16,tip:'#fe5f55'},
-  {id:'eco',name:'ECO TIP',short:'ECO',desc:'Gentler air, but uses 45% less battery. Great for long days.',price:139,range:.9,coneLo:30,coneHi:24,force:.72,lift:.8,drain:.55,tube:14,tip:'#4bc26a'},
-  {id:'twin',name:'TWIN NOZZLE',short:'TWIN',desc:'Splits the air out the front and the back at the same time. Clears both sides of a path in one pass.',price:499,range:.85,coneLo:30,coneHi:24,force:.8,lift:.8,drain:1.3,tube:14,tip:'#ff5f8f',twin:true},
-  {id:'vortex',name:'VORTEX TIP',short:'VORTEX',desc:'Spins the air so leaves swirl in toward one spot. Builds piles right where you aim.',price:499,range:1,coneLo:36,coneHi:30,force:.85,lift:.45,drain:1.1,tube:15,tip:'#b06cff',vortex:true},
+  {id:'jet',name:'JET TIP',short:'JET',desc:'Needle-thin and brutal. Blasts leaves out of corners and off fences, but into the air.',price:299,range:1.15,coneLo:10,coneHi:7.5,force:2.1,lift:1.6,drain:1.15,tube:16,tip:'#fe5f55'},
+  {id:'eco',name:'ECO TIP',short:'ECO',desc:'Gentler air, but uses 35% less battery. Great for long days.',price:139,range:.9,coneLo:30,coneHi:24,force:.72,lift:.8,drain:.65,tube:14,tip:'#4bc26a'},
+  {id:'twin',name:'TWIN NOZZLE',short:'TWIN',desc:'Splits the air out the front and the back at the same time.',price:499,range:.92,coneLo:26,coneHi:21,force:.72,lift:.8,drain:1.3,tube:9,tip:'#ff5f8f',twin:true},
+  {id:'vortex',name:'VORTEX TIP',short:'VORTEX',desc:'Spins the air so leaves swirl in toward one spot. Builds piles right where you aim.',price:499,range:1,coneLo:36,coneHi:30,force:1.05,lift:.45,drain:1.1,tube:15,tip:'#b06cff',vortex:true},
 ];
 const TUNE={force:[1,1.2,1.4,1.6,2],range:[1,1.05,1.12,1.22,1.35],lift:[1,1.15,1.25,1.35,1.65],drain:[1,1.05,1.12,1.2,1.35]};
 const BASE={lowF:600,highF:731,lowR:74,highR:90,liftHi:.18};
@@ -601,7 +632,7 @@ function buildLots(){
     const [d,bi]=roadDist(x+.5,y+.5),i=y*WORLD_W+x;
     REG[i]=d<=0?1:d<=VERGE?2:d<=VERGE+SWW?3:0;NEAR[i]=bi;if(REG[i])SURF[i]=1;
   }
-  for(const c of LAYOUT){const [w,d]=TIERS[c.k];const L=makeLot(c.k,c.k,w,d,mulberry(1000+c.k*7919),false,YARDS[c.k]);orient(L,c.face,c.x,c.y);LOTS.push(L);}
+  for(const c of LAYOUT){const [w,d]=c.w?[c.w,c.d]:TIERS[c.k];const L=makeLot(c.k,c.k,w,d,mulberry(1000+c.k*7919),false,TUTORIAL?TUT_YARDS[c.k]:YARDS[c.k]);orient(L,c.face,c.x,c.y);LOTS.push(L);}
   FILLERS.forEach((c,i)=>{const L=makeLot(LOTS.length+i,c.s,c.w,c.d,mulberry(5000+i*131),true);orient(L,c.face,c.x,c.y);});
   ALL_LOTS.push(...LOTS,...FILLER_LOTS);
   ALL_LOTS.forEach((L,li)=>{L.li=li;
@@ -623,9 +654,9 @@ function buildLots(){
       STREETLIGHTS.push({x,y,dx:r.h?0:-side,dy:r.h?-side:0});
     }
   }
-  // street parking along the curbs
+  // street parking along the curbs (the tutorial keeps its streets clear)
   const R=mulberry(4242);
-  for(const r of ROADS){const len=r.h?r.x1-r.x0:r.y1-r.y0;
+  for(const r of TUTORIAL?[]:ROADS){const len=r.h?r.x1-r.x0:r.y1-r.y0;
     for(const side of [-1,1]){
       for(let a=40;a<len-40;a+=48+R()*150){
         if(R()<(side<0?.45:.6))continue;
@@ -732,7 +763,7 @@ function makeLot(k,s,w,d,R,filler,custom){
     if(!custom)placePots(L,R);
     return L;
   };
-  if(custom){applyYard(L,custom);return finish();}
+  if(custom){applyYard(L,typeof custom==='function'?custom(L):custom);return finish();}
   const car=(cx,cy,vert,dir,col)=>L.lcars.push({cx,cy,vert,dir,col});
   const carRect=c=>{const a=c.vert?8:17,b=c.vert?17:8;return{x0:c.cx-a,y0:c.cy-b,x1:c.cx+a,y1:c.cy+b};};
   const dc=DRIVE_CFG[s];
@@ -1214,6 +1245,7 @@ const PLAYER_PALS=[
 const SHARED_UPG=['spare','cap','solar'];
 const players=[];let cur=null,PPAL=PLAYER_PALS[0];
 // upgrade levels capped at each upgrade's current top level (older saves can have more)
+const upDesc=(u,lvl)=>typeof u.desc==='function'?u.desc(lvl):u.desc;
 function clampUpg(u){for(const k in UPG)u[k]=Math.min(u[k]||0,UPG[k].max);return u;}
 function newPlayer(i,dev,prof){
   const pr=prof||{money:0,upg:{},owned:['std'],equipped:'std'};
@@ -1242,7 +1274,7 @@ const blowers=(min)=>players.filter(pl=>pl.power>min&&onFoot(pl));
 // spare batteries live in the truck bed, each with its own charge (0..1). A swap takes the fullest one and leaves
 // yours in its place, where the solar panel (if you have one) can top it back up
 const bestSpare=()=>bed.length?Math.max(...bed):0;
-function swapBattery(){const i=bed.indexOf(bestSpare());if(i<0)return;const got=bed[i];bed[i]=clamp(battery/capacity(),0,1);battery=got*capacity();}
+function swapBattery(){const i=bed.indexOf(bestSpare());if(i<0)return;tutEv('swap');const got=bed[i];bed[i]=clamp(battery/capacity(),0,1);battery=got*capacity();}
 const SOLAR_RATE=.25;
 // sunlight on the panels: nothing before 7 AM or after 7 PM, strongest at 1 PM
 const sunAt=h=>clamp(Math.sin(Math.PI*(h-7)/12),0,1);
@@ -1349,8 +1381,9 @@ function updateFx(dt){
 // ============================================================ gamepad
 // standard mapping: 0 A/cross, 1 B/circle, 2 X/square, 3 Y/triangle, 4 LB/L1, 5 RB/R1, 6 LT/L2, 7 RT/R2, 8 view/share, 9 menu/options, 12-15 d-pad
 const BTN={use:0,honk:1,tarp:2,end:3,rake:3,prev:4,next:5,view:8,pause:9,up:12,down:13,left:14,right:15};
-const PAD_KEY='curbappeal-pad-v1',padPrefs={style:null,rumble:true};
-try{Object.assign(padPrefs,JSON.parse(localStorage.getItem(PAD_KEY))||{});}catch(e){}
+// keys carried the game's old name; still read them so nobody loses their settings
+const PAD_KEY='rakingitin-pad-v1',padPrefs={style:null,rumble:true};
+try{Object.assign(padPrefs,JSON.parse(localStorage.getItem(PAD_KEY)||localStorage.getItem('curbappeal-pad-v1'))||{});}catch(e){}
 function savePadPrefs(){try{localStorage.setItem(PAD_KEY,JSON.stringify(padPrefs));}catch(e){}}
 const mkPad=idx=>({lx:0,ly:0,rx:0,ry:0,lt:0,rt:0,b:new Array(17).fill(false),pb:new Array(17).fill(false),lock:false,id:'',obj:null,style:'xbox',idx,startT:0,joinFired:false,startTap:false,r:{until:0,t:0,key:'',on:false}});
 // ZERO_PAD stands in for "no controller"; MERGED is every pad at once, for menus
@@ -1420,7 +1453,7 @@ function padInput(dt){
       if(state==='play'&&!padOwnedNow(p.idx)){if(!coop())setInputMode('pad',p.idx);openMenu(false,coop()?padOwner(p.idx)||players[0]:players[0]);}}
   }else{for(const k in pads)pads[k].startTap=false;
     if(state==='shop'&&coop()){for(const pl of players)if(devPad(pl)!==ZERO_PAD)shopPadNav(pl,dt);}
-    else if(state==='title'||state==='menu'||state==='closeout'||state==='shop'||state==='joinpad'){const sv=pad;pad=MERGED;menuNav(dt);pad=sv;}}
+    else if(state==='title'||state==='menu'||state==='closeout'||state==='shop'||state==='joinpad'||state==='tut'){const sv=pad;pad=MERGED;menuNav(dt);pad=sv;}}
 }
 function shopPadNav(pl,dt){
   const ns=pl.nav||(pl.nav={focus:null,navT:0,navDir:''}),sv=[pad,padFocus,navT,navDir];
@@ -1433,6 +1466,7 @@ function shopPadNav(pl,dt){
 // is this pad already somebody's, right now?
 const padOwnedNow=idx=>players.some(pl=>pl.dev.t==='pad'?pl.dev.i===idx:pl.dev.t==='auto'&&pl.autoMode==='pad'&&pl.autoPad===idx);
 function canJoinWith(dev){
+  if(TUT.on)return false;
   if(players.length>=2)return false;const p1=players[0];
   if(dev.t==='pad')return !padOwnedNow(dev.i);
   const a=autoPl();return !!a&&a.autoMode==='pad';
@@ -1478,7 +1512,7 @@ function menuNav(dt){
   else if((navT-=dt)<=0){navT=.11;moveFocus(dx,dy,it);}
   if(state!=='title'&&Math.abs(pad.ry)>.2)(navScrollEl||modalEl).scrollTop+=pad.ry*700*dt;
   if(padHit(BTN.use)&&padFocus){padFocus.click();return;}
-  if(padHit(BTN.honk)){if(state==='menu')menuBack();else if(state==='closeout')closeModal();else if(state==='joinpad')closeKeypad();return;}
+  if(padHit(BTN.honk)){if(state==='tut')tutModalOk();else if(state==='menu')menuBack();else if(state==='closeout')closeModal();else if(state==='joinpad')closeKeypad();return;}
   if(padHit(BTN.pause)){if(state==='menu')closeMenu();else if(state==='shop')startDay();else if(state==='joinpad')kpPress('>');else if(state==='title')(padFocus||defaultFocus())?.click();return;}
   if(padHit(BTN.prev)||padHit(BTN.next)){const d=padHit(BTN.next)?1:-1;
     if(state==='menu'){if(document.getElementById('ctlWrap')){const v=['kbm','xbox','ps'];pickCtl(v[(v.indexOf(ctlView)+d+3)%3]);}}
@@ -1487,11 +1521,11 @@ function menuNav(dt){
 // re-rendered screens (the shop) keep the ring on the same button, or the one nearest where it was
 function focusSnap(){
   if(!padFocus||!padFocus.isConnected)return null;const r=padFocus.getBoundingClientRect();
-  const at=['data-up','data-buy','data-eq','data-tab','data-cv','id'].find(a=>padFocus.hasAttribute(a));
+  const at=['data-up','data-buy','data-tab','data-cv','id'].find(a=>padFocus.hasAttribute(a));
   return{sel:at?`[${at}="${padFocus.getAttribute(at)}"]`:null,x:r.left+r.width/2,y:r.top+r.height/2};
 }
 // find the same button after the store re-renders (by what it buys), for a co-op player's own focus ring
-function refocus(old){const at=['data-up','data-buy','data-eq','data-tab'].find(a=>old.hasAttribute(a));if(!at)return null;
+function refocus(old){const at=['data-up','data-buy','data-tab'].find(a=>old.hasAttribute(a));if(!at)return null;
   const sel=`[${at}="${old.getAttribute(at)}"]`+(old.dataset.pl!=null?`[data-pl="${old.dataset.pl}"]`:'');const el=modalEl.querySelector(sel);
   if(el&&!el.disabled){el.classList.add('padfocus');if(old.classList.contains('pf1'))el.classList.add('pf1');return el;}return null;}
 function focusRestore(f){
@@ -1500,7 +1534,7 @@ function focusRestore(f){
   setFocus(el);
 }
 // ---------- button glyphs for prompts: keycaps, Xbox letters or PlayStation shapes
-const KB_GLY={use:'E',tarp:'Q',rake:'R',honk:'SPACE',end:'N',pause:'ESC',back:'ESC',ok:'ENTER',start:'ENTER',low:'L-CLICK',high:'R-CLICK',prev:'WHEEL',next:'WHEEL'};
+const KB_GLY={ls:'WASD',rs:'MOUSE',use:'E',tarp:'Q',rake:'R',honk:'SPACE',end:'N',pause:'ESC',back:'ESC',ok:'ENTER',start:'ENTER',low:'L-CLICK',high:'R-CLICK',prev:'WHEEL',next:'WHEEL'};
 const PAD_GLY={use:'a',ok:'a',honk:'b',back:'b',tarp:'x',end:'y',rake:'y',prev:'lb',next:'rb',tabL:'lb',tabR:'rb',low:'lt',high:'rt',pause:'menu',start:'menu',ls:'ls',rs:'rs'};
 const PS_FACE={a:'<path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#8ab4ff"/>',b:'<circle cx="7" cy="7" r="4" stroke="#ff7070"/>',x:'<rect x="3.2" y="3.2" width="7.6" height="7.6" stroke="#ff8fd6"/>',y:'<path d="M7 2.8l4.6 8H2.4z" stroke="#4fe0b0"/>'};
 const PS_NAME={lb:'L1',rb:'R1',lt:'L2',rt:'R2',menu:'OPTIONS'};
@@ -1662,6 +1696,8 @@ addEventListener('keydown',e=>{
     });
   }else if(state==='menu'){
     if(e.code==='Escape')menuBack();else if(menuFirst&&(e.code==='Enter'||e.code==='Space'))closeMenu();
+  }else if(state==='tut'){
+    if(e.code==='Escape'||e.code==='Enter'||e.code==='Space')tutModalOk();
   }else if(state==='closeout'){
     if(e.code==='KeyE'||e.code==='Enter')confirmCloseout();
     if(e.code==='Escape')closeModal();
@@ -1681,13 +1717,13 @@ addEventListener('mouseup',e=>{if(e.button===0)mouse.l=false;if(e.button===2)mou
 addEventListener('wheel',e=>{if(state==='play'&&NET.role==='guest'){NET.evOut.push(e.deltaY>0?'next':'prev');return;}if(state!=='play'||!kbmPl())return;withPl(kbmPl(),()=>cycleNozzle(e.deltaY>0?1:-1));},{passive:true});
 addEventListener('contextmenu',e=>e.preventDefault());
 addEventListener('blur',()=>{for(const k in keys)keys[k]=false;dropInputs();});
-document.getElementById('logo').innerHTML=[...'CURB APPEAL'].map((ch,i)=>ch===' '?'<span style="width:.5em"></span>':`<span style="animation-delay:${-i*.18}s">${ch}</span>`).join('');
+document.getElementById('logo').innerHTML=[...'RAKING IT IN'].map((ch,i)=>ch===' '?'<span style="width:.5em"></span>':`<span style="animation-delay:${-i*.18}s">${ch}</span>`).join('');
 document.body.style.cursor='default';
 function equip(id){if(equipped===id)return;equipped=id;rumble(0,.25,45);const a=att();floatText(P.x,P.y-16,a.name,a.tip);blip(700,.05,'square',.05);setTimeout(()=>blip(900,.05,'square',.04),50);for(const v of views)v.cache.hot=null;}
 
 // ============================================================ save
 const SAVE_KEY='leafblower-save-v3';
-function save(){try{const p1=players[0],p2=players[1];if(cur===p1)storePl();
+function save(){if(TUT.on)return;try{const p1=players[0],p2=players[1];if(cur===p1)storePl();
   const prof=p2?{money:p2.money,upg:p2.upg,owned:p2.owned,equipped:p2.equipped}:p2Profile;
   localStorage.setItem(SAVE_KEY,JSON.stringify({money:p1.money,day,rep,upg:p1.upg,owned:p1.owned,equipped:p1.equipped,p2:prof||null}));}catch(e){}}
 function loadSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY));if(s&&typeof s.money==='number')return s;}catch(e){}return null;}
@@ -1697,6 +1733,7 @@ function setupTitle(){
   const mkb=(txt,cls,fn)=>{const el=document.createElement('button');el.className='btn '+cls;el.textContent=txt;el.onclick=e=>{e.stopPropagation();fn();};b.appendChild(el);};
   if(s){mkb(`CONTINUE - DAY ${s.day}`,'bounce',()=>{money=s.money;day=s.day;rep=s.rep||0;upg=clampUpg({...upg,...s.upg});owned=s.owned||['std'];equipped=s.equipped||'std';p2Profile=s.p2||null;beginGame();});mkb('NEW GAME','red',()=>{try{localStorage.removeItem(SAVE_KEY);}catch(e){}money=0;rep=0;day=1;beginGame(true);});}
   else mkb('START DAY 1','bounce',()=>beginGame(true));
+  mkb('TUTORIAL','',()=>{location.hash='tutorial';location.reload();});
   mkb('JOIN ONLINE','',openKeypad);
   mkb('YARD EDITOR','gold',openEditor);
 }
@@ -1705,8 +1742,8 @@ function beginGame(fresh){titleEl.classList.add('hide');ensureAudio();resetDay()
 // ============================================================ audio
 let AC=null,nGain,nFilt,mOsc,mGain,eOsc,eGain,master,sfxBus,musicBus;
 // volume settings (0..1), kept in the browser
-const SET_KEY='curbappeal-settings-v1',settings={music:.7,sfx:1};
-try{Object.assign(settings,JSON.parse(localStorage.getItem(SET_KEY))||{});}catch(e){}
+const SET_KEY='rakingitin-settings-v1',settings={music:.7,sfx:1};
+try{Object.assign(settings,JSON.parse(localStorage.getItem(SET_KEY)||localStorage.getItem('curbappeal-settings-v1'))||{});}catch(e){}
 function saveSettings(){try{localStorage.setItem(SET_KEY,JSON.stringify(settings));}catch(e){}}
 function applyVolumes(){if(!AC)return;const t=AC.currentTime;sfxBus.gain.setTargetAtTime(settings.sfx,t,.02);musicBus.gain.setTargetAtTime(settings.music,t,.02);}
 function ensureAudio(){
@@ -1769,9 +1806,9 @@ function interact(){
   if(heldNet){putNetDown();return;}
   if(carryPkg){putDownPkg();return;}
   const pk=nearPkg();if(pk&&!bundle&&pk.far){pickUpPkg(pk);return;}
-  const L=nearDoor();if(L){if(lotLocked(L)){floatText(P.x,P.y-14,'NOT HIRING YOU YET','#fe5f55');blip(150,.15,'sawtooth',.04,90);return;}if(!L.done){if(cur.dev.t==='net'){const s0=lotStats(L),p0=calcPay(L,s0);pendingLot=L;pendingPay=p0;L.pct=s0.pct;const st=state;confirmCloseout();state=st;}else openCloseout(L);}return;}
+  const L=tutOk('knock')&&nearDoor();if(L){if(lotLocked(L)){floatText(P.x,P.y-14,'NOT HIRING YOU YET','#fe5f55');blip(150,.15,'sawtooth',.04,90);return;}if(!L.done){if(cur.dev.t==='net'){const s0=lotStats(L),p0=calcPay(L,s0);pendingLot=L;pendingPay=p0;L.pct=s0.pct;const st=state;confirmCloseout();state=st;}else openCloseout(L);}return;}
   if(pk&&!bundle){pickUpPkg(pk);return;}
-  const net=nearNet();if(net){if(bundle)floatText(P.x,P.y-14,'HANDS FULL','#fe5f55');else grabNet(net);return;}
+  const net=tutOk('net')&&nearNet();if(net){if(bundle)floatText(P.x,P.y-14,'HANDS FULL','#fe5f55');else grabNet(net);return;}
   const part=truckPart();
   if(part==='back'){
     if(bundle){
@@ -1779,9 +1816,9 @@ function interact(){
       const n=bundle.total;for(const k in bundle.counts){LOTS[k].hauled+=bundle.counts[k];}
       today.hauled+=n;today.bundles++;truckBundles.push(n);tarpsUsed++;
       floatText(P.x,P.y-14,`TARP LOADED · ${n} LEAVES`,'#4bc26a');blip(260,.08,'triangle',.06);setTimeout(()=>blip(390,.1,'triangle',.05),70);rumble(.35,.2,120);bundle=null;statsT=1;
-      if(tarpsLeft()<=0)setTimeout(()=>floatText(P.x,P.y-24,'THAT WAS YOUR LAST TARP','#ffcf4a'),500);
-    }else trySwap();
-  }else if(part==='front'){if(bundle){floatText(P.x,P.y-14,'UNLOAD FIRST','#fe5f55');return;}
+      if(tarpsLeft()<=0&&!TUT.on)setTimeout(()=>floatText(P.x,P.y-24,'THAT WAS YOUR LAST TARP','#ffcf4a'),500);tutEv('load');
+    }else if(tutOk('swap'))trySwap();
+  }else if(part==='front'&&tutOk('drive')){if(bundle){floatText(P.x,P.y-14,'UNLOAD FIRST','#fe5f55');return;}
     // someone's already at the wheel: hop in the passenger side
     stopRake(true);
     if(players.some(pl=>pl!==cur&&pl.driving)){cur.riding=true;dropInputs();blip(200,.06);setTimeout(()=>blip(260,.06),70);return;}
@@ -1804,7 +1841,8 @@ function tarpAction(){
     bundle=null;floatText(P.x,P.y-14,'DROPPED','#ffcf4a');blip(180,.12,'triangle',.06);return;
   }
   let best=null,bd=1e9;for(const t of tarps){if(t.st!=='down'||t.owner!==cur)continue;const dx=Math.max(t.x0-P.x,0,P.x-t.x1),dy=Math.max(t.y0-P.y,0,P.y-t.y1),d=Math.hypot(dx,dy);if(d<10&&d<bd){bd=d;best=t;}}
-  if(best){startTie(best);return;}
+  if(best){if(tutOk('tie'))startTie(best);return;}
+  if(!tutOk('tarp'))return;
   if(tarpsLeft()<=0){if(tarpsOwned())floatText(P.x,P.y-14,tarpsUsed?'NO TARPS LEFT TODAY':'NO TARPS LEFT','#fe5f55');return;}
   const [tw,th]=tarpDims(),cx=P.x+aim.x*(tw*.5+10),cy=P.y+aim.y*(th*.5+10);
   if(wet(cx,cy)){floatText(P.x,P.y-14,'NOT IN THE POOL!','#fe5f55');return;}
@@ -1870,11 +1908,12 @@ function emptyNet(force){
   const ni=NETS.indexOf(n);
   for(let i=0;i<N;i++){if(ST[i]!==4||UN[i]!==ni)continue;const a=rnd()*Math.PI*2,s=8+rnd()*22;
     ST[i]=0;LX[i]=hx+Math.cos(a)*2;LY[i]=hy+Math.sin(a)*2;LZ[i]=3+rnd()*3;VX[i]=Math.cos(a)*s;VY[i]=Math.sin(a)*s*.7;VZ[i]=10+rnd()*15;VR[i]=(rnd()-.5)*8;}
-  if(!force)floatText(hx,hy-10,`DUMPED ${n.n}`,'#009dff');
+  if(!force){tutEv('netDump');floatText(hx,hy-10,`DUMPED ${n.n}`,'#009dff');}
   n.n=0;blip(240,.1,'triangle',.06,160);statsT=1;
 }
 // ---------- rake
 function toggleRake(){
+  if(!tutOk('rake'))return;
   if(state!=='play'||driving||cur.riding||tieT>0||swapT>0)return;
   if(cur.raking){stopRake();return;}
   if(bundle||carryPkg){floatText(P.x,P.y-14,'HANDS FULL','#fe5f55');blip(150,.12,'sawtooth',.04,90);return;}
@@ -1900,7 +1939,7 @@ function rakeDump(force){
   // where the head was becomes a no-stick zone covering the pile and the head, so the rake can't scoop the pile straight
   // back up. It goes away once the whole head has left it
   k.drop={x:hx,y:hy,r:Math.max(rakeHW(pl),r)+3};pl.rakeN=0;statsT=1;
-  if(!force){floatText(hx,hy-10,`PILED ${n}`,'#4bc26a');blip(200,.1,'triangle',.06,140);rumble(.15,.25,80);}
+  if(!force){tutEv('rakeDump');floatText(hx,hy-10,`PILED ${n}`,'#4bc26a');blip(200,.1,'triangle',.06,140);rumble(.15,.25,80);}
 }
 // ---------- flowerpots
 function breakPot(p){
@@ -1938,7 +1977,7 @@ function openCloseout(L){
   if(s.pool>8)q+=' "THE POOL IS FULL OF LEAVES!"';
   if(L.potsBroken)q+=L.potsBroken>1?` "YOU BROKE ${L.potsBroken} OF MY FLOWERPOTS!"`:' "AND YOU BROKE MY FLOWERPOT!"';
   modalEl.innerHTML=`<div class="panel receipt">
-    <h2>${L.name}</h2><div class="lottag">${L.tag} &middot; ${pct}% OF LEAVES IN THE RIGHT SPOT</div>
+    <h2>${L.name}</h2><div class="lottag">${L.tag} &middot; ${pct}% OF LEAVES ORGANIZED</div>
     <div class="quote">${q}</div>
     <div class="line"><span>IN BEDS &amp; NATURAL AREAS</span><span>${s.good-L.hauled} &times; $1</span></div>
     <div class="line"><span>HAULED AWAY</span><span>${L.hauled} &times; $1</span></div>
@@ -2035,11 +2074,14 @@ function volRow(k,label,note){const v=Math.round(settings[k]*100);
 function renderMenuAs(){
   const first=menuFirst,guest=NET.role==='guest',back=`<div class="btns"><button class="btn" id="mBack">BACK ${G('back')}</button></div>`;
   let html;
-  if(first)html=`<h2>HOW TO PLAY</h2><div class="goal">BLOW LEAVES INTO THE <span style="color:var(--green)">GREEN</span> BEDS AND KEEP THEM OUT OF THE <span style="color:var(--red)">RED</span> ZONES.<br>THEN KNOCK ON THE FRONT DOOR TO GET PAID.</div>
+  if(first)html=`<h2>HOW TO PLAY</h2><div class="goal">GET LEAVES INTO THE <span style="color:var(--green)">MULCH BEDS</span> AND OUT OF <span style="color:var(--red)">FANCY AREAS</span>.<br>DON'T BREAK ANYTHING! KNOCK ON THE FRONT DOOR TO GET PAID.</div>
     ${ctlSeg()}<div id="ctlWrap"></div><div class="btns"><button class="btn green bounce" id="mResume">GOT IT! ${G('ok')}</button></div>`;
   else if(menuPage==='controls')html=`<h2>CONTROLS</h2>${ctlSeg()}<div id="ctlWrap"></div>${back}`;
   else if(menuPage==='settings')html=`<h2>SETTINGS</h2><div class="setlist">${volRow('music','MUSIC','NO MUSIC YET')}${volRow('sfx','SOUND EFFECTS')}
     ${guest?'':'<button class="btn gold" id="mCheat">DEV CHEAT: +1K$</button>'}</div>${back}`;
+  else if(TUT.on)html=`<h2>PAUSED</h2><div class="sub">TUTORIAL</div><div class="mlist">
+    <button class="btn green" id="mResume">RESUME ${G('back')}</button><button class="btn" id="mCtl">CONTROLS</button>
+    <button class="btn" id="mSet">SETTINGS</button><button class="btn red" id="mExitTut">EXIT TUTORIAL</button></div>`;
   else html=`<h2>PAUSED</h2><div class="sub">DAY ${day} &middot; ${fmtHour(hour)}</div><div class="mlist">
     <button class="btn green" id="mResume">RESUME ${G('back')}</button>
     <button class="btn" id="mCtl">CONTROLS</button>
@@ -2052,7 +2094,7 @@ function renderMenuAs(){
   modalEl.classList.remove('hide');
   const on=(id,fn)=>{const b=document.getElementById(id);if(b)b.onclick=fn;};
   if(document.getElementById('ctlWrap')){modalEl.querySelectorAll('[data-cv]').forEach(b=>b.onclick=()=>pickCtl(b.dataset.cv));showCtl(ctlView);}
-  on('mResume',closeMenu);on('mBack',()=>menuGo('main'));on('mCtl',()=>menuGo('controls'));on('mSet',()=>menuGo('settings'));
+  on('mResume',closeMenu);on('mExitTut',exitTutorial);on('mBack',()=>menuGo('main'));on('mCtl',()=>menuGo('controls'));on('mSet',()=>menuGo('settings'));
   on('mEnd',()=>{modalEl.classList.add('hide');state='play';endDay();});on('mNetLeave',guestLeave);
   on('mAdd',()=>{modalEl.classList.add('hide');state='play';document.body.style.cursor='none';joinPlayer({t:'wait'});});
   {const who=cur;on('mLeave',()=>{modalEl.classList.add('hide');state='play';leavePlayer(who);});}
@@ -2065,7 +2107,7 @@ function renderMenuAs(){
 }
 function closeMenu(){if(state!=='menu')return;menuPage='main';NET.localMenu=false;modalEl.classList.add('hide');state='play';document.body.style.cursor='none';}
 function endDay(){
-  if(state!=='play')return;
+  if(state!=='play'||TUT.on)return;
   state='shop';storePl();for(const pl of players)withPl(pl,()=>{dropInputs();driving=false;cur.riding=false;});document.body.style.cursor='default';
   // co-op: the day's pot is split down the middle (a loss comes out of both banks, never below zero)
   if(today.coop){const half=Math.round(today.pot/2),sh=[half,today.pot-half];today.shares=sh;
@@ -2161,7 +2203,6 @@ function renderNight(){
   const plOf=b=>players[+(b.dataset.pl||0)]||players[0];
   modalEl.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>buyUpgrade(plOf(b),b.dataset.up));
   modalEl.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>{if(NET.role==='guest'){if(plOf(b)===players[1])netSend({t:'act',a:'buy',id:b.dataset.buy});return;}const a=ATT.find(x=>x.id===b.dataset.buy);let ok=false;withPl(plOf(b),()=>{if(!owned.includes(a.id)&&money>=a.price){money-=a.price;owned.push(a.id);equipped=a.id;ok=true;}});if(ok){chaChing();renderNight();}});
-  modalEl.querySelectorAll('[data-eq]').forEach(b=>b.onclick=()=>{if(NET.role==='guest'){if(plOf(b)===players[1])netSend({t:'act',a:'eq',id:b.dataset.eq});return;}withPl(plOf(b),()=>{equipped=b.dataset.eq;});blip(700,.05);renderNight();});
   document.getElementById('bDay').onclick=startDay;
   // put every scroll position back where it was, so buying something doesn't jump the page
   if(NET.role==='host')sendNight();
@@ -2176,13 +2217,13 @@ function storeCards(pl,ids,withAtts){
   const cards=ids.map(id=>{const u=UPG[id];
       const lvl=upg[id],maxed=lvl>=u.max,price=maxed?0:u.price(lvl),can=!maxed&&money>=price;
       return `<div class="ucard"><div class="t"><span>${u.name}</span><span class="ic" style="background:${u.col}">${u.ic}</span></div>
-        <div class="d">${u.desc}</div>
+        <div class="d">${upDesc(u,lvl)}</div>
         <div class="pips">${Array.from({length:u.max},(_,i)=>`<i class="${i<lvl?'on':''}"></i>`).join('')}</div>
         <button class="btn small ${can?'green':''}" data-up="${id}"${da} ${can?'':'disabled'}>${maxed?'MAXED':'BUY '+fmt$(price)}</button></div>`;}).join('');
   if(!withAtts)return cards;
-  const atts=ATT.map(a=>{const own=owned.includes(a.id),eq=equipped===a.id,can=!own&&money>=a.price;
-      const btn=eq?`<button class="btn small gold" disabled style="background:var(--gold);color:#3a2a00;box-shadow:0 6px 0 #b08a20">EQUIPPED</button>`:own?`<button class="btn small" data-eq="${a.id}"${da}>EQUIP</button>`:`<button class="btn small ${can?'green':''}" data-buy="${a.id}"${da} ${can?'':'disabled'}>BUY ${fmt$(a.price)}</button>`;
-      return `<div class="ucard ${eq?'eq':''}"><div class="t"><span>${a.name}</span><span class="ic" style="background:${a.tip}">${a.id==='fan'?'&lt;':a.id==='jet'?'!':a.id==='long'?'=':a.id==='vortex'?'@':a.id==='eco'?'%':a.id==='twin'?'&lt;&gt;':'o'}</span></div>
+  const atts=ATT.map(a=>{const own=owned.includes(a.id),can=!own&&money>=a.price;
+      const btn=own?'<button class="btn small" disabled>OWNED</button>':`<button class="btn small ${can?'green':''}" data-buy="${a.id}"${da} ${can?'':'disabled'}>BUY ${fmt$(a.price)}</button>`;
+      return `<div class="ucard"><div class="t"><span>${a.name}</span><span class="ic" style="background:${a.tip}">${a.id==='fan'?'&lt;':a.id==='jet'?'!':a.id==='long'?'=':a.id==='vortex'?'@':a.id==='eco'?'%':a.id==='twin'?'&lt;&gt;':'o'}</span></div>
         <div class="d">${a.desc}</div>${statBars(a)}${btn}</div>`;}).join('');
   if(pl)return `<div class="sect">UPGRADES</div><div class="cards">${cards}</div><div class="sect">NOZZLES</div><div class="cards">${atts}</div>`;
   return `<div class="panel" style="text-align:center;margin-bottom:14px"><span class="label">BANK</span> <span style="font-size:22px;color:var(--gold);font-weight:700">${fmt$(money)}</span></div>
@@ -2193,7 +2234,7 @@ function storeCards(pl,ids,withAtts){
 function coopStore(){
   const shared=SHARED_UPG.filter(id=>UPG[id]).map(id=>{const u=UPG[id],lvl=players[0].upg[id],maxed=lvl>=u.max,price=maxed?0:u.price(lvl);
     const btns=maxed?'<button class="btn small" disabled>MAXED</button>':players.map(pl=>`<button class="btn small ${pl.money>=price?'green':''} pb${pl.i}" data-up="${id}" data-pl="${pl.i}" ${pl.money>=price?'':'disabled'}>P${pl.i+1} ${fmt$(price)}</button>`).join('');
-    return `<div class="ucard"><div class="t"><span>${u.name}</span><span class="ic" style="background:${u.col}">${u.ic}</span></div><div class="d">${u.desc}</div>
+    return `<div class="ucard"><div class="t"><span>${u.name}</span><span class="ic" style="background:${u.col}">${u.ic}</span></div><div class="d">${upDesc(u,lvl)}</div>
       <div class="pips">${Array.from({length:u.max},(_,i)=>`<i class="${i<lvl?'on':''}"></i>`).join('')}</div><div class="buy2">${btns}</div></div>`;}).join('');
   const personal=Object.keys(UPG).filter(id=>!SHARED_UPG.includes(id));
   const col=pl=>withPl(pl,()=>`<div class="shopcol p${pl.i}"><div class="colhead"><span>PLAYER ${pl.i+1}</span><b>${fmt$(money)}</b></div>${storeCards(pl,personal,true)}</div>`);
@@ -2268,6 +2309,9 @@ function pushRect(i,w){
   else if(m===t){LY[i]=w.y0-.6;bounceLeaf(i,0,-1);}else{LY[i]=w.y1+.6;bounceLeaf(i,0,1);}
 }
 const MAXV=300,MAXV2=MAXV*MAXV;
+// vortex tip: top speed leaves spiral in at, how fast speed falls off near the aim point, how much they circle, how hard
+// the air grabs them (per unit of blower force), and the radius of the pile they settle into
+const VORT_VMAX=55,VORT_GAIN=4,VORT_SWIRL=.45,VORT_STEER=.03,VORT_PILE=4;
 let bl={nx:0,ny:0,range:0,cosH:1,tx:0,ty:0};
 function blowParams(p){
   const a=att(),tl=upg.tune;let F,R,deg,lift;
@@ -2288,7 +2332,7 @@ function updateLeaves(dt){
     pl.bl={nx,ny,range,cosH,tx:tgx,ty:tgy,vort:bp.vortex};
     if(p>.02)B.push({nx,ny,ax,ay,range,R2:range*range,F:bp.F,cosH,inv:1/(1-cosH),liftK:bp.lift,vort:bp.vortex,tgx,tgy});
     // the twin nozzle's second outlet points straight back from the pack
-    if(bp.twin){const bx=pl.P.x-ax*(tube*.6),by=pl.P.y-ay*(tube*.6);pl.bl2={nx:bx,ny:by,range,cosH,ax:-ax,ay:-ay};
+    if(bp.twin){const bx=pl.P.x-ax*tube,by=pl.P.y-ay*tube;pl.bl2={nx:bx,ny:by,range,cosH,ax:-ax,ay:-ay};
       if(p>.02)B.push({nx:bx,ny:by,ax:-ax,ay:-ay,range,R2:range*range,F:bp.F,cosH,inv:1/(1-cosH),liftK:bp.lift,vort:false,tgx:0,tgy:0});}
     else pl.bl2=null;
     const sp=foot?Math.hypot(pl.P.vx,pl.P.vy):0;if(sp>12)WK.push({px:pl.P.x,py:pl.P.y,psp:sp,vx:pl.P.vx,vy:pl.P.vy});
@@ -2319,11 +2363,14 @@ function updateLeaves(dt){
           const t=1-d/range,ang=(c-cosH)*inv,f=F*t*(.3+.7*ang)*(z>1?1.3:1);
           if(z>.3||f>THR[i]*(nDT&&z<1&&onTarp(x,y)?tThr:1)){
             if(vort){
-              const qx=tgx-x,qy=tgy-y,qd=Math.hypot(qx,qy)||1,ux=qx/qd,uy=qy/qd,near=Math.min(1,qd/14);
-              const sw=Math.sin(ph*6.28)>0?1:-1;
-              vx+=(ux*.9*near-uy*.75*sw+ax*.15)*f*dt;vy+=(uy*.9*near+ux*.75*sw+ay*.15)*f*dt;
-              if(qd<10){vx*=.9;vy*=.9;}
-              vz+=f*liftK*LIFT[i]*dt*.6;
+              // steer the leaf toward a speed and heading rather than shoving it: a spiral in toward the aim point that
+              // slows to nothing at the middle, so leaves settle into a pile instead of overshooting. More power only
+              // makes them get there quicker
+              const qx=tgx-x,qy=tgy-y,qd=Math.hypot(qx,qy)||1,ux=qx/qd,uy=qy/qd;
+              const vs=Math.min(VORT_VMAX+F*.04,Math.max(0,qd-VORT_PILE)*VORT_GAIN),sw=VORT_SWIRL*Math.min(1,qd/18);
+              const k=Math.min(1,f*VORT_STEER*dt);
+              vx+=((ux-uy*sw)*vs-vx)*k;vy+=((uy+ux*sw)*vs-vy)*k;
+              if(z>0)vz-=f*.05*dt;else vz+=f*liftK*LIFT[i]*dt*.08;
             }else{
               const rx=dx/d,ry=dy/d,n=Math.sin(T*9+ph*40+d*.15)*.5+Math.sin(T*23+ph*13)*.25;
               vx+=(ax*.72+rx*.28-ay*n)*f*dt;vy+=(ay*.72+ry*.28+ax*n)*f*dt;
@@ -3232,20 +3279,22 @@ function drawBird(b,cx,cy){
 let lastEmptyBuzz=0,wasEmpty=false;
 function update(dt){
   time+=dt;
-  hour+=dt*(DAY_END-DAY_START)/DAY_SECONDS;
+  if(!TUT.on)hour+=dt*(DAY_END-DAY_START)/DAY_SECONDS;
   if(hour>=DAY_END){hour=DAY_END;endDay();return;}
   for(const pl of players){usePl(pl);viewIn(pl);updatePlayer(dt);storePl();}
   usePl(players[0]);
   if(players[0].upg.solar>0){const k=SOLAR_RATE*sunAt(hour)*dt*(DAY_END-DAY_START)/DAY_SECONDS;if(k>0)for(let i=0;i<bed.length;i++)bed[i]=Math.min(1,bed[i]+k);}
   if(crashShake>0)crashShake=Math.max(0,crashShake-dt);for(const c of CARS)if(c.jolt>0)c.jolt-=dt;
+  if(TUT.on){}else{
   if(!today.mailSent&&hour>=9){today.mailSent=true;spawnTraffic('mail');}
   if(!today.copSent&&hour>=today.copHour){today.copSent=true;spawnTraffic('cop');}
   if(!today.vanSent&&hour>=today.vanHour){today.vanSent=true;spawnTraffic('van');}
-  if(hour>=today.carHour){today.carHour=hour+.6+rnd()*.8;if(hour<20.5)spawnTraffic('car');}
+  if(hour>=today.carHour){today.carHour=hour+.6+rnd()*.8;if(hour<20.5)spawnTraffic('car');}}
   updateTraffic(dt);updateCritters(dt);
   updateRakes(dt);updateLeaves(dt);updatePool(dt);updatePots(dt);updateTarps(dt);updateTrees(dt);updateParticles(dt);updatePeds(dt);
   for(const pl of players){usePl(pl);viewIn(pl);updateCamera(dt);viewOut(pl);storePl();}
   usePl(players[0]);
+  tutUpdate(dt);
 }
 // one player's own movement, aim, blower and battery
 function updatePlayer(dt){
@@ -3277,7 +3326,8 @@ function updatePlayer(dt){
   }
   if(swapT>0){swapT-=dt;if(swapT<=0){swapT=0;swapBattery();blip(523,.1,'square',.06);setTimeout(()=>blip(784,.18,'square',.06),90);rumble(.2,.5,120);
     for(let k=0;k<22;k++){const a=rnd()*Math.PI*2,s=30+rnd()*50;sparks.push({x:P.x,y:P.y,z:10,vx:Math.cos(a)*s,vy:Math.sin(a)*s*.7,vz:60+rnd()*60,l:.6+rnd()*.5,c:rnd()<.5?'#4bc26a':'#b8ffcf'});}}}
-  let want=0;if(!driving&&!bundle&&!heldNet&&!carryPkg&&!cur.raking&&swapT<=0&&tieT<=0){if((usesKeys&&mouse.r)||(!pad.lock&&pad.rt>.3)||(ni&&ni.hi))want=2;else if((usesKeys&&mouse.l)||(!pad.lock&&pad.lt>.3)||(ni&&ni.lo))want=1;}
+  let want=0;if(!driving&&!bundle&&!heldNet&&!carryPkg&&!cur.raking&&swapT<=0&&tieT<=0&&tutOk('blowLo')){if((usesKeys&&mouse.r)||(!pad.lock&&pad.rt>.3)||(ni&&ni.hi))want=2;else if((usesKeys&&mouse.l)||(!pad.lock&&pad.lt>.3)||(ni&&ni.lo))want=1;}
+  if(want===2&&!tutOk('blowHi'))want=0;
   if(want&&battery<=0){want=0;if(time-lastEmptyBuzz>.45){lastEmptyBuzz=time;rumble(.25,0,60);blip(110,.12,'sawtooth',.05,70);}}
   mode=want;
   if(mode===2&&hour>=LATE_HOUR)today.lateHigh+=dt;
@@ -3438,13 +3488,14 @@ function drawPlayer(cx,cy){
   };
   const bx=Math.round(x-ax*4),bby=Math.round(by-ay*4);
   ctx.fillStyle='#6b3a00';ctx.fillRect(bx-4,bby-3,9,8);ctx.fillStyle='#ff9800';ctx.fillRect(bx-3,bby-3,7,6);ctx.fillStyle='#ffc766';ctx.fillRect(bx-3,bby-3,7,1);
-  if(a.twin&&!busy){const ex=x-ax*12,ey=by-ay*12;ctx.fillStyle='#1e2226';pline(ctx,bx-1,bby-1,ex-1,ey-1,3);ctx.fillStyle='#5d656d';pline(ctx,bx,bby-1,ex,ey-1,1);
+  if(a.twin&&!busy){const ex=x-ax*a.tube,ey=by-ay*a.tube;ctx.fillStyle='#1e2226';pline(ctx,bx-1,bby-1,ex-1,ey-1,3);ctx.fillStyle='#5d656d';pline(ctx,bx,bby-1,ex,ey-1,1);
     ctx.fillStyle=shadeHex(a.tip,.55);ctx.fillRect(Math.round(ex)-2,Math.round(ey)-2,4,4);ctx.fillStyle=power>.05?shadeHex(a.tip,1.4):a.tip;ctx.fillRect(Math.round(ex)-2,Math.round(ey)-2,3,3);}
   const bp=battery/capacity(),lowBlink=bp<.2&&Math.sin(time*12)<0;
   ctx.fillStyle=battery<=0?'#3a0d0d':bp>.5?'#4bc26a':bp>.2?'#ffcf4a':(lowBlink?'#5a1a1a':'#fe5f55');ctx.fillRect(bx,bby-1,2,2);
   if(ay<-.35){tube();net();rake();}
   ctx.fillStyle=PPAL.shirt[0];pcircle(ctx,x,by+1,5);ctx.fillStyle=PPAL.shirt[1];pcircle(ctx,x,by,4);
-  ctx.fillStyle=PPAL.shirt[2];ctx.fillRect(x-4,by,9,1);ctx.fillRect(x-1,by-4,1,9);ctx.fillRect(x+2,by-3,1,7);
+  // (the light suit turns the shirt's seams into glowing strips)
+  ctx.fillStyle=upg.light>2?'#c8f4ff':PPAL.shirt[2];ctx.fillRect(x-4,by,9,1);ctx.fillRect(x-1,by-4,1,9);ctx.fillRect(x+2,by-3,1,7);
   ctx.fillStyle=PPAL.shirt[3];ctx.fillRect(x-3,by-3,2,1);
   if(ay>=-.35){tube();net();rake();}
   if(tieT>0){ctx.fillStyle='#f2c29a';const k=Math.sin(time*30)*2;ctx.fillRect(Math.round(x+ax*6+k)-1,Math.round(by+ay*6)-1,2,2);ctx.fillRect(Math.round(x+ax*6-k)-1,Math.round(by+ay*6+1)-1,2,2);}
@@ -3603,10 +3654,13 @@ function drawLighting(cx,cy){
   const glows=[];
   for(const [wx,wy,r,a] of lights){const x=wx-cx,y=wy-cy;if(x<-r||x>VW+r||y<-r||y>VH+r)continue;
     const g=L.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(0,0,0,${a})`);g.addColorStop(.6,`rgba(0,0,0,${a*.6})`);g.addColorStop(1,'rgba(0,0,0,0)');L.fillStyle=g;L.fillRect(x-r,y-r,r*2,r*2);glows.push([x,y,r]);}
-  // on foot: a faint glow so you can see yourself, plus a flashlight beam once it's bought
-  const beams=[];
+  // on foot: a faint glow so you can see yourself, plus a flashlight beam once it's bought, and at level 3 the
+  // light suit's ring all round you
+  const beams=[],suits=[];
   for(const pl of players){if(!onFoot(pl))continue;const Q=pl.P,A=pl.aim;
     const px=Q.x-cx,py=Q.y-4-cy,g=L.createRadialGradient(px,py,0,px,py,16);g.addColorStop(0,'rgba(0,0,0,.55)');g.addColorStop(1,'rgba(0,0,0,0)');L.fillStyle=g;L.fillRect(px-16,py-16,32,32);
+    if(pl.upg.light>2){const r=SUIT_R,g=L.createRadialGradient(px,py,0,px,py,r);g.addColorStop(0,'rgba(0,0,0,.8)');g.addColorStop(.55,'rgba(0,0,0,.55)');g.addColorStop(1,'rgba(0,0,0,0)');
+      L.fillStyle=g;L.fillRect(px-r,py-r,r*2,r*2);suits.push([px,py]);}
     if(pl.upg.light>0){const lv=pl.upg.light,R=lv>1?118:78,hw=lv>1?.5:.32,a=Math.atan2(A.y,A.x),ox=px+A.x*5,oy=py+A.y*5;beams.push({ox,oy,R,hw,a});
       // soft edges: a few stacked wedges, widest and faintest first
       for(const [k,al] of [[1.35,.3],[1,.45],[.6,.35]]){const gr=L.createRadialGradient(ox,oy,0,ox,oy,R);gr.addColorStop(0,`rgba(0,0,0,${al})`);gr.addColorStop(.75,`rgba(0,0,0,${al*.7})`);gr.addColorStop(1,'rgba(0,0,0,0)');
@@ -3615,9 +3669,11 @@ function drawLighting(cx,cy){
   ctx.globalCompositeOperation='lighter';
   for(const {ox,oy,R,hw,a} of beams){const g=ctx.createRadialGradient(ox,oy,0,ox,oy,R);g.addColorStop(0,`rgba(255,240,200,${.16*s.dark})`);g.addColorStop(1,'rgba(255,240,200,0)');
     ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(ox,oy);ctx.arc(ox,oy,R,a-hw,a+hw);ctx.closePath();ctx.fill();}
+  for(const [x,y] of suits){const g=ctx.createRadialGradient(x,y,0,x,y,SUIT_R);g.addColorStop(0,`rgba(190,235,255,${.13*s.dark})`);g.addColorStop(1,'rgba(190,235,255,0)');ctx.fillStyle=g;ctx.fillRect(x-SUIT_R,y-SUIT_R,SUIT_R*2,SUIT_R*2);}
   for(const [x,y,r] of glows){const g=ctx.createRadialGradient(x,y,0,x,y,r*.7);g.addColorStop(0,`rgba(255,170,80,${.12*s.dark})`);g.addColorStop(1,'rgba(255,170,80,0)');ctx.fillStyle=g;ctx.fillRect(x-r,y-r,r*2,r*2);}
   ctx.globalCompositeOperation='source-over';
 }
+const SUIT_R=44;
 let canOff={x:0,y:0};
 function render(){for(const v of views){useView(v);withPl(v.pl,renderView);}useView(views[0]);}
 function renderView(){
@@ -3668,6 +3724,7 @@ function renderView(){
   drawDoorBadges(cx,cy);
   drawPackageCues(cx,cy);
   drawMarker(cx,cy);
+  drawTutMarker(cx,cy);
   drawBedPanel(cx,cy);
   drawCursor(cx,cy);
 }
@@ -3748,28 +3805,25 @@ function hudView(dt){
     const part=truckPart(),door=nearDoor(),a=autoPl();
     if(cur.dev.t==='wait'){cls='swap';txt=`PRESS ANY BUTTON ON A CONTROLLER${a&&a.autoMode==='pad'?' (OR A KEY)':''} TO PLAY`;}
     else if(swapT>0){cls='busy';txt='SWAPPING BATTERY...';E('pfill').style.width=((1-swapT/SWAP_TIME)*100).toFixed(1)+'%';}
-    else if(tieT>0){cls='busy';txt='TYING UP THE TARP...';E('pfill').style.width=((1-tieT/TIE_T)*100).toFixed(1)+'%';}
-    else if(mode===2&&hour>=LATE_HOUR){cls='dead';txt='IT\'S AFTER 8 PM! HIGH SPEED IS HURTING YOUR REPUTATION';}
+    else if(tieT>0){cls='busy';txt='TYING TARP...';E('pfill').style.width=((1-tieT/TIE_T)*100).toFixed(1)+'%';}
+    else if(mode===2&&hour>=LATE_HOUR){cls='dead';txt='QUIET DOWN!';}
     else if(cur.riding){if(Math.abs(TR.v)<=35){cls='info';txt=`RIDING ALONG  ·  ${G('use')} GET OUT`;}}
-    else if(driving){if(Math.abs(TR.v)<=35){cls='info';txt=`${G('use')} GET OUT  ·  ${G('end')} END THE DAY`;}}
+    else if(driving){if(Math.abs(TR.v)<=35){cls='info';txt=TUT.on?`${G('use')} GET OUT`:`${G('use')} GET OUT  ·  ${G('end')} END THE DAY`;}}
     else if(carryPkg){cls=carryPkg.far?'info':'swap';txt=carryPkg.far?`TAKE IT TO THE FRONT DOOR  ·  ${G('use')} PUT IT DOWN`:`${G('use')} LEAVE IT AT THE DOOR`;}
-    else if(heldNet){const full=heldNet.n>=NET_CAP;cls=full?'dead':'info';txt=full?`NET FULL!  ${G('tarp')} EMPTY IT ON DRY LAND`:heldNet.n?`${G('tarp')} EMPTY THE NET  ·  ${G('use')} PUT IT DOWN`:`SWEEP THE NET THROUGH THE WATER  ·  ${G('use')} PUT IT DOWN`;}
+    else if(heldNet){const full=heldNet.n>=NET_CAP;cls=full?'dead':'info';txt=full?`${G('tarp')} EMPTY NET ON LAND`:heldNet.n?`${G('tarp')} EMPTY THE NET  ·  ${G('use')} PUT IT DOWN`:`SWEEP NET THROUGH WATER  ·  ${G('use')} PUT IT DOWN`;}
     else if(lotLocked(curLot)){cls='dead calm';txt=`HOUSE REQUIRES REPUTATION ${lotNeed(curLot)} ${STAR_ICON}`;}
-    else if(door){cls=door.done?'info':'swap';txt=door.done?`${door.name} ALREADY PAID TODAY`:`${G('use')} KNOCK ON THE DOOR`;}
-    else if(nearNet()){cls='swap';txt=bundle?'HANDS FULL  ·  LOAD THE TARP FIRST':`${G('use')} GRAB THE POOL NET`;}
-    else if(part==='back'&&(bundle||battery<cap-.5)){cls='swap';txt=bundle?`${G('use')} LOAD THE TIED TARP (${bundle.total} LEAVES)`:bestSpare()>.05?`${G('use')} SWAP BATTERY (BEST ONE ${Math.round(bestSpare()*100)}%)`:'NO CHARGED SPARES LEFT';}
-    else if(part==='front'){cls='swap';txt=bundle?'LOAD THE TARP AT THE BACK FIRST':`${G('use')} DRIVE THE TRUCK`;}
-    else if(cur.raking){const n=cur.rakeN,full=n>=rakeCap(cur);cls=full?'dead':'info';
-      txt=full?`RAKE FULL!  ${G('tarp')} DUMP THE PILE`:n?`${G('tarp')} DUMP THE PILE  ·  ${G('rake')} BLOWER`
-        :rakeShoves(cur)?`PULL BACK TO SCOOP, PUSH TO SHOVE  ·  ${G('rake')} BLOWER`:`BACK UP TO PULL THE RAKE THROUGH THE LEAVES  ·  ${G('rake')} BLOWER`;}
-    else if(battery<=0){cls='dead';txt=bestSpare()>.05?'BATTERY DEAD! HEAD BACK TO THE TRUCK':`OUT OF BATTERIES! ${G('end')} IN TRUCK TO END DAY`;}
-    else if(bundle){cls='info';txt=`CARRY THE BUNDLE TO THE BACK OF THE TRUCK  ·  ${G('tarp')} DROP`;}
-    else if(tarps.some(t=>t.st==='down'&&t.owner===cur&&Math.hypot(Math.max(t.x0-P.x,0,P.x-t.x1),Math.max(t.y0-P.y,0,P.y-t.y1))<10)){cls='info';txt=`${G('tarp')} TIE UP THE TARP`;}
-    else if(POOLS.some(pl=>pl.cnt>0&&pl.lot===curLot&&!pl.lot.done&&Math.hypot(Math.max(pl.x0-P.x,0,P.x-pl.x1),Math.max(pl.y0-P.y,0,P.y-pl.y1))<14)){cls='info';txt='LEAVES STUCK IN THE POOL  ·  FISH THEM OUT WITH THE NET';}
+    else if(door&&tutOk('knock')){cls=door.done?'info':'swap';txt=door.done?`${door.name} ALREADY PAID TODAY`:`${G('use')} KNOCK ON THE DOOR`;}
+    else if(nearNet()&&tutOk('net')){cls='swap';txt=bundle?'HANDS FULL  ·  LOAD THE TARP FIRST':`${G('use')} GRAB THE POOL NET`;}
+    else if(part==='back'&&(bundle||(battery<cap-.5&&tutOk('swap')))){cls='swap';txt=bundle?`${G('use')} LOAD THE TIED TARP (${bundle.total} LEAVES)`:bestSpare()>.05?`${G('use')} SWAP BATTERY (BEST ONE ${Math.round(bestSpare()*100)}%)`:'NO CHARGED SPARES LEFT';}
+    else if(part==='front'&&tutOk('drive')){cls='swap';txt=bundle?'LOAD THE TARP AT THE BACK FIRST':`${G('use')} DRIVE THE TRUCK`;}
+    else if(cur.raking&&cur.rakeN>=rakeCap(cur)){cls='dead';txt=`${G('tarp')} EMPTY RAKE`;}
+    else if(battery<=0){cls='dead';txt=bestSpare()>.05?'REPLACE BATTERY IN TRUCK':`OUT OF BATTERIES! ${G('end')} IN TRUCK TO END DAY`;}
+    else if(bundle){cls='info';txt=`CARRY BUNDLE TO THE TRUCK  ·  ${G('tarp')} DROP`;}
+    else if(tutOk('tie')&&tarps.some(t=>t.st==='down'&&t.owner===cur&&Math.hypot(Math.max(t.x0-P.x,0,P.x-t.x1),Math.max(t.y0-P.y,0,P.y-t.y1))<10)){cls='info';txt=`${G('tarp')} TIE UP THE TARP`;}
+    else if(tutOk('net')&&POOLS.some(pl=>pl.cnt>0&&pl.lot===curLot&&!pl.lot.done&&Math.hypot(Math.max(pl.x0-P.x,0,P.x-pl.x1),Math.max(pl.y0-P.y,0,P.y-pl.y1))<14)){cls='info';txt='LEAVES STUCK IN THE POOL  ·  FISH THEM OUT WITH THE NET';}
     else if(nearPkg()&&!bundle&&nearPkg().far){cls='swap';txt=`${G('use')} PICK UP THE PACKAGE`;}
-    else if(packages.some(k=>k.far&&k.moved&&Math.hypot(k.x-P.x,k.y-P.y)<70)){cls='info';txt='THAT PACKAGE BELONGS AT THE DOOR  ·  CARRY OR BLOW IT BACK';}
     else if(nearPkg()&&!bundle){cls='info';txt=`${G('use')} PICK UP THE PACKAGE`;}
-    else if(hour>=21){cls='dead';txt='IT\'S LATE! THE DAY ENDS AT 10 PM';}
+    else if(hour>=21){const m=Math.ceil((DAY_END-hour)*60);cls='dead';txt=`DAY ENDS IN ${m} MINUTE${m===1?'':'S'}`;}
   }
   setIf('pcls',cls,v=>{E('prompt').className=v;});
   setIf('ptxt',txt,v=>{E('ptext').innerHTML=v;});
@@ -3914,7 +3968,7 @@ const carCache={};function makeCarCached(col){return carCache[col]||(carCache[co
 // guest's view that changed. Floating text, speech bubbles and sounds are forwarded as events.
 const NET={role:null,peer:null,conn:null,code:'',ready:false,acc:0,ev:[],in:{mx:0,my:0,th:0,ax:1,ay:0,lo:0,hi:0,cam:null},evOut:[],
   localMenu:false,hostPaused:false,repT:0,ls:null,lsT:0,nid:1,objs:new Map(),visKey:'',status:''};
-const NET_PREFIX='curbappeal-v1-',PEER_JS='https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js';
+const NET_PREFIX='rakingitin-v1-',PEER_JS='https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js';
 // How the two browsers reach each other. STUN finds a direct route, which works between most home networks. When
 // one side is behind a strict router (mobile hotspots, offices, some ISPs) the game data has to go through a TURN
 // relay instead, and PeerJS's free public relays no longer exist. To get those players connected, make a free TURN
@@ -3975,7 +4029,6 @@ function hostData(m){
   else if(m.t==='act'&&state==='shop'){
     if(m.a==='up')buyUpgrade(p2,m.id);
     else if(m.a==='buy'){const a=ATT.find(x=>x.id===m.id);let ok=false;withPl(p2,()=>{if(a&&!owned.includes(a.id)&&money>=a.price){money-=a.price;owned.push(a.id);equipped=a.id;ok=true;}});if(ok){chaChing();renderNight();}}
-    else if(m.a==='eq'){withPl(p2,()=>{if(owned.includes(m.id))equipped=m.id;});renderNight();}
     else if(m.a==='start')startDay();}
 }
 // last values sent to the guest for each leaf (quantized), so only changes go over the wire
@@ -4154,6 +4207,110 @@ function guestFrame(dt){
     t.alpha+=((inside?.28:.95)-t.alpha)*Math.min(1,dt*7);}
 }
 
+// ============================================================ tutorial
+// One goal at a time, shown top right. Things the player hasn't been shown yet stay locked (the blower speeds, the
+// door, the truck, the tarp, the rake and the net), so it's always clear what to try next
+const TUT={on:TUTORIAL,i:0,flashT:0,moved:0,turned:0,lastA:null,lo:0,hi:0,ev:{},pct:0,pctT:0,modal:null};
+const tutEv=k=>{if(TUT.on)TUT.ev[k]=true;};
+// where to park at the second house: the curb lane along its frontage, on the right coming round the corner
+const tutPark=()=>{const L=LOTS[1];return{x:XC-38,y:(L.y0+L.y1)/2};};
+const tutParked=()=>Math.hypot(TR.x-tutPark().x,TR.y-tutPark().y)<40&&Math.abs(TR.v)<3&&!illegalPark();
+const TUT_STEPS=[
+  {id:'move',text:()=>`MOVE WITH ${G('ls')}`,done:()=>TUT.moved>70},
+  {id:'turn',text:()=>`TURN WITH ${G('rs')}`,done:()=>TUT.turned>Math.PI*1.5},
+  {id:'lo',text:()=>`LOW SPEED: HOLD ${G('low')}`,done:()=>TUT.lo>1.2},
+  {id:'hi',text:()=>`HIGH SPEED: HOLD ${G('high')}`,done:()=>TUT.hi>1.2},
+  {id:'mulch',text:()=>'BLOW 50% OF THE LEAVES INTO THE MULCH BED',sub:()=>`${Math.round(TUT.pct*100)}% · DON'T BREAK THE FLOWERPOTS!`,done:()=>TUT.pct>=.5,
+    at:()=>{const z=LOTS[0].zones.find(z=>z.type==='mulch');return z&&{x:(z.x0+z.x1)/2,y:(z.y0+z.y1)/2};}},
+  {id:'knock',text:()=>`KNOCK ON THE DOOR ${G('use')} TO GET PAID`,done:()=>LOTS[0].done,at:()=>({x:LOTS[0].door.x,y:LOTS[0].door.y+4}),after:()=>tutModal('rep')},
+  {id:'truck',text:()=>'RETURN TO THE TRUCK',done:()=>!!truckPart(),at:()=>({x:TR.x,y:TR.y})},
+  {id:'swap',text:()=>`SWAP BATTERY AT THE BACK ${G('use')}`,enter:()=>{battery=Math.min(battery,capacity()*.8);},done:()=>TUT.ev.swap,
+    at:()=>{const [x,y]=fromTruck(-TRUCK_HL-4,0);return{x,y};}},
+  {id:'drive',text:()=>`GET IN THE FRONT ${G('use')} AND DRIVE`,done:()=>driving,at:()=>{const [x,y]=fromTruck(TRUCK_HL-6,0);return{x,y};}},
+  {id:'park',text:()=>`DRIVE ROUND THE CORNER TO ${LOTS[1].name}`,sub:()=>driving&&Math.abs(TR.v)<3&&Math.hypot(TR.x-tutPark().x,TR.y-tutPark().y)<60&&illegalPark()?'PULL INTO THE LANE BY THE CURB':'PARK IN THE CURB LANE TO AVOID A TICKET',
+    done:()=>driving&&tutParked(),at:tutPark,spot:true},
+  {id:'out',text:()=>`GET OUT ${G('use')}`,done:()=>!driving},
+  {id:'tarp',text:()=>`THROW A TARP ${G('tarp')}`,enter:()=>{upg.tarp=Math.max(upg.tarp,1);},done:()=>tarps.some(t=>t.st==='down')},
+  {id:'rake',text:()=>`SWITCH TO THE RAKE ${G('rake')}`,done:()=>cur.raking},
+  {id:'fill',text:()=>'PULL THE RAKE THROUGH LEAVES',sub:()=>`${cur.rakeN} / ${rakeCap(cur)}`,done:()=>cur.raking&&cur.rakeN>=rakeCap(cur)},
+  {id:'dump',text:()=>`EMPTY THE RAKE ONTO THE TARP ${G('tarp')}`,done:()=>TUT.ev.rakeDump,at:()=>{const t=tarps.find(t=>t.st==='down');return t&&{x:(t.x0+t.x1)/2,y:(t.y0+t.y1)/2};}},
+  {id:'net',text:()=>`PICK UP THE POOL NET ${G('use')}`,done:()=>!!heldNet,at:()=>{const n=LOTS[1].nets[0];return n&&{x:n.x+Math.cos(n.a)*NET_STICK/2,y:n.y+Math.sin(n.a)*NET_STICK/2};}},
+  {id:'scoop',text:()=>'SWEEP THE NET THROUGH THE POOL',sub:()=>`${heldNet?heldNet.n:0} / 10 LEAVES`,done:()=>!!heldNet&&heldNet.n>=10},
+  {id:'netdump',text:()=>`EMPTY THE NET ONTO THE TARP ${G('tarp')}`,done:()=>TUT.ev.netDump,at:()=>{const t=tarps.find(t=>t.st==='down');return t&&{x:(t.x0+t.x1)/2,y:(t.y0+t.y1)/2};}},
+  {id:'tie',text:()=>heldNet?`PUT THE NET DOWN ${G('use')}`:`TIE UP THE TARP ${G('tarp')}`,done:()=>!!bundle,at:()=>{const t=tarps.find(t=>t.st==='down');return t&&!heldNet&&{x:(t.x0+t.x1)/2,y:(t.y0+t.y1)/2};}},
+  {id:'load',text:()=>`LOAD THE TARP INTO THE TRUCK ${G('use')}`,done:()=>TUT.ev.load,at:()=>{const [x,y]=fromTruck(-TRUCK_HL-4,0);return{x,y};}},
+];
+// which step unlocks each thing
+const TUT_UNLOCK={blowLo:'lo',blowHi:'hi',knock:'knock',swap:'swap',drive:'drive',tarp:'tarp',rake:'rake',net:'net',tie:'tie',load:'load'};
+function tutOk(f){if(!TUT.on)return true;const k=TUT_STEPS.findIndex(s=>s.id===TUT_UNLOCK[f]);return TUT.i>=k;}
+function startTutorial(){
+  titleEl.classList.add('hide');ensureAudio();resetDay();hour=9;
+  // a few leaves are already floating in the pool, so there's something to net straight away
+  const pool=POOLS.find(p=>p.lot===LOTS[1]);
+  if(pool)for(let k=0;k<22;k++){const i=addLeaf(pool.x0+2+rnd()*(pool.x1-pool.x0-4),pool.y0+2+rnd()*(pool.y1-pool.y0-4),0,randCol(),1);if(i>=0)ST[i]=3;}
+  state='play';document.body.style.cursor='none';tutShow();
+}
+function exitTutorial(){history.replaceState(null,'',location.pathname+location.search);location.reload();}
+function tutUpdate(dt){
+  if(!TUT.on||TUT.i>=TUT_STEPS.length||state!=='play')return;
+  if(TUT.flashT>0){TUT.flashT-=dt;if(TUT.flashT<=0)tutShow();return;}
+  // what the current goal is watching for
+  if(!driving&&!cur.riding)TUT.moved+=Math.hypot(P.vx,P.vy)*dt;
+  const a=Math.atan2(aim.y,aim.x);if(TUT.lastA!=null){let d=a-TUT.lastA;d=((d+Math.PI*3)%(Math.PI*2))-Math.PI;TUT.turned+=Math.abs(d);}TUT.lastA=a;
+  if(mode===1&&power>.3)TUT.lo+=dt;if(mode===2&&power>1.2)TUT.hi+=dt;
+  if((TUT.pctT-=dt)<=0){TUT.pctT=.25;TUT.pct=lotStats(LOTS[0]).pct;}
+  const st=TUT_STEPS[TUT.i];
+  if(st.done()){
+    // done: flash it green for a moment, then on to the next one
+    TUT.i++;TUT.flashT=.8;TUT.moved=TUT.turned=TUT.lo=TUT.hi=0;TUT.lastA=null;TUT.ev={};
+    $('tutBox').classList.add('done');$('tutT').innerHTML='&#10003; '+st.text();$('tutS').textContent='';
+    blip(660,.07,'square',.05);setTimeout(()=>blip(990,.12,'square',.05),80);rumble(.1,.3,90);
+    const nx=TUT_STEPS[TUT.i];if(nx&&nx.enter)nx.enter();
+    if(st.after)st.after();
+    if(TUT.i>=TUT_STEPS.length)setTimeout(()=>tutModal('end'),900);
+    return;
+  }
+  tutShow();
+}
+let tutShown='';
+function tutShow(){
+  const box=$('tutBox');box.style.display=TUT.on&&TUT.i<TUT_STEPS.length?'block':'none';if(box.style.display==='none')return;
+  const st=TUT_STEPS[TUT.i],key=TUT.i+'|'+st.text()+'|'+(st.sub?st.sub():'');if(key===tutShown)return;tutShown=key;
+  box.classList.remove('done');$('tutL').textContent=`TUTORIAL · ${TUT.i+1} / ${TUT_STEPS.length}`;$('tutT').innerHTML=st.text();$('tutS').innerHTML=st.sub?st.sub():'';
+}
+// the reputation explainer after the first payday, and the send-off at the end
+function tutModal(kind){
+  if(kind==='end')$('tutBox').style.display='none';
+  TUT.modal=kind;state='tut';dropInputs();document.body.style.cursor='default';
+  modalEl.innerHTML=kind==='rep'?`<div class="panel tutpop"><h2>REPUTATION ${STAR_ICON}</h2><div class="rl">
+      <div><b class="pos">+</b>GAIN REPUTATION BY FINISHING A HOUSE WITH THE YARD PRISTINE (50/70/90% OF LEAVES CLEANED UP GIVES +10/20/40)</div>
+      <div><b class="neg">&minus;</b>BREAKING THINGS, SCARING PEOPLE, LEAVES IN THE ROAD, PARKING TICKETS, NOISE COMPLAINTS</div>
+      <div><b>&#9733;</b>BIGGER HOUSES ONLY HIRE YOU AT HIGHER REPUTATION</div>
+      <div><b>&#9790;</b>TALLIED EVERY NIGHT</div></div>
+      <button class="btn green bounce" id="tutOk">GOT IT ${G('ok')}</button></div>`
+    :`<div class="panel tutpop"><h2>YOU'RE READY TO MAKE SOME MONEY!</h2><button class="btn green bounce" id="tutOk">MAIN MENU ${G('ok')}</button></div>`;
+  modalEl.classList.remove('hide');$('tutOk').onclick=tutModalOk;
+}
+function tutModalOk(){if(state!=='tut')return;if(TUT.modal==='end'){exitTutorial();return;}modalEl.classList.add('hide');state='play';document.body.style.cursor='none';TUT.modal=null;}
+// a bouncing arrow over whatever the current goal is about (pointing in from the edge when it's off screen),
+// and for parking, the outline of the spot
+function drawTutMarker(cx,cy){
+  if(!TUT.on||TUT.i>=TUT_STEPS.length||TUT.flashT>0||state!=='play')return;
+  const st=TUT_STEPS[TUT.i],t=st.at&&st.at();if(!t)return;
+  if(st.spot){const a=.45+.35*Math.sin(time*6),x0=Math.round(t.x-cx-13),y0=Math.round(t.y-cy-27);ctx.fillStyle=`rgba(255,207,74,${a.toFixed(2)})`;
+    for(let k=0;k<26;k+=2){ctx.fillRect(x0+k,y0,1,1);ctx.fillRect(x0+k,y0+54,1,1);}for(let k=0;k<55;k+=2){ctx.fillRect(x0,y0+k,1,1);ctx.fillRect(x0+26,y0+k,1,1);}}
+  const sx=Math.round(t.x-cx),sy=Math.round(t.y-cy-12+Math.sin(time*5)*2);
+  if(sx>4&&sx<VW-4&&sy>4&&sy<VH-4){
+    for(let k=0;k<6;k++){const w=(6-k)*2+1;ctx.fillStyle='#1a0f0a';ctx.fillRect(sx-w/2-1|0,sy-8+k,w+2,1);}
+    for(let k=0;k<5;k++){const w=(5-k)*2+1;ctx.fillStyle='#ffcf4a';ctx.fillRect(sx-(w>>1),sy-8+k,w,1);}
+  }else{
+    const ex=clamp(sx,14,VW-14),ey=clamp(sy,14,VH-14),dx=sx-ex,dy=sy-ey,dl=Math.hypot(dx,dy)||1;
+    ctx.fillStyle='#1a0f0a';pcircle(ctx,ex,ey,7);ctx.fillStyle='#ffcf4a';pcircle(ctx,ex,ey,6);
+    ctx.fillStyle='#ffcf4a';for(let k=8;k<13;k++){const w=13-k;ctx.fillRect(Math.round(ex+dx/dl*k-w/2),Math.round(ey+dy/dl*k-w/2),w,w);}
+    ctx.fillStyle='#1a0f0a';ctx.fillRect(ex-1,ey-4,2,5);ctx.fillRect(ex-1,ey+2,2,2);
+  }
+}
+
 // ============================================================ boot
 buildLots();buildBackground();buildTruck();buildTrafficSprites();buildTrafficPath();buildMail();initTrees();resize();
 N=0;for(const L of LOTS)spawnLot(L);
@@ -4161,7 +4318,7 @@ today=newToday();
 {const [x,y]=fromTruck(-6,-(TRUCK_HW+8));P.x=x;P.y=y;}
 camX=clamp(P.x-VW/2,0,WORLD_W-VW);camY=clamp(P.y-VH/2,0,H-VH);
 {const p1=newPlayer(0,{t:'auto'});p1.P=P;p1.aim=aim;p1.money=money;p1.upg=upg;p1.owned=owned;p1.equipped=equipped;players.push(p1);usePl(p1);views[0].pl=p1;p1.view=views[0];p1.cam.x=camX;p1.cam.y=camY;}
-setupTitle();
+if(TUTORIAL)startTutorial();else setupTitle();
 if(location.hash.startsWith('#join=')){const c=location.hash.slice(6).replace(/\D/g,'').slice(0,6);if(c.length===6){openKeypad();kpCode=c;kpShow();startJoin(c);}}
 let last=performance.now();
 // holding Enter for a moment while player 1 is on a controller drops a second player in on the keyboard
